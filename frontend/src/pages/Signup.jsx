@@ -34,7 +34,7 @@ export default function Signup() {
       const data = res?.data?.user;
       console.log(data)
       if (data) {
-        localStorage.setItem("user-info", JSON.stringify(data));
+        login(data);
         navigate('/')
       }
     } catch (error) {
@@ -55,16 +55,15 @@ export default function Signup() {
       if (authResult['code']) {
 
         const result = await googleAuth(authResult['code']);
-        const { uid, email, name, photo } = result.data.user;
+        const { uid, email, name, avatar } = result.data.user;
         const token = result.data.tokens.access_token
-        const userData = { uid, email, name, photo, token }
+        const userData = { uid, email, name, photo:avatar, token }
 
         if (userData) {
           login(userData);
           navigate('/');
         }
       }
-      console.log(authResult)
     } catch (error) {
       console.error("google login error:: ", error)
     } finally {

@@ -15,6 +15,9 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import SearchResults from './components/categories/SearchResults.jsx';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
+import { FavItemsProvider } from './context/FavItemsContext.jsx';
+import FavouriteProducts from './pages/FavouriteProducts.jsx';
+import PageNotFound from './pages/PageNotFound.jsx';
 
 
 const GoogleAuthWrappper = () => {
@@ -36,9 +39,11 @@ createRoot(document.getElementById('root')).render(
               element={
 
                 <ProductsProvider>
-                  <CartProvider >
-                    <App />
-                  </CartProvider>
+                  <FavItemsProvider>
+                    <CartProvider >
+                      <App />
+                    </CartProvider>
+                  </FavItemsProvider>
                 </ProductsProvider>
               }
             >
@@ -49,11 +54,15 @@ createRoot(document.getElementById('root')).render(
                   <CartDetails />
                 </ProtectedRoute>
               } />
+              <Route path="/whitelist" element={<FavouriteProducts />} />
               <Route path="/search" element={<SearchResults />} />
             </Route>
 
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<GoogleAuthWrappper />} />
+
+            {/* 404 Route */}
+            <Route path="*" element={<PageNotFound />} />
 
           </Routes>
         </SearchProvider>

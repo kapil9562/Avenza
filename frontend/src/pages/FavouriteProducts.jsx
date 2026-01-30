@@ -1,0 +1,88 @@
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { useFavItem } from "../context/FavItemsContext";
+import { useTheme } from "../context/ThemeContext";
+import { ProductImage, ProductSkeleton } from "../utils";
+import AddToCartBtn from "../utils/AddToCartBtn";
+
+export default function FavouriteProducts() {
+    const { items, loading } = useFavItem();
+    const {isDark} = useTheme();
+
+    const navigate = useNavigate();
+
+    const { setActiveTab, scrollRef } = useOutletContext();
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const emptyStars = 5 - fullStars;
+
+        return (
+            <div className="flex items-center ">
+                {[...Array(fullStars)].map((_, i) => (
+                    <span key={`full-${i}`} className="text-yellow-500 text-xl">★</span>
+                ))}
+                {[...Array(emptyStars)].map((_, i) => (
+                    <span key={`empty-${i}`} className="text-gray-300 text-xl">★</span>
+                ))}
+            </div>
+        );
+    };
+
+
+    const createSlug = (text) => {
+        return text
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+    }
+
+    if (loading) return <ProductSkeleton/>
+
+    return (
+        <div className="min-h-screen bg-[#0F172A] pt-5 text-white">
+            <h1 className="text-3xl font-semibold text-center">
+                Favourite Products <span className="text-pink-500">❤️</span>
+            </h1>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 animate-fadeUp will-change-transform">
+                {items.map((item, idx) => (
+                    <div
+                        key={idx}
+                        className={`animate-fadeUp will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
+                        onClick={() => {
+                            setActiveTab("");
+                            navigate(`/${createSlug(item.product.title)}/p/${item.product.id}`);
+                        }}
+                    >
+
+                        <ProductImage
+                            src={item.product.thumbnail}
+                            alt={item.product.title}
+                            className="w-full h-40 object-contain transition-all duration-400 group-hover:scale-120 relative z-5 will-change-transform"
+                            idx={idx}
+                        />
+
+                        <div className="p-2">
+                            <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
+                                {item.product.title}
+                            </h2>
+
+                            <p className={`text-sm mb-2 line-clamp-2 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                                {item.product.description}
+                            </p>
+                            <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
+                                {renderStars(item.product.rating)} ({item.product.rating})
+                            </div>
+
+                            <div className="flex flex-col gap-2 justify-between">
+                                <span className="text-[#FF6F61] font-bold text-lg">
+                                    ₹{(item.product.price).toLocaleString("en-IN")}
+                                </span>
+                                <AddToCartBtn product={item.product} />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}

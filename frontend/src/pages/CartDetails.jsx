@@ -43,9 +43,8 @@ export default function CartDetails() {
                     ) : (
                         <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} rounded-2xl`}>
                             {items.map((item, idx) => (
-                                <div>
+                                <div key={idx}>
                                     <CartItem
-                                        key={item.id}
                                         item={item}
                                     />
                                     {idx !== items.length - 1 &&

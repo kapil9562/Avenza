@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
 }
@@ -109,6 +110,16 @@ html, body {
   background-position: top center;
 }
 
+.notFound {
+  width: "100%";
+  min-height: "100vh";
+  background-image: url('./assets/404.png');
+  background-size: "cover";
+  background-position: "center";
+  background-repeat: "no-repeat";
+}
+
+
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
@@ -137,6 +148,7 @@ html, body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -151,6 +163,7 @@ html, body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -163,4 +176,20 @@ html, body {
 
 .nunitoFont {
   font-family: 'Nunito', sans-serif;
+}
+
+.float-img {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px); /* move up */
+  }
+  100% {
+    transform: translateY(0px); /* back down */
+  }
 }

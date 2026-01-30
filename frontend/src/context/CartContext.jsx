@@ -27,7 +27,6 @@ export const CartProvider = ({ children }) => {
     [items]
   );
 
-
   const fetchCart = useCallback(async () => {
     if (!user?.uid) return;
 
@@ -41,17 +40,15 @@ export const CartProvider = ({ children }) => {
       }
 
       const productPromises = dbCart.map(async (item) => {
-        const res = await getProducts({ productId: item.product_id });
+        const res = await getProducts({ productId: item.productId });
         const product = res.data?.products?.[0];
-
-        console.log(product)
 
         if (!product) return null;
 
         return {
           ...product,
-          id: product.id,
-          qty: item.quantity,
+          id: product.productId,
+          qty: item.qty,
         };
       });
 
@@ -78,16 +75,16 @@ export const CartProvider = ({ children }) => {
 
         const addCartRes = await addCart({
           uid: user.uid,
-          product_id: fullProduct.id,
+          product_id: fullProduct.productId,
           price: fullProduct.price,
           qty,
         });
 
         setItems((prev) => {
-          const exists = prev.find((i) => i.id === fullProduct.id);
+          const exists = prev.find((i) => i.productId === fullProduct.productId);
           if (exists) {
             return prev.map((i) =>
-              i.id === fullProduct.id
+              i.productId === fullProduct.productId
                 ? { ...i, qty: i.qty + qty }
                 : i
             );
@@ -116,7 +113,7 @@ export const CartProvider = ({ children }) => {
       setItems(prev =>
         prev
           .map(item => {
-            if (item.id === product_id) {
+            if (item.productId === product_id) {
               prevQty = item.qty;
               const nextQty = item.qty + qtyChange;
 
@@ -145,7 +142,7 @@ export const CartProvider = ({ children }) => {
       } catch (err) {
         setItems(prev =>
           prev.map(item =>
-            item.id === product_id
+            item.productId === product_id
               ? { ...item, qty: prevQty }
               : item
           )

@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./index.css";
 import { Header } from "./components";
 import { Outlet, useLocation } from "react-router-dom";
 import { useTheme } from "./context/ThemeContext";
 import SideMenu from "./components/sideMenu/SideMenu";
+import Snowfall from "react-snowfall";
+import flowerSrc from "./assets/flower.png";
 
 function App() {
   const { isDark } = useTheme();
@@ -19,6 +21,14 @@ function App() {
       behavior: "instant",
     });
   }, [pathname]);
+
+  const flowerImage = useMemo(() => {
+    const img = new Image();
+    img.src = flowerSrc;
+    img.onload = () => { };
+    return img;
+  }, []);
+
 
   return (
     <div
@@ -36,6 +46,22 @@ function App() {
         <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
       </main>
       <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
+      <Snowfall
+        snowflakeCount={6}
+        images={[flowerImage]}
+        speed={[0.5, 1.5]}
+        wind={[-0.5, 0.5]}
+        radius={[10, 15]}
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          zIndex: 9999,
+
+          maskImage: "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)"
+        }}
+      />
+
     </div>
   );
 }

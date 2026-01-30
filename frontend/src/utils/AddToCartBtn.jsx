@@ -20,7 +20,7 @@ function AddToCartBtn({ product }) {
 
     const handleAddToCart = async () => {
 
-        if (loadingId === product.id) return;
+        if (loadingId === product.productId) return;
 
         if (!user) {
             navigate('/signup');
@@ -28,10 +28,10 @@ function AddToCartBtn({ product }) {
         }
         
         try {
-            setLoadingId(product.id);
+            setLoadingId(product.productId);
             await new Promise(resolve => setTimeout(resolve, 1500))
-            const res = await addToCart({ product_id: product.id, price: Number(product.price) });
-            setSuccess(product.id);
+            const res = await addToCart({ product_id: product.productId, price: Number(product.price) });
+            setSuccess(product.productId);
         } catch (err) {
             const error = err?.response?.data?.error || "Failed to add item"
             setError(error);
@@ -59,16 +59,16 @@ function AddToCartBtn({ product }) {
                     handleAddToCart();
                 }}
                 className="w-full px-6 py-2 border border-[#FF6F61] text-[#FF6F61] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300 hover:scale-105 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden"
-                disabled={loadingId === product.id || success}
+                disabled={loadingId === product.productId  || success}
             >
-                {loadingId === product.id ? (
+                {loadingId === product.productId  ? (
                     <Lottie
                         animationData={loader}
                         loop
                         className="w-12 h-12 hue-rotate-180"
                     />
                 ) : (
-                    success === product.id  ? 
+                    success === product.productId  ? 
                     <div  className='animate-fadeUp flex flex-row justify-center items-center font-semibold gap-1 text-green-600'>
                         <BsCheckCircleFill/>
                         <span>Added</span>

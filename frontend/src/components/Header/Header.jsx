@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { IoIosSearch } from "react-icons/io";
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
@@ -29,21 +29,26 @@ function Header({ activeTab, setActiveTab, setShow }) {
     "bg-[#FF6F61] border-[#ff3e2d] border-2 rounded-4xl p-2 hover:bg-[#ff3e2d] transition-transform duration-150 ease-out active:scale-95 transform-gpu cursor-pointer flex justify-center items-center";
 
   const [input, setInput] = useState("");
-  const [search, setSearch] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const suggestions = useMemo(() => filteredData.slice(0, 5), [filteredData]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [alert, setAlert] = useState(false);
-  const [searchType, setSearchType] = useState();
-
+  const [searchType, setSearchType] = useState("");
+  const location = useLocation();
   const { user, logout } = useAuth();
-
   const { totalItems } = useCart();
-
   const [openIndex, setOpenIndex] = useState(null);
-
   const [isActive, setIsActive] = useState(false);
+  const searchTimeout = useRef(null);
 
-  const handleDropDown = (el) => {
+  useEffect(() => {
+    if (location.pathname !== "/search") {
+      setInput("");
+      setSearchType("");
+    }
+  }, [location.pathname]);
+
+  const handleDropDown = () => {
     if (isActive) setIsActive(false);
     else setIsActive(true);
   };
@@ -51,45 +56,55 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const searchProduct = async (input) => {
     try {
       const response = await getProducts({ limit: 0, title: input });
-      console.log(response)
-      const data = await response.data.products;
-      setFilteredData(data)
-      setSearch(data.slice(0, 5));
-      setShowDropdown(true);
-
+      const data = response.data.products;
+      setFilteredData(data);
+      if (searchType != 'autosuggest') {
+        setShowDropdown(true);
+      }
     } catch (error) {
       console.error("Error fetching Search:", error);
     }
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (input.trim()) {
-        searchProduct(input);
-      } else {
-        setShowDropdown(false);
-      }
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current);
+    }
+
+    if (!input.trim()) {
+      setShowDropdown(false);
+      return;
+    }
+
+    searchTimeout.current = setTimeout(() => {
+      searchProduct(input);
     }, 400);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(searchTimeout.current);
   }, [input]);
-
 
   const { setSearchResults } = useSearch();
 
-  const searchHandler = () => {
-    if (!filteredData?.length) return;
-
-    const query = input;
+  const searchHandler = useCallback(() => {
+    const query = input?.trim();
+    if (!query || !filteredData?.length) return;
 
     navigate(
       `/search?q=${encodeURIComponent(query)}&searchType=${searchType}&searchIdentifier=text_search`
     );
+
     setSearchResults(filteredData);
     setShowDropdown(false);
     setActiveTab(null);
-  };
+  }, [input, filteredData, searchType]);
 
+  const handleEnter = (e) => {
+    if (e.key !== "Enter") return;
+
+    e.preventDefault();
+    setSearchType("manual");
+    searchHandler();
+  };
 
   const normalizeGooglePhoto = (url) => {
     if (!url) return null;
@@ -103,27 +118,19 @@ function Header({ activeTab, setActiveTab, setShow }) {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
-        desktopSearchRef.current &&
-        desktopSearchRef.current.contains(e.target)
-      ) return;
-
-      if (
-        mobileSearchRef.current &&
-        mobileSearchRef.current.contains(e.target)
-      ) return;
-
-      if (
-        categoryRef.current &&
-        categoryRef.current.contains(e.target)
+        desktopSearchRef.current?.contains(e.target) ||
+        mobileSearchRef.current?.contains(e.target) ||
+        categoryRef.current?.contains(e.target)
       ) return;
 
       setShowDropdown(false);
-      setOpenIndex(null)
+      setOpenIndex(null);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
 
   const handleTabClick = (tab) => {
     navigate('/')
@@ -134,13 +141,14 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const { categories, setCategories } = useProducts();
 
   useEffect(() => {
-    const getCategories = async () => {
+    if (categories.length) return;
+
+    const fetchCategories = async () => {
       const res = await getAllCategory();
-      const data = res.data
-      console.log("data", data)
-      setCategories(data);
+      setCategories(res.data);
     };
-    getCategories();
+
+    fetchCategories();
   }, []);
 
 
@@ -168,27 +176,33 @@ function Header({ activeTab, setActiveTab, setShow }) {
         <div className='relative w-1/2 sm:flex flex-row justify-center items-center hidden ' ref={desktopSearchRef}>
           <input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                setSearchType("manual");
-                searchHandler()
-              }
+            onChange={(e) => {
+              setInput(e.target.value);
+              setSearchType(null);
             }}
+            onKeyDown={handleEnter}
             type="text"
             placeholder='Search products, brands, categories…'
             className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-semibold text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
           <IoIosSearch className='absolute left-3 text-2xl font-semibold text-[#8b90c7] z-20' />
           {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-400" : "bg-[#FFEDF3]"} absolute top-10 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 max-h-60 overflow-hidden z-5`} >
             <div className={`${showDropdown ? "block" : "hidden"} w-full max-h-50 overflow-auto pt-1`}>
-              {search.length > 0 ? (
-                search.map((product) => (
+              {suggestions.length > 0 ? (
+                suggestions.map((product) => (
                   <div
                     key={product.id}
                     onClick={() => {
+                      const title = product.title;
+                      setInput(title);
                       setSearchType("autosuggest");
-                      searchHandler();
+
+                      navigate(
+                        `/search?q=${encodeURIComponent(title)}&searchType=autosuggest&searchIdentifier=text_search`
+                      );
+
+                      setSearchResults(filteredData);
+                      setShowDropdown(false);
+                      setActiveTab(null);
                     }}
                     className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-1 px-2 font-semibold flex flex-row gap-2 border-b-2 border-[#f7ddf4] cursor-pointer`}
                   >
@@ -216,7 +230,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
             {/* Toggle for mobiles */}
             <button onClick={toggleTheme} className='flex justify-center items-center sm:hidden cursor-pointer'>
-              {isDark ? <img src="https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/2600.svg" alt="" className='h-6 w-6' /> : <BsMoonStarsFill className='text-yellow-500 text-xl' />}
+              {isDark ? <img src="https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/2600.svg" alt="" className='min-h-6 min-w-6' /> : <BsMoonStarsFill className='text-yellow-500 text-xl' />}
             </button>
 
             {/* Toggle for destop */}
@@ -232,7 +246,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
               {isDark ? (<span className='absolute left-1 text-gray-500 font-semibold'>Light</span>) : (<span className='absolute right-1'>Dark</span>)}
             </button>
           </div>
-          <div className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`}>
+          <div className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`} onClick={() => navigate('/whitelist')}>
             <IoHeartSharp className='text-3xl text-red-600' />
             <span className="hidden sm:flex font-['Sour_Gummy'] font-medium">Favorite</span>
           </div>
@@ -309,26 +323,32 @@ function Header({ activeTab, setActiveTab, setShow }) {
       <div className='relative w-full flex flex-row justify-center items-center sm:hidden mb-1' ref={mobileSearchRef}>
         <input
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              searchHandler();
-              setSearchType("manual");
-            }
+          onChange={(e) => {
+            setInput(e.target.value);
+            setSearchType(null);
           }}
+          onKeyDown={handleEnter}
           type="text"
           placeholder='Enter your product name...'
           className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-semibold text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
         <IoIosSearch className='absolute left-3 text-2xl font-semibold text-gray-500 z-20' />
         {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-400" : "bg-[#FFEDF3]"} absolute top-5 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 max-h-60 overflow-hidden z-5`}>
           <div className={`${showDropdown ? "block" : "hidden"} w-full max-h-50 overflow-auto pt-1`}>
-            {search.length > 0 ? (
-              search.map((product) => (
+            {suggestions.length > 0 ? (
+              suggestions.map((product) => (
                 <div
                   onClick={() => {
+                    const title = product.title;
+                    setInput(title);
                     setSearchType("autosuggest");
-                    searchHandler();
+
+                    navigate(
+                      `/search?q=${encodeURIComponent(title)}&searchType=autosuggest&searchIdentifier=text_search`
+                    );
+
+                    setSearchResults(filteredData);
+                    setShowDropdown(false);
+                    setActiveTab(null);
                   }}
                   key={product.id}
                   className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-1 px-2 font-semibold flex flex-row gap-2 border-b-2 border-[#f7ddf4] cursor-pointer`}
@@ -378,7 +398,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     <div className={`w-full px-1 sm:px-5 md:px-10`}>
                       {item.categories.map((sub, i) => (
                         <div key={i} className={`cursor-pointer hover:text-[#FF6F61] px-4 whitespace-nowrap capitalize  py-1  $ ${activeTab === sub ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-gray-700"}`}
-                          onClick={() => {handleTabClick(sub)}}>
+                          onClick={() => { handleTabClick(sub) }}>
                           {sub}
                         </div>
                       ))}

@@ -11,7 +11,7 @@ const addToCart = async (req, res) => {
             .input("price", sql.Decimal(10, 2), price)
             .input("qty", sql.Int, qty)
             .execute("sp_add_to_cart");
-        res.json({ success: true, message: "Item added to cart" });
+        res.status(200).json({ success: true, message: "Item added to cart" });
     } catch (err) {
         console.log('error :: ', err)
         res.status(500).json({ error: err.message });
