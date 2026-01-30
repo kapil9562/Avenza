@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #c562b0d7;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #c562b0d7;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c562b0d7 transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #c562b0d7;
+  border-radius: 999px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #c562b0d7;
+}
+
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #c562b0d7 transparent;
+}
+
+.darkBgImg {
+  background-image: url('./assets/darkWebBg2.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+.darkBgImg2 {
+  background-image: url('./assets/darkWebBg.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+.bgImg {
+  background-image: url('./assets/webBg.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+.signupBg {
+  background-image: url('./assets/SignupBg.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+.cartBg {
+  background-image: url('./assets/cartBg.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+.sideMenuBg {
+  background-image: url('./assets/sideMenuBg.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+.sideMenuDarkBg {
+  background-image: url('./assets/sideMenuDarkBg.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.08),
+      transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes easeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-easeIn {
+  animation: easeIn 0.6s ease forwards;
+}
+
+
+.nunitoFont {
+  font-family: 'Nunito', sans-serif;
+}
