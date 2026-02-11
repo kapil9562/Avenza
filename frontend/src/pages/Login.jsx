@@ -1,6 +1,4 @@
 import { useState, useRef } from "react";
-import SignupBg from "../assets/SignupBg.png"
-import { FaPencil } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { NavLink } from 'react-router-dom'
 import { emailLogin } from "../api/api";

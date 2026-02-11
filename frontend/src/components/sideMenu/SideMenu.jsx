@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useTheme } from '../../context/ThemeContext';
-import logo from '../../assets/logo.png';
-import { RxCross2 } from "react-icons/rx";
 import { IoHome } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../../context/ProductsContext';
@@ -11,7 +9,6 @@ import { GiClothes } from "react-icons/gi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { FcBusinessman, FcBusinesswoman, FcSportsMode } from "react-icons/fc";
 import { IoIosArrowUp } from "react-icons/io";
-import { FiSidebar } from "react-icons/fi";
 import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
 
 
@@ -91,7 +88,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                 <div className={`flex flex-row pt-3 pl-1 items-center gap-3 sticky top-0 z-50 pb-2 border-b-2 justify-between px-4 ${isDark ? "border-gray-800 sideMenuDarkBg" : "border-gray-200 sideMenuBg"}`}>
                     {/* LOGO */}
                     <div className='cursor-pointer flex justify-center items-center' onClick={() => handleTabClick("HOME")}>
-                        <img src={logo} alt="logo" className='sm:w-35 w-30 object-cover' />
+                        <img src='/assets/logo.png' alt="logo" className='sm:w-35 w-30 object-cover' />
                     </div>
                     {/* categories taggle btn */}
                     <div onClick={() => setShow(!show)}>

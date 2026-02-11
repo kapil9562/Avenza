@@ -4,8 +4,6 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
-import loader from "../assets/loader.json";
-import { FaRegCircleCheck } from "react-icons/fa6";
 import { BsCheckCircleFill } from "react-icons/bs";
 
 function AddToCartBtn({ product }) {
@@ -63,7 +61,7 @@ function AddToCartBtn({ product }) {
             >
                 {loadingId === product.productId  ? (
                     <Lottie
-                        animationData={loader}
+                        animationData='/assets/loader.json'
                         loop
                         className="w-12 h-12 hue-rotate-180"
                     />

@@ -4,7 +4,6 @@ import { ProductSkeleton, ProductImage } from '../../utils/index';
 import { useSearch } from '../../context/SearchContext';
 import { useTheme } from '../../context/ThemeContext';
 import AddToCartBtn from '../../utils/AddToCartBtn';
-import notFound from "../../assets/ItemNotFound.png"
 
 function SearchResults() {
 
@@ -58,7 +57,7 @@ function SearchResults() {
                     :
                     products.length === 0 ?
                         (<div className="flex flex-col justify-center items-center gap-4 col-span-full">
-                            <img src={notFound} alt="not found" className="md:h-100 h-70 object-contain float-img" />
+                            <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
                             <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
                                 We couldn't find what you were looking for. Let's start over.
                             </span>
@@ -71,11 +70,11 @@ function SearchResults() {
                         ) : (
                             products.map((product, idx) => (
                                 <div
-                                    key={product.id}
+                                    key={idx}
                                     className={`animate-fadeUp will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer h-fit ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
                                     onClick={() => {
                                         setActiveTab("");
-                                        navigate(`/${createSlug(product.title)}/p/${product.id}`);
+                                        navigate(`/${createSlug(product.title)}/p/${product._id}`);
                                     }}
                                 >
                                     <ProductImage

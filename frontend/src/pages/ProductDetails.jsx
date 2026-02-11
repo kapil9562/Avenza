@@ -2,18 +2,13 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ProductDetailsSkeleton from "../utils/ProductDetailsSkeleton";
 import { formatINR } from "../utils/price";
-import bg from '../assets/1.png'
-import darkBg from '../assets/d1.png'
 import Layout from "../components/categories/Layout";
 import { useTheme } from "../context/ThemeContext";
 import { getProducts } from "../api/api.js";
 import AddToCartBtn from "../utils/AddToCartBtn.jsx";
-import userImg from "../assets/user.png"
-import userLight from "../assets/userLight.png"
-import notFound from "../assets/ItemNotFound.png"
 
 function ProductDetails() {
-    const { productId } = useParams();
+    const { _id } = useParams();
 
     const [product, setProduct] = useState(null);
     const [currentImg, setCurrentImg] = useState(null);
@@ -25,7 +20,7 @@ function ProductDetails() {
     const { setActiveTab } = useOutletContext();
 
     const { isDark } = useTheme();
-    const getbg = !isDark ? bg : darkBg
+    const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
     const navigate = useNavigate();
 
@@ -33,7 +28,7 @@ function ProductDetails() {
         const fetchProductById = async () => {
             try {
                 setLoading(true);
-                const res = await getProducts({ productId: productId });
+                const res = await getProducts({ _id });
                 const data = res.data.products[0];
                 setProduct(data);
                 setCurrentImg(data.images?.[0] || null);
@@ -47,7 +42,7 @@ function ProductDetails() {
         };
 
         fetchProductById();
-    }, [productId]);
+    }, [_id]);
 
     useEffect(() => {
         setActiveTab("")
@@ -96,7 +91,7 @@ function ProductDetails() {
                     <div className={`md:rounded-4xl flex flex-col justify-center items-center min-h-150 md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
                         {error ? (
                             <div className="flex flex-col justify-center items-center gap-4">
-                                <img src={notFound} alt="not found" className="md:h-100 h-70 object-contain float-img" />
+                                <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
                                 <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
                                     We couldn't find what you were looking for. Let's start over.
                                 </span>
@@ -280,7 +275,7 @@ function ProductDetails() {
                                             <div key={idx} className={idx !== product.reviews.length - 1 ? `${isDark ? "border-gray-600" : "border-gray-200"}  lg:border-r flex flex-row lg:pr-4 pb-4 lg:pb-0 border-b-2 lg:border-b-0` : "border-none flex flex-row lg:pr-4 pb-4 lg:pb-0"}>
                                                 <div className="flex gap-4">
                                                     <img
-                                                        src={`${isDark ? userImg : userLight}`}
+                                                        src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`}
                                                         alt="User"
                                                         className="w-10 h-10 rounded-full"
                                                     />
@@ -313,7 +308,7 @@ function ProductDetails() {
                                     <h1 className={`text-2xl mb-2 font-serif sm:pl-6 pl-4 ${!isDark ? "text-black" : "text-gray-200"}`}>
                                         Related Products
                                     </h1>
-                                    <Layout category={product?.category} pid={product?.id} />
+                                    <Layout category={product?.category} pid={product?.productId} />
                                 </div>
                             </>
                         )}

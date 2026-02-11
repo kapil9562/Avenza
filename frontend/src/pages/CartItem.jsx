@@ -4,8 +4,6 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 import { ImBin } from "react-icons/im";
 import { useCart } from "../context/CartContext";
 import { GoAlertFill } from "react-icons/go";
-import bg from '../assets/1.png'
-import darkBg from '../assets/d1.png'
 import { useTheme } from "../context/ThemeContext";
 
 const CartItem = React.memo(function CartItem({ item }) {
@@ -14,7 +12,7 @@ const CartItem = React.memo(function CartItem({ item }) {
     const [error, setError] = useState("");
 
     const { isDark } = useTheme();
-    const getbg = !isDark ? bg : darkBg
+    const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
     const updateCart = async (product_id, qtyChange) => {
         try {

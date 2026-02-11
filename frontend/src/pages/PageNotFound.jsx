@@ -1,5 +1,4 @@
 import React from 'react'
-import error from '../assets/error.png'
 import { GoAlertFill } from "react-icons/go";
 import { useNavigate } from 'react-router-dom';
 import { useOnlineStatus } from '../utils/OnlineStatus';
@@ -93,7 +92,7 @@ function PageNotFound({ type = "404" }) {
         {/* Right Illustration */}
         <div className="flex-1 flex justify-center w-full">
           <img
-            src={error}
+            src='/assets/error.png'
             alt="No internet"
             className="w-full max-w-xs sm:max-w-sm lg:max-w-lg h-auto object-contain float-img"
           />

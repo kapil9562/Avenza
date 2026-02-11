@@ -1,5 +1,4 @@
 import { useState } from "react";
-import SignupBg from "../assets/SignupBg.png"
 import { FaUser } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";

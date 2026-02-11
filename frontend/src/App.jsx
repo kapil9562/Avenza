@@ -5,7 +5,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useTheme } from "./context/ThemeContext";
 import SideMenu from "./components/sideMenu/SideMenu";
 import Snowfall from "react-snowfall";
-import flowerSrc from "./assets/flower.png";
 
 function App() {
   const { isDark } = useTheme();
@@ -24,7 +23,7 @@ function App() {
 
   const flowerImage = useMemo(() => {
     const img = new Image();
-    img.src = flowerSrc;
+    img.src = '/assets/flower.png';
     img.onload = () => { };
     return img;
   }, []);

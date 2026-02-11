@@ -1,8 +1,11 @@
 // api.js
 import axios from "axios";
 
+// export const api = axios.create({
+//   baseURL: import.meta.env.VITE_BACKEND_BASE_URI
+// });
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URI
+  baseURL: 'http://localhost:8000/api'
 });
 
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
@@ -43,14 +46,14 @@ export const updateQty = ({ uid, product_id, qtyChange }) => api.post("/cart/upd
 });
 
 
-export const getProducts = ({ skip = 0, category, limit, title, productId }) => {
+export const getProducts = ({ skip = 0, category, limit, title, _id }) => {
   const params = new URLSearchParams();
 
   params.append('skip', skip);       // always add skip
   if (category) params.append('category', category); // only if defined
   if (limit) params.append('limit', limit);
   if (title) params.append('search', title);
-  if (productId) params.append('productId', productId);
+  if (_id) params.append('productId', _id);
   
   return api.get(`/products?${params.toString()}`);
 };

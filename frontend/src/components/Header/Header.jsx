@@ -4,7 +4,6 @@ import { NavLink, useLocation } from "react-router-dom"
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/logo.png';
 import { useCart } from '../../context/CartContext';
 import { useSearch } from '../../context/SearchContext';
 import { useAuth } from '../../context/AuthContext';
@@ -13,8 +12,6 @@ import { IoHeartSharp } from "react-icons/io5";
 import { useTheme } from '../../context/ThemeContext';
 import { getAllCategory, getProducts } from '../../api/api';
 import { IoIosArrowUp } from "react-icons/io";
-import userLight from '../../assets/userLight.png';
-import userDark from '../../assets/user.png';
 import { BsMoonStarsFill } from "react-icons/bs";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { useProducts } from '../../context/ProductsContext';
@@ -168,7 +165,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
             setActiveTab("HOME");
             navigate('/')
           }}>
-            <img src={logo} alt="logo" className='sm:w-40 w-30 object-cover' />
+            <img src='/assets/logo.png' alt="logo" className='sm:w-40 w-30 object-cover' />
           </div>
         </div>
 
@@ -276,7 +273,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     className='md:max-h-12 md:max-w-12 max-h-10 max-w-10 rounded-full object-cover' />
                 ) : (
                   <div className={`flex flex-col justify-center items-center text-sm md:text-lg group-hover:text-pink-500 relative group cursor-pointer ${isDark ? "text-gray-300" : "text-[#373951]"}`}>
-                    <img src={`${isDark ? userDark : userLight}`} alt="pfp" className='h-8 w-8 rounded-full' />
+                    <img src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`} alt="pfp" className='h-8 w-8 rounded-full' />
                     <span className="font-['Sour_Gummy'] hidden sm:block">Profile</span>
                   </div>
                 )}

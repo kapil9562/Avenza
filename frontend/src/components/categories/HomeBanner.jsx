@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
-import banner2 from "../../assets/banner2.png";
-import banner3 from "../../assets/banner3.jpg";
-import banner1 from "../../assets/banner1.png";
-import Layout from './Layout';
 
 
 import "swiper/css";
@@ -18,15 +14,15 @@ function HomeBanner() {
     const banners = [
         {
             id: 1,
-            link: banner1
+            link: '/assets/banner1.png'
         },
         {
             id: 2,
-            link: banner2
+            link: '/assets/banner2.png'
         },
         {
             id: 3,
-            link: banner3
+            link: '/assets/banner3.jpg'
         }
     ];
 

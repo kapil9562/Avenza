@@ -1,16 +1,8 @@
 import { useState } from "react";
-import l1 from '../assets/1.png'
-import l2 from '../assets/2.png'
-import l3 from '../assets/3.png'
-import l4 from '../assets/4.png'
-import d1 from '../assets/d1.png'
-import d2 from '../assets/d2.png'
-import d3 from '../assets/d3.png'
-import d4 from '../assets/d4.png'
 import { useTheme } from "../context/ThemeContext";
 
-const bgImages = [l1, l2, l3, l4];
-const darkBgImages = [d1, d2, d3, d4];
+const bgImages = ['/assets/1.png', '/assets/2.png', '/assets/3.png', '/assets/4.png'];
+const darkBgImages = ['/assets/d1.png', '/assets/d2.png', '/assets/d3.png', '/assets/d4.png'];
 
 export const getBg = (index) => {
   const { isDark } = useTheme();
