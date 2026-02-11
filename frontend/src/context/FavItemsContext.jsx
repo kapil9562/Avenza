@@ -47,27 +47,41 @@ export const FavItemsProvider = ({ children }) => {
 
     const toggleFavItems = async (pid) => {
         if (!user?.uid) return;
-        try {
-            const res = await toggleFav({ UserId: user?.uid, ProductId: pid });
 
-            setFavorites((prev) => {
-                if (!Array.isArray(prev)) return [];
+        const exists = favorites.some((f) => f.productId === pid);
 
-                const exists = prev.some((f) => f.productId === pid);
+        setFavorites((prev) => {
+            if (exists) {
+                return prev.filter((f) => f.productId !== pid);
+            }
+            return [...prev, { productId: pid }];
+        });
 
-                if (exists) {
-                    return prev.filter((f) => f.productId !== pid);
+        if (exists) {
+            setItems((prev) =>
+                prev.filter((item) => item.product?.productId !== pid)
+            );
+        } else {
+            try {
+                const res = await getProducts({ productId: pid });
+                const product = res.data?.products?.[0];
+                if (product) {
+                    setItems((prev) => [...prev, { product }]);
                 }
+            } catch { }
+        }
 
-                return [...prev, { productId: pid }];
-            });
-
-            fetchFavorites();
+        try {
+            // 2️⃣ Server sync
+            const res = await toggleFav({ UserId: user.uid, ProductId: pid });
             return res?.data?.res;
         } catch (err) {
-            throw err?.response?.data?.res || "Something went wrong !"
+            //  rollback on error
+            fetchFavorites();
+            throw err?.response?.data?.res || "Something went wrong!";
         }
     };
+
 
     const contextValue = useMemo(
         () => ({

@@ -29,7 +29,7 @@ function ProductDetails() {
         const fetchProductById = async () => {
             try {
                 setLoading(true);
-                const res = await getProducts({ _id:productId });
+                const res = await getProducts({ productId });
                 const data = res.data.products[0];
                 setProduct(data);
                 setCurrentImg(data.images?.[0] || null);

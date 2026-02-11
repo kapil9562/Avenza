@@ -5,7 +5,7 @@ const toggleFav = async (req, res) => {
 
     try {
         const uid = UserId;
-        const productId = Number(ProductId);
+        const productId = ProductId;
 
         const existing = await Favorite.findOne({ uid, productId });
 

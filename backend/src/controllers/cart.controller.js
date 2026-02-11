@@ -3,7 +3,6 @@ import Cart from "../models/cart.model.js";
 // Add to Cart
 const addToCart = async (req, res) => {
   const { uid, product_id, price, qty } = req.body;
-  console.log("pid ::", product_id)
 
   try {
     // Check if item already exists

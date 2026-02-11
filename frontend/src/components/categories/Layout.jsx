@@ -166,7 +166,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                         .map((_, idx) => <ProductSkeleton key={idx} />)
                     : products?.filter(p => p.productId !== pid).map((product, idx) => (
                         <div
-                            key={idx}
+                            key={product.productId}
                             className={`animate-fadeUp will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
                             onClick={() => {
                                 setActiveTab("");
@@ -177,8 +177,8 @@ const Layout = React.memo(function Layout({ category, pid }) {
                                 className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleAddToFav(product.productId);
-                                }}>{isFavorite(product.productId) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}</div>
+                                    handleAddToFav(product._id);
+                                }}>{isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}</div>
 
                             <ProductImage
                                 src={product.thumbnail}
@@ -260,10 +260,10 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
             )}
 
-            { alert && <div className={`absolute bottom-5 left-1/2 translate-x-[-50%] bg-red-100 text-red-600 flex justify-between items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2 z-999 transition-all ease-out animate-fadeUp duration-300 will-change-transform `}>
+            { alert && <div className={`absolute bottom-8 left-1/2 translate-x-[-50%] bg-red-100 text-red-600 flex justify-between items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2 z-999 transition-all ease-out animate-fadeUp duration-300 will-change-transform shadow-lg`}>
                 <div className='flex justify-center items-center flex-row gap-2'>
                     <GoAlertFill />
-                    <p className='leading-tight'>{alert}</p>
+                    <p className='leading-tight text-lg'>{alert}</p>
                 </div>
             </div>}
         </>

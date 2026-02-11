@@ -40,7 +40,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const productPromises = dbCart.map(async (item) => {
-        const res = await getProducts({ productId: item.productId });
+        const res = await getProducts({ productId: item._id });
         const product = res.data?.products?.[0];
 
         if (!product) return null;
@@ -66,6 +66,7 @@ export const CartProvider = ({ children }) => {
       if (!user?.uid) return;
 
       const { product_id, qty = 1 } = product;
+      console.log("pid :", product_id)
 
       try {
         const res = await getProducts({ productId: product_id });
