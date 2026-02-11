@@ -1,11 +1,8 @@
 // api.js
 import axios from "axios";
 
-// export const api = axios.create({
-//   baseURL: import.meta.env.VITE_BACKEND_BASE_URI
-// });
 export const api = axios.create({
-  baseURL: 'http://localhost:8000/api'
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URI
 });
 
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
