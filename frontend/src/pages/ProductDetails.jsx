@@ -8,7 +8,8 @@ import { getProducts } from "../api/api.js";
 import AddToCartBtn from "../utils/AddToCartBtn.jsx";
 
 function ProductDetails() {
-    const { _id } = useParams();
+    const { productId, _id } = useParams();
+    useEffect(() => {console.log(productId)},[productId])
 
     const [product, setProduct] = useState(null);
     const [currentImg, setCurrentImg] = useState(null);
@@ -28,7 +29,7 @@ function ProductDetails() {
         const fetchProductById = async () => {
             try {
                 setLoading(true);
-                const res = await getProducts({ _id });
+                const res = await getProducts({ _id:productId });
                 const data = res.data.products[0];
                 setProduct(data);
                 setCurrentImg(data.images?.[0] || null);
@@ -42,7 +43,7 @@ function ProductDetails() {
         };
 
         fetchProductById();
-    }, [_id]);
+    }, [productId]);
 
     useEffect(() => {
         setActiveTab("")
