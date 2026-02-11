@@ -32,7 +32,7 @@ function App() {
   return (
     <div
       ref={scrollRef}
-      className={`h-screen overflow-y-scroll custom-scroll`}
+      className={`h-dvh overflow-y-scroll custom-scroll`}
       style={{
         scrollbarColor: isDark
           ? "#c562b0d7 #0F172A"
@@ -44,7 +44,7 @@ function App() {
       <main className="grow">
         <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
       </main>
-      <Footer activeTab={activeTab} setActiveTab={setActiveTab} scrollRef={scrollRef}/>
+      <Footer setActiveTab={setActiveTab} scrollRef={scrollRef}/>
       <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
       <Snowfall
         snowflakeCount={6}

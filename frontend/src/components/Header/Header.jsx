@@ -150,9 +150,9 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
 
   return (
-    <div className={`w-full border-b-2 sticky top-0 z-50 min-h-20 flex flex-col will-change-transform ${isDark ? "bg-[#0F172A] border-b-gray-800" : "bg-[#ffffff]"} border-b-gray-200`}>
+    <div className={`w-full border-b-2 sticky top-0 z-50 min-h-20 flex flex-col will-change-transform ${isDark ? "bg-[#0F172A] border-b-gray-800" : "bg-[#ffffff]"} border-b-gray-200 px-2`}>
 
-      <div className='flex flex-row justify-between w-full min-h-15 sm:min-h-20 gap-4 px-1 sm:px-5 lg:px-10'>
+      <div className='flex flex-row justify-between w-full min-h-15 sm:min-h-20 gap-4 sm:px-5 lg:px-10'>
 
         <div className='flex flex-row justify-center items-center gap-3'>
           {/* categories taggle btn */}
@@ -320,7 +320,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
       </div>
 
-      <div className='relative w-full flex flex-row justify-center items-center sm:hidden mb-1' ref={mobileSearchRef}>
+      <div className='relative w-full flex flex-row justify-center items-center sm:hidden mb-2' ref={mobileSearchRef}>
         <input
           value={input}
           onChange={(e) => {

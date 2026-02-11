@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { FaFacebook, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 
-function Footer({ activeTab, setActiveTab, scrollRef }) {
+function Footer({setActiveTab, scrollRef }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { isDark } = useTheme();
@@ -12,7 +12,7 @@ function Footer({ activeTab, setActiveTab, scrollRef }) {
   return (
     <section
       className={` ${isDark ? "bg-[#020617] text-gray-300" : "bg-gray-50 text-gray-700"
-        } pb-10`}
+        } pb-20`}
     >
       <div>
         <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:col-span-3 lg:grid-cols-6 gap-y-16 gap-x-12">
