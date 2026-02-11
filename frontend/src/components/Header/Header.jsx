@@ -243,7 +243,10 @@ function Header({ activeTab, setActiveTab, setShow }) {
               {isDark ? (<span className='absolute left-1 text-gray-500 font-semibold'>Light</span>) : (<span className='absolute right-1'>Dark</span>)}
             </button>
           </div>
-          <div className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`} onClick={() => navigate('/whitelist')}>
+          <div className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`} onClick={() => {
+            setActiveTab('');
+            navigate('/whitelist');
+          }}>
             <IoHeartSharp className='text-3xl text-red-600' />
             <span className="hidden sm:flex font-['Sour_Gummy'] font-medium">Favorite</span>
           </div>
