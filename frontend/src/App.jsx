@@ -11,7 +11,6 @@ function App() {
   const { pathname } = useLocation();
   const scrollRef = useRef(null);
   const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(true)
 
   const [activeTab, setActiveTab] = useState("HOME");
 
@@ -29,12 +28,6 @@ function App() {
     return img;
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, [])
-
 
   return (
     <div
@@ -47,30 +40,26 @@ function App() {
         scrollbarWidth: "thin",
       }}
     >
-      {!loading &&
-        <>
-          <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
-          <main className="grow">
-            <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
-          </main>
-          <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
-          <Snowfall
-            snowflakeCount={6}
-            images={[flowerImage]}
-            speed={[0.5, 1.5]}
-            wind={[-0.5, 0.5]}
-            radius={[10, 15]}
-            className="fixed inset-0 pointer-events-none"
-            style={{
-              zIndex: 9999,
+      <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
+      <main className="grow">
+        <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
+      </main>
+      <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
+      <Snowfall
+        snowflakeCount={6}
+        images={[flowerImage]}
+        speed={[0.5, 1.5]}
+        wind={[-0.5, 0.5]}
+        radius={[10, 15]}
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          zIndex: 9999,
 
-              maskImage: "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)"
-            }}
-          />
-        </>
-      }
+          maskImage: "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)"
+        }}
+      />
 
     </div>
   );
