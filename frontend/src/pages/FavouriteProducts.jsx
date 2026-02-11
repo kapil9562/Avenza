@@ -38,8 +38,8 @@ export default function FavouriteProducts() {
     if (loading) return <ProductSkeleton/>
 
     return (
-        <div className="min-h-screen bg-[#0F172A] pt-5 text-white">
-            <h1 className="text-3xl font-semibold text-center">
+        <div className={`min-h-screen pt-5 text-white ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"}`}>
+            <h1 className={`text-3xl font-semibold text-center ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                 Favourite Products <span className="text-pink-500">❤️</span>
             </h1>
 
