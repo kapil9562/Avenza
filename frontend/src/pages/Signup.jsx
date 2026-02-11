@@ -34,7 +34,7 @@ export default function Signup() {
       const data = res?.data?.user;
       console.log(data)
       if (data) {
-        login(data);
+        await login(data);
         navigate('/')
       }
     } catch (error) {
@@ -60,7 +60,7 @@ export default function Signup() {
         const userData = { uid, email, name, photo:avatar, token }
 
         if (userData) {
-          login(userData);
+          await login(userData);
           navigate('/');
         }
       }

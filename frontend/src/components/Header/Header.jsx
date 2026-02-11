@@ -35,7 +35,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [alert, setAlert] = useState(false);
   const [searchType, setSearchType] = useState("");
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const { totalItems } = useCart();
   const [openIndex, setOpenIndex] = useState(null);
   const [isActive, setIsActive] = useState(false);
@@ -267,9 +267,9 @@ function Header({ activeTab, setActiveTab, setShow }) {
             <div className="relative group min-h-full flex cursor-pointer"
               onClick={() => handleDropDown()}>
               <div className='group-hover:shadow-[inset_0_-2px_0_0_#ff1774] min-h-full flex justify-center items-center p-2'>
-                {user?.photo ? (
+                {(user?.photo) ? (
                   <img
-                    src={normalizeGooglePhoto(user.photo)}
+                    src={normalizeGooglePhoto(user?.photo)}
                     alt="pfp"
                     referrerPolicy="no-referrer"
                     loading="lazy"
