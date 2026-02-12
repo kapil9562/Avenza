@@ -36,21 +36,21 @@ function PageNotFound({ type = "404" }) {
           {/* 404 Title Row */}
           <div className="flex flex-row items-center justify-center lg:justify-start gap-3 
                       text-4xl sm:text-5xl xl:text-8xl 
-                      font-bold bg-gradient-to-r from-purple-300 to-white bg-clip-text text-transparent">
+                      font-bold bg-linear-to-r from-purple-300 to-white bg-clip-text text-transparent">
 
             <span>404</span>
 
-            {/* Gradient Icon */}
+            {/* linear Icon */}
             <svg width="0" height="0">
-              <linearGradient id="iconGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearlinear id="iconlinear" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#FFD54F" />
                 <stop offset="100%" stopColor="#FF6A00" />
-              </linearGradient>
+              </linearlinear>
             </svg>
 
             <GoAlertFill
               className="text-4xl sm:text-5xl xl:text-8xl"
-              style={{ fill: "url(#iconGradient)" }}
+              style={{ fill: "url(#iconlinear)" }}
             />
 
             <span className="text-xl sm:text-2xl  xl:text-4xl font-medium text-white whitespace-normal font-[Playfair_Display]">
@@ -69,7 +69,7 @@ function PageNotFound({ type = "404" }) {
           {isNetworkError ? (
             <button
               className="mt-6 px-6 sm:px-8 py-2 sm:py-3 rounded-full text-white font-medium 
-                     bg-gradient-to-r from-[#ff8a7a] to-[#ff5e8a]
+                     bg-linear-to-r from-[#ff8a7a] to-[#ff5e8a]
                      transition-all duration-300 text-base sm:text-lg
                      active:scale-95"
               onClick={handleRetry}
@@ -79,7 +79,7 @@ function PageNotFound({ type = "404" }) {
           ) : (
             <button
               className="mt-6 px-6 sm:px-8 py-2 sm:py-3 rounded-full text-white font-medium 
-                     bg-gradient-to-r from-[#ff8a7a] to-[#ff5e8a]
+                     bg-linear-to-r from-[#ff8a7a] to-[#ff5e8a]
                      transition-all duration-300 text-base sm:text-lg
                      active:scale-95"
               onClick={handleGoBack}

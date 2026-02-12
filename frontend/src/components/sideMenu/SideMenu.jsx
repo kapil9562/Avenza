@@ -83,7 +83,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
     }
 
     return (
-        <div className={`w-full h-screen absolute top-0 left-0 z-99 ${show ? `translate-x-0 ${isDark ? "bg-[#00000080]" : "bg-[#00000050]"}` : "-translate-x-full transition-transform duration-300 bg-transparent overflow-hidden"} cursor-pointer`}>
+        <div className={`w-full h-screen absolute top-0 left-0 z-99 ${show ? `translate-x-0 ${isDark ? "bg-[#00000080]" : "bg-[#00000050]"}` : "-translate-x-full transition-transform duration-500 bg-transparent overflow-hidden"} cursor-pointer`}>
             <div className={` ${show ? "block translate-x-0" : " -translate-x-full"}  top-0 z-99 w-70 transition-all duration-300 overflow-y-auto h-screen no-scrollbar will-change-scroll cursor-default ${isDark ? "sideMenuDarkBg" : "sideMenuBg"} pb-15`} ref={backdropRef}>
                 <div className={`flex flex-row pt-3 pl-1 items-center gap-3 sticky top-0 z-50 pb-2 border-b-2 justify-between px-4 ${isDark ? "border-gray-800 sideMenuDarkBg" : "border-gray-200 sideMenuBg"}`}>
                     {/* LOGO */}
@@ -112,17 +112,21 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                                         key={idx}
                                         className="flex flex-col"
                                     >
-                                        <div className={`flex flex-row px-4 py-2 w-full items-center gap-4 cursor-pointer ${isParentActive && `${isDark ? "bg-[#0a193c]" : "bg-[#dadada90]"} `} relative`} onClick={() => currentIdx === idx ? setCurrentIdx(null) : setCurrentIdx(idx)}>
+                                        <div className={`flex flex-row px-4 py-2 w-full items-center gap-4 ${isParentActive && `${isDark ? "bg-[#0a193c]" : "bg-[#dadada90]"} cursor-pointer`} relative`} onClick={() => currentIdx === idx ? setCurrentIdx(null) : setCurrentIdx(idx)}>
                                             <Icon size={24} style={{ color }} />
                                             <span className={`font-semibold flex justify-center items-center`} style={{ color }}>
                                                 {item.parentCategory}
                                             </span>
                                             <IoIosArrowUp className={`absolute right-5 text-gray-700 ${currentIdx === idx && "rotate-180 text-orange-500"} duration-300`} />
                                         </div>
-                                        {<div className={`flex flex-col capitalize ${currentIdx === idx ? "max-h-500" : "max-h-0"} overflow-hidden transition-[max-height] duration-300 will-change-transform ease-in-out`}>
+                                        {<div className={`flex flex-col capitalize ${currentIdx === idx ? "max-h-500" : "max-h-0"} overflow-hidden transition-[max-height] duration-500 will-change-transform ease-in-out`}>
                                             {item.categories.map((sub, i) => (
-                                                <div className='font-semibold text-gray-700 cursor-pointer w-full pl-20 hover:text-orange-500' key={i} onClick={() => handleTabClick(sub)}>
-                                                    <li className={`${isDark ? "text-gray-300" : "text-gray-700"} ${activeTab === sub && "text-orange-500"}`}>{sub}</li>
+                                                <div className='font-semibold text-gray-700 w-full pl-20 hover:text-orange-500' key={i}>
+                                                    <li className={`${activeTab === sub ? "text-orange-500" : isDark ? "text-gray-300" : "text-gray-700"} hover:text-orange-500 w-fit cursor-pointer`}
+                                                        onClick={() => handleTabClick(sub)}
+                                                    >
+                                                        {sub}
+                                                    </li>
                                                 </div>
                                             ))}
                                         </div>}

@@ -62,13 +62,6 @@ body {
 }
 
 .darkBgImg {
-  background-image: url('/assets/darkWebBg2.png');
-  background-size: 100% auto;
-  background-repeat: repeat-y;
-  background-position: top center;
-}
-
-.darkBgImg2 {
   background-image: url('/assets/darkWebBg.png');
   background-size: 100% auto;
   background-repeat: repeat-y;

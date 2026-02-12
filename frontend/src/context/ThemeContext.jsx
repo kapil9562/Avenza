@@ -15,6 +15,17 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem("isDark", isDark);
   }, [isDark]);
 
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("bg-[#0F172A]");
+      document.body.classList.remove("bg-white");
+    } else {
+      document.body.classList.add("bg-white");
+      document.body.classList.remove("bg-[#0F172A]");
+    }
+  }, [isDark]);
+
+
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       {children}
