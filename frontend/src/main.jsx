@@ -18,6 +18,7 @@ import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import { FavItemsProvider } from './context/FavItemsContext.jsx';
 import FavouriteProducts from './pages/FavouriteProducts.jsx';
 import PageNotFound from './pages/PageNotFound.jsx';
+import About from './pages/About.jsx';
 
 
 const GoogleAuthWrappper = () => {
@@ -55,6 +56,7 @@ createRoot(document.getElementById('root')).render(
                 </ProtectedRoute>
               } />
               <Route path="/whitelist" element={<FavouriteProducts />} />
+              <Route path="/about" element={<About />} />
               <Route path="/search" element={<SearchResults />} />
             </Route>
 
