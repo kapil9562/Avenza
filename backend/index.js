@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000
 
 app.use(cors());
 app.get('/', (req, res) => {
-  res.send("hello from auth server")
+  res.send("Hello from Avenza server 👋")
 })
 
 app.listen(PORT, () => {
@@ -27,6 +27,10 @@ app.use('/api', authRouter)
 app.use('/api', productRouter)
 app.use('/api', cartRouter)
 app.use('/api', FavItemsRouter)
+
+app.get("/ping", (req, res) => {
+  res.send("Server is awake");
+});
 
 connectDB()
 .then(() => {
