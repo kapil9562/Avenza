@@ -1,7 +1,8 @@
+import mongoose from "mongoose";
 import Product from "../models/products.model.js";
 
 const getProducts = async (req, res) => {
-    let { skip = 0, limit = 30, category, search, productId } = req.query;
+    let { skip = 0, limit = 30, category, search, productId, productIds } = req.query;
 
     skip = parseInt(skip);
     limit = parseInt(limit);
@@ -14,8 +15,17 @@ const getProducts = async (req, res) => {
             filter.category = category;
         }
 
-        if (productId) {
-            filter._id = productId;
+        if (productIds) {
+            const idsArray = productIds
+                .split(",")
+                .filter(id => mongoose.Types.ObjectId.isValid(id));
+
+            filter._id = { $in: idsArray };
+        }
+        else if (productId) {
+            if (mongoose.Types.ObjectId.isValid(productId)) {
+                filter._id = productId;
+            }
         }
 
         if (search) {

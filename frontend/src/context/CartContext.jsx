@@ -172,10 +172,9 @@ export const CartProvider = ({ children }) => {
       subtotal,
       loading,
       addToCart,
-      updateCartQty,
-      fetchCart,
+      updateCartQty
     }),
-    [items, totalItems, subtotal, loading, addToCart, updateCartQty, fetchCart]
+    [items, totalItems, subtotal, loading, addToCart, updateCartQty]
   );
 
   return (

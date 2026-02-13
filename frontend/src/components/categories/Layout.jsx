@@ -10,6 +10,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { useFavItem } from '../../context/FavItemsContext.jsx';
 import { FaHeart } from "react-icons/fa6";
 import { GoAlertFill } from 'react-icons/go';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 const Layout = React.memo(function Layout({ category, pid }) {
 
@@ -36,15 +37,17 @@ const Layout = React.memo(function Layout({ category, pid }) {
     const { toggleFavItems, favorites } = useFavItem();
     const [alert, setAlert] = useState("");
 
-     useEffect(() => {
-            if (!alert) return;
-    
-            const timer = setTimeout(() => {
-                setAlert('');
-            }, 2500);
-    
-            return () => clearTimeout(timer);
-        }, [alert]);
+    const { isAuthenticated, loading: authloading } = useAuth();
+
+    useEffect(() => {
+        if (!alert) return;
+
+        const timer = setTimeout(() => {
+            setAlert('');
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [alert]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -143,16 +146,21 @@ const Layout = React.memo(function Layout({ category, pid }) {
     }
 
     const handleAddToFav = async (ProductId) => {
+
+        if (!authloading && !isAuthenticated) {
+            setAlert('Please login first !');
+            return;
+        }
+
         try {
-            const res = await toggleFavItems(ProductId);
-            console.log(res)
+            await toggleFavItems(ProductId);
         } catch (error) {
             setAlert(error)
         }
     }
 
-    const isFavorite = (productId) => {
-        return favorites?.some((item) => item.productId === productId);
+    const isFavorite = (_id) => {
+        return favorites?.some((item) => item.productId === _id);
     };
 
 
@@ -178,7 +186,9 @@ const Layout = React.memo(function Layout({ category, pid }) {
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleAddToFav(product._id);
-                                }}>{isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}</div>
+                                }}>
+                                {isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}
+                            </div>
 
                             <ProductImage
                                 src={product.thumbnail}
@@ -260,12 +270,16 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
             )}
 
-            { alert && <div className={`absolute bottom-8 left-1/2 translate-x-[-50%] bg-red-100 text-red-600 flex justify-between items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2 z-999 transition-all ease-out animate-fadeUp duration-300 will-change-transform shadow-lg`}>
-                <div className='flex justify-center items-center flex-row gap-2'>
-                    <GoAlertFill />
-                    <p className='leading-tight text-lg'>{alert}</p>
+            {alert &&
+                <div className='sticky inset-0 bottom-8 flex justify-center items-center '>
+                    <div className={`bg-red-100 text-red-600 flex justify-center items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2 z-999 transition-all ease-out animate-fadeUp duration-300 will-change-transform shadow-lg w-fit`}>
+                        <div className='w-fit flex justify-center items-center flex-row gap-2'>
+                            <GoAlertFill />
+                            <p className='tracking-tight text-lg font-semibold nunitoFont'>{alert}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>}
+            }
         </>
     );
 })

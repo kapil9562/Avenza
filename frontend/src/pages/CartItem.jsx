@@ -16,7 +16,7 @@ const CartItem = React.memo(function CartItem({ item }) {
 
     const updateCart = async (product_id, qtyChange) => {
         try {
-            const res = await updateCartQty(
+            await updateCartQty(
                 product_id,
                 qtyChange
             );

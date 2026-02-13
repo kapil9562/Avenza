@@ -12,7 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Grandstander&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+    rel="stylesheet">
 
   <link rel="preload" as="image" href="/assets/banner1.png" />
   <link rel="preload" as="image" href="/assets/banner2.png" />
@@ -29,6 +30,14 @@
   <link rel="preload" as="image" href="/assets/SignupBg.png" />
   <link rel="preload" as="image" href="/assets/SignupDarkBg.png" />
   <link rel="preload" as="image" href="/assets/webBg.png" />
+  <link rel="preload" as="image" href="/assets/1.png" />
+  <link rel="preload" as="image" href="/assets/2.png" />
+  <link rel="preload" as="image" href="/assets/3.png" />
+  <link rel="preload" as="image" href="/assets/4.png" />
+  <link rel="preload" as="image" href="/assets/d1.png" />
+  <link rel="preload" as="image" href="/assets/d2.png" />
+  <link rel="preload" as="image" href="/assets/d3.png" />
+  <link rel="preload" as="image" href="/assets/d4.png" />
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,6 +47,40 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const preloaded = [
+        "/assets/banner1.png",
+        "/assets/banner2.png",
+        "/assets/banner3.jpg",
+        "/assets/cartBg.png",
+        "/assets/cartDarkBg.png",
+        "/assets/darkWebBg.png",
+        "/assets/error.png",
+        "/assets/flower.png",
+        "/assets/ItemNotFound.png",
+        "/assets/logo.png",
+        "/assets/sideMenuBg.png",
+        "/assets/sideMenuDarkBg.png",
+        "/assets/SignupBg.png",
+        "/assets/SignupDarkBg.png",
+        "/assets/webBg.png",
+        "/assets/1.png",
+        "/assets/2.png",
+        "/assets/3.png",
+        "/assets/4.png",
+        "/assets/d1.png",
+        "/assets/d2.png",
+        "/assets/d3.png",
+        "/assets/d4.png"
+      ];
+
+      preloaded.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    });
+  </script>
 </body>
 
 </html>

@@ -154,7 +154,7 @@ function Footer({ setActiveTab, scrollRef }) {
         />
 
         <p
-          className={`font-semibold nunitoFont text-lg text-center ${isDark ? "text-gray-400" : "text-gray-600"
+          className={`font-semibold nunitoFont text-sm px-4 sm:text-lg text-center ${isDark ? "text-gray-400" : "text-gray-600"
             }`}
         >
           © {new Date().getFullYear()} Avenza. Made with ❤️ and ☕ in India.

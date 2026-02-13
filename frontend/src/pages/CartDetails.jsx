@@ -5,6 +5,7 @@ import { useCart } from "../context/CartContext";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import Loader from "../utils/Loader"
 import { useTheme } from "../context/ThemeContext";
+import { TiShoppingCart } from "react-icons/ti";
 
 export default function CartDetails() {
 
@@ -24,11 +25,11 @@ export default function CartDetails() {
     return (
         <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"} min-h-screen pb-15 relative`}>
             {loading && <Loader />}
-            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont `}>
+            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont justify-center items-center`}>
 
                 {/* Cart Items */}
                 <div className="space-y-1 md:space-y-2 md:w-3/4 rounded-2xl">
-                    <h1 className="sm:text-2xl text-lg">Your Cart</h1>
+                    <h1 className="sm:text-3xl text-lg flex flex-row gap-2 justify-center items-center">Your Cart <TiShoppingCart className="text-orange-500"/></h1>
 
                     {items.length === 0 ? (
                         <div className="text-gray-500 absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">Your cart is empty

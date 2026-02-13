@@ -16,8 +16,6 @@ export const getBg = (index) => {
 export default function ProductImage({ src, alt, className, idx }) {
   const [loaded, setLoaded] = useState(false);
 
-  const {isDark} = useTheme();
-
   return (
     <div className="relative w-full h-50 justify-center items-center flex">
 

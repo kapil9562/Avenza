@@ -8,8 +8,7 @@ const favoriteSchema = new mongoose.Schema(
       index: true
     },
     productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      type: String,
       required: true
     }
   },

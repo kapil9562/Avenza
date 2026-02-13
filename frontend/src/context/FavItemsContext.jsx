@@ -3,6 +3,7 @@ import { getFavItems, getProducts, toggleFav } from "../api/api";
 import { useAuth } from "./AuthContext";
 
 const FavItemsContext = createContext();
+export const useFavItem = () => useContext(FavItemsContext);
 
 export const FavItemsProvider = ({ children }) => {
     const { user, loading: authLoading } = useAuth();
@@ -22,14 +23,19 @@ export const FavItemsProvider = ({ children }) => {
 
                 setFavorites(favList);
 
-                const productPromises = favList.map(async (item) => {
-                    const res = await getProducts({ productId: item.productId });
-                    const product = res.data?.products?.[0];
-                    return product ? { product } : null;
+                const ids = favList.map(f => f.productId);
+
+                if (ids.length === 0) {
+                    setItems([]);
+                    return;
+                }
+
+                const res = await getProducts({
+                    productIds: ids.join(",")
                 });
 
-                const results = await Promise.all(productPromises);
-                setItems(results.filter(Boolean));
+                const products = res.data?.products || [];
+                setItems(products);
 
             } catch (err) {
                 console.error("Fetch favorites failed", err);
@@ -40,14 +46,6 @@ export const FavItemsProvider = ({ children }) => {
         [user?.uid]
     );
 
-
-    useEffect(() => {
-        if (!authLoading && user?.uid) {
-            fetchFavorites();
-        }
-    }, [authLoading, user?.uid]);
-
-
     const toggleFavItems = useCallback(
         async (pid) => {
             if (!user?.uid) return;
@@ -55,39 +53,65 @@ export const FavItemsProvider = ({ children }) => {
             const exists = favorites.some((f) => f.productId === pid);
 
             setFavorites((prev) => {
-                if (exists) {
-                    return prev.filter((f) => f.productId !== pid);
-                }
+                if (exists) return prev.filter((f) => f.productId !== pid);
                 return [...prev, { productId: pid }];
             });
 
             if (exists) {
-                setItems((prev) =>
-                    prev.filter((item) => item.product?.productId !== pid)
-                );
+                setItems((prev) => prev.filter((item) => item?._id !== pid));
             } else {
                 try {
                     const res = await getProducts({ productId: pid });
                     const product = res.data?.products?.[0];
-                    if (product) {
-                        setItems((prev) => [...prev, { product }]);
-                    }
-                } catch { }
+                    if (product) setItems((prev) => [...prev, product]);
+                } catch (err) {
+                    console.error("Failed to fetch product", err);
+                }
             }
 
             try {
-                // 2️⃣ Server sync
                 const res = await toggleFav({ UserId: user.uid, ProductId: pid });
                 return res?.data?.res;
             } catch (err) {
-                //  rollback on error
                 fetchFavorites();
                 throw err?.response?.data?.res || "Something went wrong!";
             }
         },
-        [user?.uid, fetchFavorites]
+        [user?.uid, favorites, fetchFavorites]
     );
 
+    const removeFavItem = useCallback(
+        async (pid) => {
+            if (!user?.uid) return;
+
+            
+            setItems(prev =>
+                prev.filter(item => item._id !== pid)
+            );
+            
+            setFavorites(prev =>
+                prev.filter(f => f.productId !== pid)
+            );
+
+            try {
+                await toggleFav({ UserId: user.uid, ProductId: pid });
+            } catch (err) {
+                fetchFavorites();
+            }
+        },
+        [user?.uid]
+    );
+
+    useEffect(() => {
+        if (authLoading) return;
+
+        if (user?.uid) {
+            fetchFavorites();
+        } else {
+            setItems([]);
+            setFavorites([]);
+        }
+    }, [authLoading, user?.uid, fetchFavorites]);
 
     const contextValue = useMemo(
         () => ({
@@ -95,9 +119,10 @@ export const FavItemsProvider = ({ children }) => {
             loading,
             items,
             toggleFavItems,
-            fetchFavorites
+            fetchFavorites,
+            removeFavItem
         }),
-        [items, loading, favorites]
+        [items, loading, favorites, toggleFavItems, fetchFavorites, removeFavItem]
     );
 
     return (
@@ -106,5 +131,3 @@ export const FavItemsProvider = ({ children }) => {
         </FavItemsContext.Provider>
     );
 };
-
-export const useFavItem = () => useContext(FavItemsContext);
