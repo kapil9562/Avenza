@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaShippingFast, FaLock, FaHeadset } from "react-icons/fa";
 import { useTheme } from "../context/ThemeContext";
 import { useOutletContext } from "react-router-dom";
@@ -24,17 +24,22 @@ const About = () => {
   const textMain = isDark ? "text-gray-200" : "text-gray-700";
   const textSoft = isDark ? "text-gray-400" : "text-gray-600";
 
+  const { setActiveTab } = useOutletContext();
+
+  useEffect(() => {
+    setActiveTab("");
+  }, []);
+
   return (
     <div className={`w-full min-h-screen ${bgMain} ${textMain}`}>
       {/* Hero */}
       <section
         ref={hero.ref}
         className={`py-24 px-6 text-center bg-white/6 transition-all duration-900 ${ease}
-        ${
-          hero.show
+        ${hero.show
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-10"
-        }`}
+          }`}
       >
         <h1 className="text-4xl md:text-5xl font-bold mb-6">About Us</h1>
         <p className={`max-w-3xl mx-auto text-lg ${textSoft}`}>
@@ -52,20 +57,18 @@ const About = () => {
           src="/assets/story.png"
           alt="story"
           className={`rounded-2xl shadow-lg w-full object-cover transition-all duration-900 ${ease}
-          ${
-            story.show
+          ${story.show
               ? "opacity-100 translate-x-0"
               : "opacity-0 -translate-x-16"
-          }`}
+            }`}
         />
 
         <div
           className={`transition-all duration-900 ${ease}
-          ${
-            story.show
+          ${story.show
               ? "opacity-100 translate-x-0"
               : "opacity-0 translate-x-16"
-          }`}
+            }`}
         >
           <h2 className="text-3xl font-bold mb-4">Our Story</h2>
           <p className="mb-4">
@@ -178,10 +181,9 @@ const GlassCard = ({ icon, title, desc, isDark, show, index }) => (
       p-8 rounded-2xl text-center backdrop-blur-md border cursor-pointer
       transition-all duration-900 ease-[cubic-bezier(0.22,1,0.36,1)]
       hover:-translate-y-2 hover:scale-[1.03]
-      ${
-        isDark
-          ? "bg-white/5 border-white/10 shadow-lg hover:shadow-purple-500/20"
-          : "bg-white/40 border-purple-300 shadow-lg hover:shadow-pink-500/20"
+      ${isDark
+        ? "bg-white/5 border-white/10 shadow-lg hover:shadow-purple-500/20"
+        : "bg-white/40 border-purple-300 shadow-lg hover:shadow-pink-500/20"
       }
       ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}
     `}
@@ -213,10 +215,9 @@ const TeamMember = ({ name, role, isDark, show, index }) => (
       p-8 rounded-2xl text-center backdrop-blur-md border cursor-pointer
       transition-all duration-900 ease-[cubic-bezier(0.22,1,0.36,1)]
       hover:-translate-y-2 hover:scale-[1.03]
-      ${
-        isDark
-          ? "bg-white/5 border-white/10 shadow-lg hover:shadow-purple-500/20"
-          : "bg-white/40 border-purple-300 shadow-lg hover:shadow-pink-500/20"
+      ${isDark
+        ? "bg-white/5 border-white/10 shadow-lg hover:shadow-purple-500/20"
+        : "bg-white/40 border-purple-300 shadow-lg hover:shadow-pink-500/20"
       }
       ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}
     `}
