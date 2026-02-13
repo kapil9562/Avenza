@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { addCart, getCart, getProducts, updateQty } from "../api/api";
+import { addCart, clearCart, getCart, getProducts, updateQty } from "../api/api";
 import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
@@ -32,6 +32,7 @@ export const CartProvider = ({ children }) => {
 
     setLoading(true);
     try {
+      // 1. Get cart items
       const { data: dbCart } = await getCart({ uid: user.uid });
 
       if (!dbCart?.length) {
@@ -39,21 +40,23 @@ export const CartProvider = ({ children }) => {
         return;
       }
 
-      const productPromises = dbCart.map(async (item) => {
-        const res = await getProducts({ productId: item._id });
-        const product = res.data?.products?.[0];
+      const productIds = dbCart.map(item => item.productId);
 
-        if (!product) return null;
+      const res = await getProducts({ productIds });
+      const products = res.data?.products || [];
+
+      const mergedItems = products.map(product => {
+        const cartItem = dbCart.find(
+          item => item.productId === product._id
+        );
 
         return {
           ...product,
-          id: product.productId,
-          qty: item.qty,
+          qty: cartItem?.qty || 1,
         };
       });
 
-      const results = await Promise.all(productPromises);
-      setItems(results.filter(Boolean));
+      setItems(mergedItems);
     } catch (e) {
       console.error("fetchCart error", e);
     } finally {
@@ -66,7 +69,6 @@ export const CartProvider = ({ children }) => {
       if (!user?.uid) return;
 
       const { product_id, qty = 1 } = product;
-      console.log("pid :", product_id)
 
       try {
         const res = await getProducts({ productId: product_id });
@@ -76,16 +78,16 @@ export const CartProvider = ({ children }) => {
 
         const addCartRes = await addCart({
           uid: user.uid,
-          product_id: fullProduct.productId,
+          product_id: fullProduct._id,
           price: fullProduct.price,
           qty,
         });
 
         setItems((prev) => {
-          const exists = prev.find((i) => i.productId === fullProduct.productId);
+          const exists = prev.find((i) => i._id === fullProduct._id);
           if (exists) {
             return prev.map((i) =>
-              i.productId === fullProduct.productId
+              i._id === fullProduct._id
                 ? { ...i, qty: i.qty + qty }
                 : i
             );
@@ -114,7 +116,7 @@ export const CartProvider = ({ children }) => {
       setItems(prev =>
         prev
           .map(item => {
-            if (item.productId === product_id) {
+            if (item._id === product_id) {
               prevQty = item.qty;
               const nextQty = item.qty + qtyChange;
 
@@ -143,7 +145,7 @@ export const CartProvider = ({ children }) => {
       } catch (err) {
         setItems(prev =>
           prev.map(item =>
-            item.productId === product_id
+            item._id === product_id
               ? { ...item, qty: prevQty }
               : item
           )
@@ -153,6 +155,26 @@ export const CartProvider = ({ children }) => {
       }
     },
     [user?.uid]
+  );
+
+  const clearAll = useCallback(
+    async () => {
+
+      if (!user?.uid) return;
+
+      setItems([]);
+
+      try {
+        await clearCart({
+          uid: user?.uid,
+        });
+      } catch (err) {
+        fetchCart();
+        console.error(err);
+        return err;
+      }
+    },
+    [user?.uid, fetchCart]
   );
 
   useEffect(() => {
@@ -172,9 +194,10 @@ export const CartProvider = ({ children }) => {
       subtotal,
       loading,
       addToCart,
-      updateCartQty
+      updateCartQty,
+      clearAll
     }),
-    [items, totalItems, subtotal, loading, addToCart, updateCartQty]
+    [items, totalItems, subtotal, loading, addToCart, updateCartQty, clearAll]
   );
 
   return (

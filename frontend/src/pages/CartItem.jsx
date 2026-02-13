@@ -64,7 +64,7 @@ const CartItem = React.memo(function CartItem({ item }) {
                         <div className={`${isDark? "border-gray-700" : "border-gray-300"} border rounded-sm flex flex-row`}>
 
                             <button
-                                onClick={() => updateCart(item.productId, -1)}
+                                onClick={() => updateCart(item._id, -1)}
                                 className={`${isDark? "hover:bg-gray-800 active:bg-gray-700" : "hover:bg-gray-200 active:bg-gray-200"} md:px-2 md:py-1 px-1 cursor-pointer`}
                             >
                                 <FiMinus className="text-red-600"/>
@@ -77,7 +77,7 @@ const CartItem = React.memo(function CartItem({ item }) {
                             <div className={`${isDark? "bg-gray-700" : "bg-gray-300"}  min-h-full w-px`}></div>
 
                             <button
-                                onClick={() => updateCart(item.productId, 1)}
+                                onClick={() => updateCart(item._id, 1)}
                                 className={`${isDark? "hover:bg-gray-800 active:bg-gray-700" : "hover:bg-gray-200 active:bg-gray-200"} md:px-2 md:py-1 px-1 cursor-pointer`}
                             >
                                 <FiPlus className="text-green-600"/>
@@ -93,7 +93,7 @@ const CartItem = React.memo(function CartItem({ item }) {
                         </div>
 
                         <button
-                            onClick={() => updateCart(item.productId, -item.qty)}
+                            onClick={() => updateCart(item._id, -item.qty)}
                             className={`${isDark? "hover:bg-gray-800 active:bg-gray-700" : "hover:bg-gray-200 active:bg-gray-200"} ml-2 p-2 rounded-lg cursor-pointer`}
                         >
                             <ImBin size={20} className="text-red-600" />

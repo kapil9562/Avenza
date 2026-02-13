@@ -199,7 +199,6 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
                       setSearchResults(filteredData);
                       setShowDropdown(false);
-                      setActiveTab(null);
                     }}
                     className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-1 px-2 font-semibold flex flex-row gap-2 border-b-2 border-[#f7ddf4] cursor-pointer`}
                   >
@@ -245,14 +244,12 @@ function Header({ activeTab, setActiveTab, setShow }) {
           </div>
           <div className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`} onClick={() => {
             navigate('/whitelist');
-            setActiveTab('');
           }}>
             <IoHeartSharp className='text-3xl text-red-600' />
             <span className="hidden sm:flex font-['Sour_Gummy'] font-medium">Favorite</span>
           </div>
           <div onClick={() => {
             navigate('/carts');
-            setActiveTab('');
           }} className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`}>
             <div className='relative'>
               <PiShoppingCartFill className='text-3xl text-[#FF6F61]' />
@@ -348,7 +345,6 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
                     setSearchResults(filteredData);
                     setShowDropdown(false);
-                    setActiveTab(null);
                   }}
                   key={product.id}
                   className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-1 px-2 font-semibold flex flex-row gap-2 border-b-2 border-[#f7ddf4] cursor-pointer`}

@@ -6,13 +6,13 @@ const addToCart = async (req, res) => {
 
   try {
     // Check if item already exists
-    const existing = await Cart.findOne({ uid, productId:product_id });
+    const existing = await Cart.findOne({ uid, productId: product_id });
 
     if (existing) {
       existing.qty += qty;
       await existing.save();
     } else {
-      await Cart.create({ uid, productId:product_id, price, qty });
+      await Cart.create({ uid, productId: product_id, price, qty });
     }
 
     res.status(200).json({ success: true, message: "Item added to cart" });
@@ -40,7 +40,7 @@ const updateQty = async (req, res) => {
   const { uid, product_id, qtyChange } = req.body;
 
   try {
-    const item = await Cart.findOne({ uid, productId:product_id });
+    const item = await Cart.findOne({ uid, productId: product_id });
 
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
@@ -48,7 +48,6 @@ const updateQty = async (req, res) => {
 
     item.qty += qtyChange;
 
-    // Remove if qty becomes 0 or less
     if (item.qty <= 0) {
       await item.deleteOne();
       return res.status(200).json({ message: "Item removed from cart" });
@@ -62,4 +61,15 @@ const updateQty = async (req, res) => {
   }
 };
 
-export { addToCart, getCart, updateQty };
+const clearCart = async (req, res) => {
+  const { uid } = req.body;
+  try {
+    await Cart.deleteMany({ uid })
+    return res.status(200).json({ message: "Cart cleared successfully" });
+  } catch (err) {
+    console.error("error :: ", err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export { addToCart, getCart, updateQty, clearCart };

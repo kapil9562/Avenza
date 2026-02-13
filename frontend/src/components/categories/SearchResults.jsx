@@ -17,6 +17,10 @@ function SearchResults() {
     const { setActiveTab } = useOutletContext();
 
     useEffect(() => {
+        setActiveTab("");
+    }, []);
+
+    useEffect(() => {
         setTimeout(() => {
             setLoading(false)
         }, 1000);

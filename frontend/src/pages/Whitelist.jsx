@@ -3,20 +3,37 @@ import { useFavItem } from "../context/FavItemsContext";
 import { useTheme } from "../context/ThemeContext";
 import { ProductSkeleton } from "../utils";
 import FavItems from "./FavItems";
+import { useEffect } from "react";
 
 export default function Whitelist() {
-    const { items, loading } = useFavItem();
+    const { items, loading, clearAll } = useFavItem();
     const { isDark } = useTheme();
 
     const navigate = useNavigate();
 
     const { setActiveTab } = useOutletContext();
-    
+
+    useEffect(() => {
+        setActiveTab("");
+    }, []);
+
+
+    const clearFav = async () => {
+        try {
+            await clearAll();
+        } catch (error) {
+            console.log("whitelist error ::", error);
+        }
+    }
+
     return (
-        <div className={`min-h-dvh md:pt-4 pt-2 flex flex-col gap-4 text-white relative ${isDark ? "bg-gradient-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"}`}>
-            <h1 className={`text-3xl font-semibold text-center nunitoFont ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                Favourite Products <span className="text-pink-500">❤️</span>
-            </h1>
+        <div className={`min-h-dvh md:pt-4 pt-2 flex flex-col gap-2 font-bold nunitoFont text-white relative ${isDark ? "bg-gradient-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"}`}>
+            <div className={`w-full flex flex-row justify-between items-center sm:px-5 px-1 lg:px-10 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                <h1 className={`sm:text-3xl text-lg `}>
+                    Favourite Products <span className="text-pink-500">❤️</span>
+                </h1>
+                {items.length > 0 && <button className="underline cursor-pointer hover:text-orange-500 active:text-orange-500" onClick={clearFav}>clear all</button>}
+            </div>
 
             {items.length === 0 ? (
                 <div className="text-gray-500 absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center text-center">No favorites yet. Start exploring and add what you love ❤️
@@ -35,7 +52,7 @@ export default function Whitelist() {
                         Array(10)
                             .fill(0).map((_, idx) => <ProductSkeleton key={idx} />)
                         : items.map((item, idx) => (
-                            <FavItems item={item} idx={idx} key={idx}/>
+                            <FavItems item={item} idx={idx} key={idx} />
                         ))}
                 </div>
             )}

@@ -11,7 +11,7 @@ const About = () => {
   const { scrollRef } = useOutletContext();
 
   const hero = useScrollReveal(scrollRef, 0.3);
-  const story = useScrollReveal(scrollRef, 0.5);
+  const story = useScrollReveal(scrollRef, 0.3);
   const cards = useScrollReveal(scrollRef, 0.3);
   const stats = useScrollReveal(scrollRef, 0.3);
   const team = useScrollReveal(scrollRef, 0.3);

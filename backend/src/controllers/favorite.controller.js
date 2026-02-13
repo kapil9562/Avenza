@@ -42,5 +42,19 @@ const getFavItems = async (req, res) => {
     }
 };
 
+const clearFav = async (req, res) => {
+    const { uid } = req.body;
 
-export { toggleFav, getFavItems }
+    if(!uid) return res.status(400).json({ error: "uid is required" })
+
+    try {
+        await Favorite.deleteMany({ uid });
+        return res.status(200).json({ message: "favItems cleared successfully" });
+    } catch (error) {
+        console.log("getFavItems error :: ", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+export { toggleFav, getFavItems, clearFav }

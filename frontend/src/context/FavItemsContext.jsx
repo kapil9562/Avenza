@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getFavItems, getProducts, toggleFav } from "../api/api";
+import { clearFav, getFavItems, getProducts, toggleFav } from "../api/api";
 import { useAuth } from "./AuthContext";
 
 const FavItemsContext = createContext();
@@ -84,11 +84,11 @@ export const FavItemsProvider = ({ children }) => {
         async (pid) => {
             if (!user?.uid) return;
 
-            
+
             setItems(prev =>
                 prev.filter(item => item._id !== pid)
             );
-            
+
             setFavorites(prev =>
                 prev.filter(f => f.productId !== pid)
             );
@@ -100,6 +100,29 @@ export const FavItemsProvider = ({ children }) => {
             }
         },
         [user?.uid]
+    );
+
+    const clearAll = useCallback(
+        async () => {
+
+            if (!user?.uid) return;
+
+            setItems([]);
+            setFavorites([]);
+
+            try {
+                const res = await clearFav({
+                    uid: user?.uid,
+                });
+
+                console.log(res)
+            } catch (err) {
+                fetchFavorites();
+                console.error(err);
+                return err;
+            }
+        },
+        [user?.uid, fetchFavorites]
     );
 
     useEffect(() => {
@@ -120,9 +143,10 @@ export const FavItemsProvider = ({ children }) => {
             items,
             toggleFavItems,
             fetchFavorites,
-            removeFavItem
+            removeFavItem,
+            clearAll
         }),
-        [items, loading, favorites, toggleFavItems, fetchFavorites, removeFavItem]
+        [items, loading, favorites, toggleFavItems, fetchFavorites, removeFavItem, clearAll]
     );
 
     return (

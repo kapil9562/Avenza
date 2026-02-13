@@ -9,7 +9,6 @@ import AddToCartBtn from "../utils/AddToCartBtn.jsx";
 
 function ProductDetails() {
     const { productId, _id } = useParams();
-    useEffect(() => {console.log(productId)},[productId])
 
     const [product, setProduct] = useState(null);
     const [currentImg, setCurrentImg] = useState(null);
@@ -19,6 +18,10 @@ function ProductDetails() {
     const [error, setError] = useState("");
 
     const { setActiveTab } = useOutletContext();
+
+    useEffect(() => {
+        setActiveTab("");
+    }, []);
 
     const { isDark } = useTheme();
     const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'

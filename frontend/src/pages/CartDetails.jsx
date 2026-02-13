@@ -11,7 +11,7 @@ export default function CartDetails() {
 
     const navigate = useNavigate();
 
-    const { items, subtotal, loading } = useCart();
+    const { items, subtotal, loading, clearAll } = useCart();
     const { setActiveTab } = useOutletContext();
     const { isDark } = useTheme();
 
@@ -19,17 +19,28 @@ export default function CartDetails() {
         setActiveTab("");
     }, []);
 
+    const clearCart = async() => {
+        try {
+            await clearAll();
+        } catch (error) {
+            console.log("clear cart error ::",error);
+        }
+    }
+
     const deliveryCharge = subtotal > 0 && subtotal < 500 ? 99 : 0;
     const total = subtotal + deliveryCharge;
 
     return (
         <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"} min-h-screen pb-15 relative`}>
             {loading && <Loader />}
-            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont justify-center items-center`}>
+            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont `}>
 
                 {/* Cart Items */}
                 <div className="space-y-1 md:space-y-2 md:w-3/4 rounded-2xl">
-                    <h1 className="sm:text-3xl text-lg flex flex-row gap-2 justify-center items-center">Your Cart <TiShoppingCart className="text-orange-500"/></h1>
+                    <div className="flex w-full flex-row justify-between items-center">
+                        <h1 className="sm:text-3xl text-lg flex flex-row gap-2 items-center">Your Cart <TiShoppingCart className="text-orange-500" /></h1>
+                        {items.length > 0 && <button className="underline cursor-pointer hover:text-orange-500 active:text-orange-500" onClick={clearCart}>clear all</button>}
+                    </div>
 
                     {items.length === 0 ? (
                         <div className="text-gray-500 absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">Your cart is empty
@@ -68,14 +79,14 @@ export default function CartDetails() {
                             </h2>
 
                             <div className="flex justify-between text-gray-500">
-                                <span className={`${isDark? "text-gray-300" : "text-gray-600"}`}>Subtotal</span>
+                                <span className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>Subtotal</span>
                                 <span>
                                     ₹{formatINR(subtotal)}
                                 </span>
                             </div>
 
                             <div className="flex justify-between text-gray-500">
-                                <span className={`${isDark? "text-gray-300" : "text-gray-600"}`}>Delivery</span>
+                                <span className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>Delivery</span>
                                 <span
                                     className={` ${deliveryCharge
                                         ? "text-red-600"

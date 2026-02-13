@@ -46,6 +46,7 @@ export const updateQty = ({ uid, product_id, qtyChange }) => api.post("/cart/upd
   qtyChange
 });
 
+export const clearCart = ({ uid }) => api.post("/cart/clearall", {uid});
 
 export const getProducts = ({ skip = 0, category, limit, title, productId, productIds }) => {
   const params = new URLSearchParams();
@@ -56,16 +57,20 @@ export const getProducts = ({ skip = 0, category, limit, title, productId, produ
   if (title) params.append('search', title);
   if (productId) params.append('productId', productId);
   if (productIds) params.append('productIds', productIds);
-  
+
   return api.get(`/products?${params.toString()}`);
 };
 
 export const getAllCategory = () => api.get('/category-list');
 
-export const toggleFav = ({UserId, ProductId}) => api.post('favorite/toggle', {
+export const toggleFav = ({ UserId, ProductId }) => api.post('favorite/toggle', {
   UserId,
   ProductId
 });
 
-export const getFavItems = ({UserId}) => api.get(`favorite/getitems?UserId=${UserId}`);
+export const clearFav = ({ uid }) => api.post('favorite/clearall', {
+  uid
+});
+
+export const getFavItems = ({ UserId }) => api.get(`favorite/getitems?UserId=${UserId}`);
 

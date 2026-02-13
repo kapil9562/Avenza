@@ -5,6 +5,7 @@ import { useFavItem } from '../context/FavItemsContext';
 import { ProductImage } from "../utils";
 import AddToCartBtn from "../utils/AddToCartBtn";
 import { FaRegHeart } from "react-icons/fa6";
+import { RxCross2 } from "react-icons/rx";
 
 function FavItems({ item, idx }) {
 
@@ -46,11 +47,11 @@ function FavItems({ item, idx }) {
             }}
         >
             <div
-                className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
+                className={`absolute right-1 top-1 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl active:text-red-500 ${isDark ? "text-gray-500" : "text-gray-400"}`}
                 onClick={(e) => {
                     e.stopPropagation();
                     removeItem(item._id);
-                }}>  <FaRegHeart />
+                }}>  <RxCross2 />
             </div>
 
             <ProductImage
