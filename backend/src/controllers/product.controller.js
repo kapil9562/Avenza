@@ -23,9 +23,7 @@ const getProducts = async (req, res) => {
             filter._id = { $in: idsArray };
         }
         else if (productId) {
-            if (mongoose.Types.ObjectId.isValid(productId)) {
-                filter._id = productId;
-            }
+            filter._id = productId;
         }
 
         if (search) {

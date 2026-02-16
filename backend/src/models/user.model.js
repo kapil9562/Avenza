@@ -32,13 +32,19 @@ const userSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    resetToken: {
+        type: String
+    },
+    resetTokenExpiry: {
+        type: Date
     }
 
 }, { timestamps: true });
 
 userSchema.pre("save", async function () {
     if (!this.isModified("passwordHash") || !this.passwordHash) {
-        return ;
+        return;
     }
 
     const salt = await bcrypt.genSalt(10);

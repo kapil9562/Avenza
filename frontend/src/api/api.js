@@ -1,13 +1,13 @@
 // api.js
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URI
-});
-
 // export const api = axios.create({
-//   baseURL: 'http://localhost:8000/api'
+//   baseURL: import.meta.env.VITE_BACKEND_BASE_URI
 // });
+
+export const api = axios.create({
+  baseURL: 'http://localhost:8000/api'
+});
 
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
 
@@ -17,14 +17,19 @@ export const signup = ({ email, password, name }) => api.post(`/auth/signup`, {
   name
 });
 
-// export const sendOtp = ({email}) => api.post(`/sendotp`, {
-//   email
-// });
+export const sendOtp = ({email}) => api.post(`/auth/sendotp`, {email});
 
-// export const verifyOtp = ({email, otp}) => api.post(`/verifyotp`, {
-//   email,
-//   otp
-// });
+export const verifyOtp = ({name, email, password, otp}) => api.post(`/auth/verifyotp`, {
+  name,
+  email,
+  password,
+  otp
+});
+
+export const sendResetOtp = ({email}) => api.post('/auth/forgot-password', {email})
+export const verifyResetOTP = ({email, otp}) => api.post('/auth/verify-reset-otp', {email, otp})
+export const resetPassword = ({email, password}) => api.post('/auth/reset-password', {email, password})
+
 
 export const emailLogin = ({ email, password }) => api.post("/auth/emaillogin", {
   email,

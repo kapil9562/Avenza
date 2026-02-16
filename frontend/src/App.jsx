@@ -30,6 +30,7 @@ function App() {
 
 
   return (
+    <>
     <div
       ref={scrollRef}
       className={`h-dvh overflow-y-scroll custom-scroll scroll-smooth will-change-transform transform-gpu overflow-x-hidden`}
@@ -45,7 +46,6 @@ function App() {
         <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
       </main>
       <Footer setActiveTab={setActiveTab} scrollRef={scrollRef}/>
-      <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
       <Snowfall
         snowflakeCount={6}
         images={[flowerImage]}
@@ -63,6 +63,8 @@ function App() {
       />
 
     </div>
+    <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
+    </>
   );
 }
 

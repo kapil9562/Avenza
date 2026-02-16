@@ -82,8 +82,20 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
         setShow(false);
     }
 
+    useEffect(() => {
+    if (show) {
+        document.body.style.overflow = "hidden";
+    } else {
+        document.body.style.overflow = "auto";
+    }
+
+    return () => {
+        document.body.style.overflow = "auto";
+    };
+}, [show]);
+
     return (
-        <div className={`w-full h-screen absolute top-0 left-0 z-99 ${show ? `translate-x-0 ${isDark ? "bg-[#00000080]" : "bg-[#00000050]"}` : "-translate-x-full transition-transform duration-500 bg-transparent overflow-hidden"} cursor-pointer`}>
+        <div className={`w-full h-screen absolute inset-0 top-0 left-0 z-99 ${show ? `translate-x-0 ${isDark ? "bg-[#00000080]" : "bg-[#00000050]"}` : "-translate-x-full transition-transform duration-500 bg-transparent overflow-hidden"} cursor-pointer`}>
             <div className={` ${show ? "block translate-x-0" : " -translate-x-full"}  top-0 z-99 w-70 transition-all duration-300 overflow-y-auto h-screen no-scrollbar will-change-scroll cursor-default ${isDark ? "sideMenuDarkBg" : "sideMenuBg"} pb-15`} ref={backdropRef}>
                 <div className={`flex flex-row pt-3 pl-1 items-center gap-3 sticky top-0 z-50 pb-2 border-b-2 justify-between px-4 ${isDark ? "border-gray-800 sideMenuDarkBg" : "border-gray-200 sideMenuBg"}`}>
                     {/* LOGO */}

@@ -19,6 +19,8 @@ import { FavItemsProvider } from './context/FavItemsContext.jsx';
 import PageNotFound from './pages/PageNotFound.jsx';
 import About from './pages/About.jsx';
 import Whitelist from './pages/Whitelist.jsx';
+import ForgetPass from './pages/ForgetPass.jsx';
+import ResetPass from './pages/ResetPass.jsx';
 
 
 const GoogleAuthWrappper = () => {
@@ -66,6 +68,8 @@ createRoot(document.getElementById('root')).render(
 
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<GoogleAuthWrappper />} />
+            <Route path="/forgetpassword" element={<ForgetPass />} />
+            <Route path="/reset-password/:email" element={<ResetPass />} />
 
             {/* 404 Route */}
             <Route path="*" element={<PageNotFound />} />

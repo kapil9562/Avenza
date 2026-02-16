@@ -30,7 +30,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const { isDark } = useTheme();
 
-    const { setActiveTab, scrollRef } = useOutletContext();
+    const { scrollRef } = useOutletContext();
 
     const showPagination = !pid && totalItems > 30 && !loading;
 

@@ -3,7 +3,8 @@ import axios from "axios";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import User from '../models/user.model.js'
-// import { sendOTPEmail } from "../utils/sendEmail.js";
+import Otp from '../models/otp.model.js'
+import { sendEmail } from "../utils/sendEmail.js";
 
 {/* google login */ }
 const googleLogin = async (req, res) => {
@@ -74,60 +75,6 @@ const googleLogin = async (req, res) => {
     }
 };
 
-{/* email sign up */ }
-const signup = async (req, res) => {
-    const { name, email, password } = req.body;
-
-    if (!email || !password)
-        return res.status(400).json({ message: "All fields required" });
-
-    try {
-
-        const uid = uuidv4();
-
-        let user = await User.findOne({ email });
-
-        if (user && !user.isActive) {
-            return res.status(400).json({
-                message: "This account has been temporarily frozen",
-            });
-        }
-
-        if (!user) {
-            user = await User.create({
-                uid,
-                name,
-                email,
-                passwordHash: password,
-                googleLogin: false
-            });
-        }
-        else if (user.googleLogin && !user.passwordHash) {
-            user.passwordHash = password;
-            await user.save();
-        }
-        else {
-            return res.status(400).json({
-                message: "Email already registered"
-            });
-        }
-
-        res.status(201).json({
-            message: "Signup successful",
-            user: {
-                uid: user.uid,
-                name: user.name,
-                email: user.email,
-                photo: user.avatar
-            }
-        });
-
-    } catch (err) {
-        res.status(500).json({ message: err });
-        console.log(err)
-    }
-};
-
 
 {/* email  Login */ }
 const emailLogin = async (req, res) => {
@@ -184,79 +131,275 @@ const emailLogin = async (req, res) => {
 };
 
 
-// const loginSendOTP = async (req, res) => {
-//   const { email } = req.body;
+const emailSendOTP = async (req, res) => {
+    const { email } = req.body;
 
-//   try {
-//     const pool = await poolPromise;
+    if (!email) {
+        return res.status(400).json({
+            message: "Invalid credentials !"
+        });
+    }
 
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-//     const otpHash = await bcrypt.hash(otp, 10);
-//     await pool.request()
-//       .input("email", sql.NVarChar, email)
-//       .input("otp_hash", sql.NVarChar, otpHash)
-//       .execute("sp_login_send_otp");
+    try {
 
-//     await sendOTPEmail(email, otp);
+        let user = await User.findOne({ email });
 
-//     res.json({ message: "OTP sent to email" });
+        if (user && user.passwordHash) {
+            return res.status(400).json({
+                message: "Email already registered !"
+            });
+        }
 
-//   } catch (err) {
-//     console.log(err)
-//     res.status(400).json({
-//       message: err.originalError?.info?.message || "Failed to send OTP"
-//     });
-//   }
-// };
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpHash = await bcrypt.hash(otp, 10);
+
+        await Otp.deleteMany({ email })
+
+        await Otp.create({
+            email,
+            otpHash
+        })
+
+        await sendEmail({
+            to: email,
+            otp: otp,
+            subject: "Your Signup OTP"
+        });
+
+        res.json({ message: "OTP sent to email" });
+
+    } catch (err) {
+        console.log("send otp error ::", err)
+        res.status(400).json({
+            message: err || "Failed to send OTP"
+        });
+    }
+};
+
+const verifyOTP = async (req, res) => {
+    const { name, email, password, otp } = req.body;
+
+    if (!email || !password || !name) {
+        return res.status(400).json({ message: "Invalid credentials !" });
+    }
+    if (!otp) {
+        return res.status(400).json({ message: "OTP is required !" });
+    }
+
+    try {
+        // Find latest OTP for email
+        const otpRecord = await Otp.findOne({ email });
+
+        if (!otpRecord) {
+            return res.status(400).json({
+                message: "OTP expired or not found !"
+            });
+        }
+
+        const isMatch = await bcrypt.compare(otp, otpRecord.otpHash);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Invalid OTP !"
+            });
+        }
+
+        const uid = uuidv4();
+
+        let user = await User.findOne({ email });
+
+        if (user && !user.isActive) {
+            return res.status(400).json({
+                message: "This account has been temporarily frozen.",
+            });
+        }
+
+        if (!user) {
+            user = await User.create({
+                uid,
+                name,
+                email,
+                passwordHash: password,
+                googleLogin: false
+            });
+        }
+        else if (user.googleLogin && !user.passwordHash) {
+            user.passwordHash = password;
+            await user.save();
+        }
+
+        await Otp.deleteMany({ email });
+
+        res.status(201).json({
+            message: "Signup successful",
+            user: {
+                uid: user.uid,
+                name: user.name,
+                email: user.email,
+                photo: user.avatar
+            }
+        });
+
+    } catch (err) {
+        console.log("verifyOTP error:", err);
+        res.status(500).json({ message: "OTP verification failed" });
+    }
+};
 
 
+// POST /auth/forgot-password/send-otp
+const sendResetOTP = async (req, res) => {
+    const { email } = req.body;
 
-// const verifyOTP = async (req, res) => {
-//   const { email, otp } = req.body;
-//   console.log(email, otp)
+    if (!email) {
+        return res.status(400).json({
+            message: "Invalid credentials !"
+        });
+    }
 
-//   if (!email || !otp) {
-//     return res.status(400).json({ message: "Email and OTP are required" });
-//   }
+    try {
+        const user = await User.findOne({ email });
 
-//   try {
-//     const pool = await poolPromise;
+        if (!user) {
+            return res.status(400).json({
+                message: "User not found !"
+            });
+        }
 
-//     // 1️⃣ Get latest valid OTP from SP
-//     const result = await pool.request()
-//       .input("email", sql.NVarChar, email)
-//       .execute("sp_login_verify_otp");
+        if (!user.passwordHash) {
+            return res.status(400).json({
+                message: "This account uses Google login !"
+            });
+        }
 
-//       console.log('result ',result)
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpHash = await bcrypt.hash(otp, 10);
 
-//     if (!result.recordset.length) {
-//       return res.status(400).json({ message: "OTP expired or invalid" });
-//     }
+        // Remove old OTP
+        await Otp.deleteMany({ email });
 
-//     const otpRow = result.recordset[0];
+        // Save new OTP
+        await Otp.create({
+            email,
+            otpHash
+        });
 
-//     // 2️⃣ Compare OTP (hashed)
-//     const isValid = await bcrypt.compare(otp, otpRow.otp_hash);
-//     if (!isValid) {
-//       return res.status(401).json({ message: "Invalid OTP" });
-//     }
+        // Send email
+        await sendEmail({
+            to: email,
+            otp: otp,
+            subject: "Password Reset OTP"
+        });
 
-//     // 3️⃣ Mark OTP as used
-//     const data = await pool.request()
-//       .input("id", sql.Int, otpRow.id)
-//       .execute("sp_mark_otp_used");
+        res.status(200).json({
+            message: "OTP sent to your email"
+        });
 
-//       const user = data.recordset[0];
+    } catch (err) {
+        console.log("Forgot OTP error:", err);
+        res.status(500).json({
+            message: "Failed to send OTP"
+        });
+    }
+};
 
-//     res.json({
-//       message: "Login successful",
-//       user
-//     });
 
-//   } catch (err) {
-//     console.error("verifyOTP error:", err);
-//     res.status(500).json({ message: "OTP verification failed" });
-//   }
-// };
+const verifyResetOTP = async (req, res) => {
+    const { email, otp } = req.body;
 
-export { googleLogin, signup, emailLogin };
+    if (!email || !otp) {
+        return res.status(400).json({
+            message: "Invalid credentials !"
+        });
+    }
+
+    try {
+        const otpRecord = await Otp.findOne({ email });
+
+        if (!otpRecord) {
+            return res.status(400).json({
+                message: "OTP expired or not found !"
+            });
+        }
+
+        const isMatch = await bcrypt.compare(otp, otpRecord.otpHash);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Invalid OTP !"
+            });
+        }
+
+        otpRecord.verified = true;
+        await otpRecord.save();
+
+        res.status(200).json({
+            message: 'Verified'
+        });
+    } catch (err) {
+        console.log("Verify forgotOTP error:", err);
+        res.status(500).json({
+            message: "Failed to verify OTP !"
+        });
+    }
+}
+
+const resetPassword = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            message: "Invalid credentials !"
+        });
+    }
+
+    try {
+        const otpRecord = await Otp.findOne({ email, verified: true });
+
+        if (!otpRecord) {
+            return res.status(400).json({
+                message: "OTP verification required!"
+            });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({
+                message: "User not found !",
+            });
+        } else if (user && !user.isActive) {
+            return res.status(400).json({
+                message: "This account has been temporarily frozen.",
+            });
+        } else if (!user.passwordHash) {
+            return res.status(400).json({
+                message: "This account uses Google login !"
+            });
+        }
+
+        user.passwordHash = password;
+        await user.save();
+
+        await Otp.deleteMany({ email });
+
+        res.status(200).json({
+            message: "Password Reset Successfully",
+            user: {
+                uid: user.uid,
+                name: user.name,
+                email: user.email,
+                photo: user.avatar
+            }
+        });
+    } catch (err) {
+        console.log("Reset Password error:", err);
+        res.status(500).json({
+            message: "Failed to reset Password !"
+        });
+    }
+
+}
+
+export { googleLogin, emailLogin, emailSendOTP, verifyOTP, sendResetOTP, verifyResetOTP, resetPassword };

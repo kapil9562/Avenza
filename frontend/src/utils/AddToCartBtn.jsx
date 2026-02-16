@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { useTheme } from '../context/ThemeContext';
 
 function AddToCartBtn({ product }) {
 
@@ -15,6 +16,8 @@ function AddToCartBtn({ product }) {
 
     const [success, setSuccess] = useState(null)
     const [error, setError] = useState("");
+
+    const {isDark} =useTheme();
 
     const handleAddToCart = async () => {
 
@@ -64,7 +67,7 @@ function AddToCartBtn({ product }) {
                     e.stopPropagation();
                     handleAddToCart();
                 }}
-                className="w-full px-6 py-5 border border-[#FF6F61] text-[#FF6F61] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300 hover:scale-105 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden"
+                className={`w-full px-6 py-5 border border-[#FF6F61] text-[#FF6F61] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden ${isDark? "hover:bg-red-900/20" : "hover:bg-red-50"}`}
                 disabled={loadingId === product.productId || success}
             >
                 {loadingId === product.productId ? (
