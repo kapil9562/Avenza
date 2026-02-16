@@ -46,13 +46,15 @@ function App() {
         <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
       </main>
       <Footer setActiveTab={setActiveTab} scrollRef={scrollRef}/>
-      <Snowfall
+    </div>
+    <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
+    <Snowfall
         snowflakeCount={6}
         images={[flowerImage]}
         speed={[0.5, 1.5]}
         wind={[-0.5, 0.5]}
         radius={[10, 15]}
-        className="fixed inset-0 pointer-events-none"
+        className="absolute top-0 pointer-events-none"
         style={{
           zIndex: 9999,
 
@@ -61,9 +63,6 @@ function App() {
             "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)"
         }}
       />
-
-    </div>
-    <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
     </>
   );
 }
