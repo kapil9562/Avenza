@@ -15,6 +15,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { useProducts } from '../../context/ProductsContext';
+import { LuCircleUserRound } from "react-icons/lu";
 
 function Header({ activeTab, setActiveTab, setShow }) {
 
@@ -278,29 +279,38 @@ function Header({ activeTab, setActiveTab, setShow }) {
                   </div>
                 )}
                 <div className={`${isActive ? "opacity-100" : "opacity-0 invisible"} ${isDark ? "bg-[#0F172A] shadow-[#0F172A] shadow-lg border-gray-700" : "bg-white shadow-gray-300 border-gray-200 shadow-xl"} absolute top-full flex flex-col justify-center text-lg font-semibold border-2 group-hover:opacity-100 group-hover:visible rounded-lg overflow-hidden z-90 right-0`}>
-                  <button className={`${isDark ? "text-gray-400 hover:bg-[#2e3d5f]" : "hover:bg-pink-100  text-black"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer`}>
+                  <button className={`${isDark ? "hover:bg-[#2e3d5f]" : "hover:bg-pink-100"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer`}>
+                    {(user?.photo) ? (
+                      <img
+                        src={normalizeGooglePhoto(user?.photo)}
+                        alt="pfp"
+                        referrerPolicy="no-referrer"
+                        loading="lazy"
+                        className='md:max-h-12 md:max-w-12 max-h-10 max-w-10 rounded-full object-cover' />
+                    ) : (
+                      <div className={`flex flex-col justify-center items-center text-sm md:text-lg group-hover:text-pink-500 relative group cursor-pointer ${isDark ? "text-gray-300" : "text-[#373951]"}`}>
+                        <img src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`} alt="pfp" className='h-8 w-8 rounded-full' />
+                      </div>
+                    )}
+                    <span className={`text-start ${isDark ? "text-gray-200" : "text-gray-700"}`}>
+                      <p className=''>Hello! {(user?.name) ? user?.name.split(" ")[0] : "User"}</p>
+                      <p className='text-sm font-medium'>{user?.email}</p>
+                    </span>
+                  </button>
+                  <div className={`${isDark ? "border-gray-700" : "border-gray-300"} w-full border-t-2`}></div>
+                  <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f]" : "hover:bg-pink-100  text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`}>
                     <LiaShoppingBagSolid className='text-xl' />
                     <span>My Orders</span>
                   </button>
                   <div className={`${isDark ? "border-gray-700" : "border-gray-300"} w-full border-t-2`}></div>
                   <button
                     className={`${isDark ? "hover:bg-[#2e3d5f]" : "hover:bg-pink-100"} flex flex-row items-center whitespace-nowrap gap-2 text-red-500 px-4 py-2 cursor-pointer`}
-                    onClick={() => setAlert(true)}>
+                    onClick={() => logout()}>
                     <FiLogOut />
                     <span>Logout</span>
                   </button>
                 </div>
-                {alert && (
-                  <div className={`${isDark ? "bg-[#0F172A] shadow-[#0F172A] shadow-lg border-gray-700" : "bg-white shadow-xl shadow-gray-300 border-gray-200"} absolute right-0 top-full flex flex-col justify-center text-lg font-semibold border-2 rounded-lg overflow-hidden py-3 px-4 gap-2 z-100 cursor-default`}>
-                    <div className={`${isDark ? "text-gray-400" : "text-black"} whitespace-nowrap`}>Sure to logout ?</div>
-                    <div className='w-full flex flex-row justify-between'>
-                      <button className=' bg-[#dadada] text-black font-semibold text-lg py-1 px-4 rounded-xl active:scale-90 transition-all cursor-pointer' onClick={() => setAlert(false)}>No</button>
-                      <button className='bg-[#FF6F61] text-white font-semibold text-lg py-1 px-4 rounded-xl active:scale-90 transition-all cursor-pointer' onClick={() => logout()}>yes</button>
-                    </div>
-                  </div>
-                )}
               </div>
-
             </div>
           ) : (
             <>
