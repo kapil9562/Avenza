@@ -61,7 +61,7 @@ export default function ResetPass() {
     }
 
     return (
-        <div className={`${isDark ? "darkBgImg" : "signupBg"} relative min-h-screen flex flex-col items-center justify-center px-4 bg-cover`}>
+        <div className={`${isDark ? "darkBgImg" : "signupBg"} relative h-dvh flex flex-col items-center justify-center px-4 bg-cover`}>
             <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 flex flex-col items-center`}>
 
                 {/* Header */}

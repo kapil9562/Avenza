@@ -10,15 +10,15 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async ({ to, otp, subject }) => {
 
+  let title = "Verify your Avenza sign-up";
+  let description =
+  "We received a sign-up attempt with the following code. Please enter it in the browser window where you started signing up.";
+  
   const htmlContent = emailTemplate
     .replace("{{title}}", title)
     .replace("{{description}}", description)
     .replace("{{otp}}", otp);
-
-  let title = "Verify your Avenza sign-up";
-  let description =
-    "We received a sign-up attempt with the following code. Please enter it in the browser window where you started signing up.";
-
+    
   // Change content for password reset
   if (subject === "Password Reset OTP") {
     title = "Reset your Avenza password";

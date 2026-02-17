@@ -175,7 +175,7 @@ export default function ForgetPass() {
 
 
     return (
-        <div className={`${isDark ? "darkBgImg" : "signupBg"} relative min-h-screen flex items-center justify-center p-4`}>
+        <div className={`${isDark ? "darkBgImg" : "signupBg"} relative h-dvh flex items-center justify-center p-4`}>
             <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 overflow-hidden`}>
 
                 <div className={`flex flex-col w-full justify-center items-center`}>

@@ -155,10 +155,10 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
       <div className='flex flex-row justify-between w-full min-h-15 sm:min-h-20 gap-4 sm:px-5 lg:px-10'>
 
-        <div className='flex flex-row justify-center items-center gap-3'>
+        <div className='flex flex-row justify-center items-center md:gap-3 gap:1'>
           {/* categories taggle btn */}
           <div className='xl:hidden' onClick={() => setShow(true)}>
-            <HiMiniBars3BottomLeft size={28} className={`${isDark ? "text-gray-300" : "text-gray-700"} cursor-pointer`} />
+            <HiMiniBars3BottomLeft className={`${isDark ? "text-gray-300" : "text-gray-700"} lg:text-3xl text-2xl cursor-pointer`} />
           </div>
 
           {/* LOGO */}
@@ -166,7 +166,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
             setActiveTab("HOME");
             navigate('/')
           }}>
-            <img src='/assets/logo.png' alt="logo" className='sm:w-40 w-30 object-cover' />
+            <img src='/assets/logo.png' alt="logo" className='sm:w-40 w-25 object-cover' />
           </div>
         </div>
 
@@ -183,12 +183,12 @@ function Header({ activeTab, setActiveTab, setShow }) {
             placeholder='Search products, brands, categories…'
             className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-semibold text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
           <IoIosSearch className='absolute left-3 text-2xl font-semibold text-[#8b90c7] z-20' />
-          {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-400" : "bg-[#FFEDF3]"} absolute top-10 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 max-h-60 overflow-hidden z-5`} >
-            <div className={`${showDropdown ? "block" : "hidden"} w-full max-h-50 overflow-auto pt-1`}>
+          {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-300" : "bg-[#FFEDF3]"} absolute top-10 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 overflow-hidden z-5`} >
+            <div className={`${showDropdown ? "block" : "hidden"} w-full overflow-auto pt-1`}>
               {suggestions.length > 0 ? (
-                suggestions.map((product) => (
+                suggestions.map((product, idx) => (
                   <div
-                    key={product.id}
+                    key={idx}
                     onClick={() => {
                       const title = product.title;
                       setInput(title);
@@ -201,7 +201,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                       setSearchResults(filteredData);
                       setShowDropdown(false);
                     }}
-                    className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-1 px-2 font-semibold flex flex-row gap-2 border-b-2 border-[#f7ddf4] cursor-pointer`}
+                    className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-2 px-2 font-semibold flex flex-row gap-2 cursor-pointer ${idx !== suggestions.length-1 && "border-b-2 border-[#f7ddf4]"}`}
                   >
                     <IoIosSearch className="text-2xl text-gray-500" />
                     <p>{product.title}</p>
@@ -226,14 +226,14 @@ function Header({ activeTab, setActiveTab, setShow }) {
           <div className='flex justify-center items-center text-[16px]'>
 
             {/* Toggle for mobiles */}
-            <button onClick={toggleTheme} className='flex justify-center items-center sm:hidden cursor-pointer'>
+            <button onClick={toggleTheme} className='flex justify-center items-center md:hidden cursor-pointer'>
               {isDark ? <img src="https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/2600.svg" alt="" className='min-h-6 min-w-6' /> : <BsMoonStarsFill className='text-yellow-500 text-xl' />}
             </button>
 
             {/* Toggle for destop */}
             <button
               onClick={toggleTheme}
-              className={`relative w-18 h-8 rounded-full hidden items-center transition-all duration-500 cursor-pointer ${isDark ? "bg-[#2d323a] shadow-black" : "bg-[#e9ecef] shadow-gray-400"} shadow-inner sm:flex`}
+              className={`relative w-18 h-8 rounded-full hidden items-center transition-all duration-500 cursor-pointer ${isDark ? "bg-[#2d323a] shadow-black" : "bg-[#e9ecef] shadow-gray-400"} shadow-inner md:flex`}
             >
               {/* Knob */}
               <span className={`absolute w-6 h-6 z-10 rounded-full shadow-md flex items-center justify-center transition-all duration-500 ${isDark ? "translate-x-11 bg-[#15171b] shadow-black" : "translate-x-1 bg-white"}`}
@@ -339,10 +339,10 @@ function Header({ activeTab, setActiveTab, setShow }) {
           placeholder='Enter your product name...'
           className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-semibold text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
         <IoIosSearch className='absolute left-3 text-2xl font-semibold text-gray-500 z-20' />
-        {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-400" : "bg-[#FFEDF3]"} absolute top-5 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 max-h-60 overflow-hidden z-5`}>
-          <div className={`${showDropdown ? "block" : "hidden"} w-full max-h-50 overflow-auto pt-1`}>
+        {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-300" : "bg-[#FFEDF3]"} absolute top-5 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 overflow-hidden z-5`}>
+          <div className={`${showDropdown ? "block" : "hidden"} w-full overflow-auto pt-1`}>
             {suggestions.length > 0 ? (
-              suggestions.map((product) => (
+              suggestions.map((product, idx) => (
                 <div
                   onClick={() => {
                     const title = product.title;
@@ -356,8 +356,8 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     setSearchResults(filteredData);
                     setShowDropdown(false);
                   }}
-                  key={product.id}
-                  className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-1 px-2 font-semibold flex flex-row gap-2 border-b-2 border-[#f7ddf4] cursor-pointer`}
+                  key={idx}
+                  className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-2 px-2 font-semibold flex flex-row gap-2 cursor-pointer ${idx !== suggestions.length-1 && "border-b-2 border-[#f7ddf4]"}`}
                 >
                   <IoIosSearch className="text-2xl text-gray-500" />
                   <p>{product.title}</p>
