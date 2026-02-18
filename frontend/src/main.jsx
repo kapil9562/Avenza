@@ -36,47 +36,52 @@ createRoot(document.getElementById('root')).render(
     <ThemeProvider>
       <AuthProvider>
         <SearchProvider>
-          <Routes>
+          <ProductsProvider>
+            <FavItemsProvider>
+              <CartProvider>
 
-            <Route
-              element={
+                <Routes>
+                  <Route element={<App />}>
+                    <Route index element={<Container />} />
+                    <Route path="/:pCategory/:category/pl/:pid" element={<Container />} />
+                    <Route path="/:slug/p/:productId" element={<ProductDetails />} />
 
-                <ProductsProvider>
-                  <FavItemsProvider>
-                    <CartProvider >
-                      <App />
-                    </CartProvider>
-                  </FavItemsProvider>
-                </ProductsProvider>
-              }
-            >
-              <Route index element={<Container />} />
-              <Route path="/:slug/p/:productId" element={<ProductDetails />} />
-              <Route path="/carts" element={
-                <ProtectedRoute>
-                  <CartDetails />
-                </ProtectedRoute>
-              } />
-              <Route path="/whitelist" element={
-                <ProtectedRoute>
-                  <Whitelist />
-                </ProtectedRoute>
-              } />
-              <Route path="/about" element={<About />} />
-              <Route path="/search" element={<SearchResults />} />
-            </Route>
+                    <Route
+                      path="/carts"
+                      element={
+                        <ProtectedRoute>
+                          <CartDetails />
+                        </ProtectedRoute>
+                      }
+                    />
 
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<GoogleAuthWrappper />} />
-            <Route path="/forgetpassword" element={<ForgetPass />} />
-            <Route path="/reset-password/:email" element={<ResetPass />} />
+                    <Route
+                      path="/whitelist"
+                      element={
+                        <ProtectedRoute>
+                          <Whitelist />
+                        </ProtectedRoute>
+                      }
+                    />
 
-            {/* 404 Route */}
-            <Route path="*" element={<PageNotFound />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/search" element={<SearchResults />} />
+                  </Route>
 
-          </Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<GoogleAuthWrappper />} />
+                  <Route path="/forgetpassword" element={<ForgetPass />} />
+                  <Route path="/reset-password/:email" element={<ResetPass />} />
+
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
+
+              </CartProvider>
+            </FavItemsProvider>
+          </ProductsProvider>
         </SearchProvider>
       </AuthProvider>
     </ThemeProvider>
   </BrowserRouter>
-)
+);
+

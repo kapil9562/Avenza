@@ -2,25 +2,25 @@ import React from 'react'
 import Layout from '../categories/Layout';
 import HomeBanner from '../categories/HomeBanner';
 import { useTheme } from '../../context/ThemeContext';
-import { useOutletContext } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 function Container() {
-    const {isDark} = useTheme();
+    const { isDark } = useTheme();
+    const { category } = useParams();   // URL se category
 
-    const { activeTab } = useOutletContext();
+    const activeCategory = category ? category.toUpperCase() : "HOME";
 
     return (
-        
-        <div className={`w-full min-h-screen pt-2 ${isDark? "darkBgImg" : "bgImg"}`}>
+        <div className={`w-full min-h-screen pt-2 ${isDark ? "darkBgImg" : "bgImg"}`}>
             <div>
                 {/* Home Banner */}
-                {activeTab === "HOME" && <HomeBanner />}
-                {/* Category */}
-                {<Layout category={activeTab} />}
+                {activeCategory === "HOME" && <HomeBanner />}
 
+                {/* Category Layout */}
+                <Layout category={activeCategory} />
             </div>
         </div>
     )
 }
 
-export default Container
+export default Container;

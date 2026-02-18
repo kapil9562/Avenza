@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
 import { ProductSkeleton, ProductImage } from '../../utils/index';
 import { useSearch } from '../../context/SearchContext';
 import { useTheme } from '../../context/ThemeContext';
 import AddToCartBtn from '../../utils/AddToCartBtn';
+import { formatINR } from '../../utils/price';
+import { getProducts } from '../../api/api';
 
 function SearchResults() {
 
@@ -16,6 +18,11 @@ function SearchResults() {
 
     const { setActiveTab } = useOutletContext();
 
+    const { setSearchResults } = useSearch();
+
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get("q");
+
     useEffect(() => {
         setActiveTab("");
     }, []);
@@ -25,6 +32,21 @@ function SearchResults() {
             setLoading(false)
         }, 1000);
     }, [products]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            if (!query) return;
+
+            const res = await getProducts({
+                limit: 0,
+                title: query,
+            });
+
+            setSearchResults(res.data.products);
+        };
+
+        fetchProducts();
+    }, [query]);
 
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
@@ -101,9 +123,24 @@ function SearchResults() {
                                         </div>
 
                                         <div className="flex flex-col gap-2 justify-between">
-                                            <span className="text-[#FF6F61] font-bold text-lg">
-                                                ₹{(product.price).toLocaleString("en-IN")}
-                                            </span>
+                                            <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
+                                                <p className="text-lg font-semibold text-[#FF6F61]">
+                                                    ₹{formatINR(product.price)}
+                                                </p>
+
+                                                <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
+                                                    ₹
+                                                    {(formatINR(Math.round(
+                                                        (product.price * 100) /
+                                                        (100 - product.discountPercentage)
+                                                    )))}
+                                                    <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
+                                                </p>
+
+                                                <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
+                                                    {product.discountPercentage.toFixed(0)}% off
+                                                </p>
+                                            </div>
                                             <AddToCartBtn product={product} />
                                         </div>
                                     </div>

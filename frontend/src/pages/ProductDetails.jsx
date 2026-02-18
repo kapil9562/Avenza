@@ -8,7 +8,7 @@ import { getProducts } from "../api/api.js";
 import AddToCartBtn from "../utils/AddToCartBtn.jsx";
 
 function ProductDetails() {
-    const { productId, _id } = useParams();
+    const { productId } = useParams();
 
     const [product, setProduct] = useState(null);
     const [currentImg, setCurrentImg] = useState(null);

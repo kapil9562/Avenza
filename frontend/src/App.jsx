@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./index.css";
 import { Footer, Header } from "./components";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useTheme } from "./context/ThemeContext";
 import SideMenu from "./components/sideMenu/SideMenu";
 import Snowfall from "react-snowfall";
@@ -12,7 +12,18 @@ function App() {
   const scrollRef = useRef(null);
   const [show, setShow] = useState(false);
 
+  const { category } = useParams();
+
   const [activeTab, setActiveTab] = useState("HOME");
+
+  useEffect(() => {
+    if (category) {
+      setActiveTab(category);
+    } else {
+      setActiveTab("HOME");
+    }
+  }, [category]);
+
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -31,24 +42,24 @@ function App() {
 
   return (
     <>
-    <div
-      ref={scrollRef}
-      className={`h-dvh overflow-y-scroll custom-scroll scroll-smooth will-change-transform transform-gpu overflow-x-hidden`}
-      style={{
-        scrollbarColor: isDark
-          ? "#c562b0d7 #0F172A"
-          : "#c562b0d7 transparent",
-        scrollbarWidth: "thin",
-      }}
-    >
-      <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
-      <main className="grow">
-        <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
-      </main>
-      <Footer setActiveTab={setActiveTab} scrollRef={scrollRef}/>
-    </div>
-    <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
-    <Snowfall
+      <div
+        ref={scrollRef}
+        className={`h-dvh overflow-y-scroll custom-scroll scroll-smooth will-change-transform transform-gpu overflow-x-hidden`}
+        style={{
+          scrollbarColor: isDark
+            ? "#c562b0d7 #0F172A"
+            : "#c562b0d7 transparent",
+          scrollbarWidth: "thin",
+        }}
+      >
+        <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
+        <main className="grow">
+          <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
+        </main>
+        <Footer setActiveTab={setActiveTab} scrollRef={scrollRef} />
+      </div>
+      <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
+      <Snowfall
         snowflakeCount={6}
         images={[flowerImage]}
         speed={[0.5, 1.5]}

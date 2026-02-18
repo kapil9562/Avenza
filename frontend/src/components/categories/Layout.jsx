@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ProductSkeleton, ProductImage } from '../../utils/index'
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../../context/ProductsContext';
 import { FaCircleArrowLeft, FaCircleArrowRight } from "react-icons/fa6";
 import { useTheme } from '../../context/ThemeContext';
@@ -11,12 +11,15 @@ import { useFavItem } from '../../context/FavItemsContext.jsx';
 import { FaHeart } from "react-icons/fa6";
 import { GoAlertFill } from 'react-icons/go';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { formatINR } from '../../utils/price.js';
 
 const Layout = React.memo(function Layout({ category, pid }) {
 
     const { cache, setProducts } = useProducts();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const pageParam = Number(searchParams.get("page")) || 1;
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(pageParam);
     const [totalItems, setTotalItems] = useState(0);
 
     const totalPages = Math.ceil(totalItems / 30);
@@ -25,6 +28,8 @@ const Layout = React.memo(function Layout({ category, pid }) {
     const cacheKey = `${category}-${page}`;
     const products = cache[cacheKey];
     const loading = !products;
+
+    const {category:getCategory} = useParams();
 
     const navigate = useNavigate();
 
@@ -53,7 +58,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
         const fetchProducts = async () => {
             try {
                 const params = { skip };
-                if (category !== "HOME") params.category = category;
+                if (category !== "HOME") params.category = getCategory;
 
                 const res = await getProducts(params);
 
@@ -72,15 +77,21 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
 
     const nextPage = () => {
-        setPage(p => Math.min(p + 1, totalPages));
+        const next = Math.min(page + 1, totalPages);
+        setPage(next);
+        setSearchParams({ page: next });
     };
 
     const prevPage = () => {
-        setPage(p => Math.max(p - 1, 1));
+        const prev = Math.max(page - 1, 1);
+        setPage(prev);
+        setSearchParams({ page: prev });
     };
+
 
     useEffect(() => {
         setPage(1);
+        setSearchParams({});
     }, [category]);
 
     const getVisiblePages = (current, total) => {
@@ -133,6 +144,10 @@ const Layout = React.memo(function Layout({ category, pid }) {
         );
     };
 
+    useEffect(() => {
+        const paramPage = Number(searchParams.get("page")) || 1;
+        setPage(paramPage);
+    }, [searchParams]);
 
     const createSlug = (text) => {
         return text
@@ -143,6 +158,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const currentPageHandler = (currPage) => {
         setPage(currPage);
+        setSearchParams({ page: currPage });
     }
 
     const handleAddToFav = async (ProductId) => {
@@ -205,13 +221,28 @@ const Layout = React.memo(function Layout({ category, pid }) {
                                     {product.description}
                                 </p>
                                 <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
-                                    {renderStars(product.rating)} ({product.rating})
+                                    {renderStars(product.rating)} ({product.rating.toFixed(1)})
                                 </div>
 
                                 <div className="flex flex-col gap-2 justify-between">
-                                    <span className="text-[#FF6F61] font-bold text-lg">
-                                        ₹{(product.price).toLocaleString("en-IN")}
-                                    </span>
+                                    <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
+                                        <p className="text-lg font-semibold text-[#FF6F61]">
+                                            ₹{formatINR(product.price)}
+                                        </p>
+
+                                        <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
+                                            ₹
+                                            {(formatINR(Math.round(
+                                                (product.price * 100) /
+                                                (100 - product.discountPercentage)
+                                            )))}
+                                            <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
+                                        </p>
+
+                                        <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
+                                            {product.discountPercentage.toFixed(0)}% off
+                                        </p>
+                                    </div>
                                     <AddToCartBtn product={product} />
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { IoIosSearch } from "react-icons/io";
-import { NavLink, useLocation } from "react-router-dom"
+import { NavLink, useLocation, useSearchParams } from "react-router-dom"
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
@@ -15,22 +15,24 @@ import { IoIosArrowUp } from "react-icons/io";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { useProducts } from '../../context/ProductsContext';
-import { LuCircleUserRound } from "react-icons/lu";
 
 function Header({ activeTab, setActiveTab, setShow }) {
 
   const { isDark, toggleTheme } = useTheme();
+
+  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
   const authBtnClass =
     "bg-[#FF6F61] border-[#ff3e2d] border-2 rounded-4xl p-2 hover:bg-[#ff3e2d] transition-transform duration-150 ease-out active:scale-95 transform-gpu cursor-pointer flex justify-center items-center";
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(() => {
+    return searchParams.get("q") || "";
+  });
   const [filteredData, setFilteredData] = useState([]);
   const suggestions = useMemo(() => filteredData.slice(0, 5), [filteredData]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [alert, setAlert] = useState(false);
   const [searchType, setSearchType] = useState("");
   const location = useLocation();
   const { user, logout, loading } = useAuth();
@@ -38,6 +40,11 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [openIndex, setOpenIndex] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const searchTimeout = useRef(null);
+
+  useEffect(() => {
+    const q = searchParams.get("q") || "";
+    setInput(q);
+  }, [searchParams]);
 
   useEffect(() => {
     if (location.pathname !== "/search") {
@@ -130,11 +137,19 @@ function Header({ activeTab, setActiveTab, setShow }) {
   }, []);
 
 
-  const handleTabClick = (tab) => {
-    navigate('/')
+  const handleTabClick = (tab, pCategory, categoryId) => {
     if (tab === activeTab) return;
+
     setActiveTab(tab);
+
+    if (tab === "HOME") {
+      navigate("/");
+      return;
+    }
+
+    navigate(`/${pCategory}/${tab}/pl/${categoryId}`);
   };
+
 
   const { categories, setCategories } = useProducts();
 
@@ -201,7 +216,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                       setSearchResults(filteredData);
                       setShowDropdown(false);
                     }}
-                    className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-2 px-2 font-semibold flex flex-row gap-2 cursor-pointer ${idx !== suggestions.length-1 && "border-b-2 border-[#f7ddf4]"}`}
+                    className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-2 px-2 font-semibold flex flex-row gap-2 cursor-pointer ${idx !== suggestions.length - 1 && "border-b-2 border-[#f7ddf4]"}`}
                   >
                     <IoIosSearch className="text-2xl text-gray-500" />
                     <p>{product.title}</p>
@@ -357,7 +372,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     setShowDropdown(false);
                   }}
                   key={idx}
-                  className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-2 px-2 font-semibold flex flex-row gap-2 cursor-pointer ${idx !== suggestions.length-1 && "border-b-2 border-[#f7ddf4]"}`}
+                  className={`${isDark ? "hover:bg-[#262e41]" : "hover:bg-[#fcdce7]"} py-2 px-2 font-semibold flex flex-row gap-2 cursor-pointer ${idx !== suggestions.length - 1 && "border-b-2 border-[#f7ddf4]"}`}
                 >
                   <IoIosSearch className="text-2xl text-gray-500" />
                   <p>{product.title}</p>
@@ -404,7 +419,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     <div className={`w-full px-1 sm:px-5 md:px-10`}>
                       {item.categories.map((sub, i) => (
                         <div key={i} className={`cursor-pointer hover:text-[#FF6F61] px-4 whitespace-nowrap capitalize  py-1  $ ${activeTab === sub ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-gray-700"}`}
-                          onClick={() => { handleTabClick(sub) }}>
+                          onClick={() => { handleTabClick(sub, item.parentCategory, idx) }}>
                           {sub}
                         </div>
                       ))}
