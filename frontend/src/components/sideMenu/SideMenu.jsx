@@ -76,23 +76,32 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleTabClick = (tab) => {
-        navigate('/');
+    const handleTabClick = (tab, pCategory) => {
+        if (tab === activeTab) return;
+
         setActiveTab(tab);
-        setShow(false);
-    }
+
+        if (tab === "HOME") {
+            navigate("/");
+            setShow(false);
+            return;
+        }
+
+        navigate(`/${pCategory}/${tab}`);
+        setShow(false)
+    };
 
     useEffect(() => {
-    if (show) {
-        document.body.style.overflow = "hidden";
-    } else {
-        document.body.style.overflow = "auto";
-    }
+        if (show) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
 
-    return () => {
-        document.body.style.overflow = "auto";
-    };
-}, [show]);
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [show]);
 
     return (
         <div className={`w-full h-screen absolute inset-0 top-0 left-0 z-99 ${show ? `translate-x-0 ${isDark ? "bg-[#00000080]" : "bg-[#00000050]"}` : "-translate-x-full transition-transform duration-500 bg-transparent overflow-hidden"} cursor-pointer`}>
@@ -135,7 +144,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                                             {item.categories.map((sub, i) => (
                                                 <div className='font-semibold text-gray-700 w-full pl-20 hover:text-orange-500' key={i}>
                                                     <li className={`${activeTab === sub ? "text-orange-500" : isDark ? "text-gray-300" : "text-gray-700"} hover:text-orange-500 w-fit cursor-pointer`}
-                                                        onClick={() => handleTabClick(sub)}
+                                                        onClick={() => handleTabClick(sub, item.parentCategory)}
                                                     >
                                                         {sub}
                                                     </li>

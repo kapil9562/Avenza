@@ -188,9 +188,9 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     return (
         <>
-            {error && <div className="flex flex-col justify-center items-center gap-4">
-                <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
-                <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
+            {error && <div className="flex flex-col min-h-[80dvh] justify-center items-center gap-4 px-10">
+                <img src='/assets/ItemNotFound.png' alt="not found" className="h-40 md:h-50 object-contain" />
+                <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg text-center`}>
                     We couldn't find what you were looking for. Let's start over.
                 </span>
                 <button className="min-w-35 px-4 py-3 border-[#FF6F61] border-2 text-[#FF6F61] rounded-sm cursor-pointer active:scale-95 transition-transform duration-300 font-semibold"
@@ -224,7 +224,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                             <ProductImage
                                 src={product.thumbnail}
                                 alt={product.title}
-                                className="w-full h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
+                                className="max-w-[80%] max-h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
                                 idx={idx}
                             />
 

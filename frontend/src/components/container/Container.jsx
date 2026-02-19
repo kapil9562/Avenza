@@ -10,7 +10,7 @@ function Container() {
     const activeCategory = category || "HOME";
 
     return (
-        <div className={`w-full min-h-screen pt-2 ${isDark ? "darkBgImg" : "bgImg"}`}>
+        <div className={`w-full min-h-[80dvh] pt-2 ${isDark ? "darkBgImg" : "bgImg"}`}>
             <div>
                 {/* Home Banner */}
                 {activeCategory === "HOME" && <HomeBanner />}

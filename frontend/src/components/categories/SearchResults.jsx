@@ -106,7 +106,7 @@ function SearchResults() {
                                     <ProductImage
                                         src={product.thumbnail}
                                         alt={product.title}
-                                        className="w-full h-40 object-contain transition-all duration-400 group-hover:scale-120 relative z-5 will-change-transform"
+                                        className="max-w-[80%] max-h-40 object-contain transition-all duration-400 group-hover:scale-120 relative z-5 will-change-transform"
                                         idx={idx}
                                     />
 
