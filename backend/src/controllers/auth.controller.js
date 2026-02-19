@@ -171,7 +171,7 @@ const emailSendOTP = async (req, res) => {
     } catch (err) {
         console.log("send otp error ::", err)
         res.status(400).json({
-            message: err || "Failed to send OTP"
+            message: "Failed to send OTP"
         });
     }
 };
@@ -297,9 +297,9 @@ const sendResetOTP = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
+        console.log("Forgot OTP error:", err);
         res.status(500).json({
-            message: err || "Failed to send OTP"
+            message: "Failed to send OTP"
         });
     }
 };
