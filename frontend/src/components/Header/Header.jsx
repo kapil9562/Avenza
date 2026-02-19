@@ -158,7 +158,6 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
     const fetchCategories = async () => {
       const res = await getAllCategory();
-      console.log(res.data)
       setCategories(res.data);
     };
 
