@@ -6,9 +6,8 @@ import { useParams } from 'react-router-dom';
 
 function Container() {
     const { isDark } = useTheme();
-    const { category } = useParams();   // URL se category
-
-    const activeCategory = category ? category.toUpperCase() : "HOME";
+    const { category } = useParams();  
+    const activeCategory = category || "HOME";
 
     return (
         <div className={`w-full min-h-screen pt-2 ${isDark ? "darkBgImg" : "bgImg"}`}>

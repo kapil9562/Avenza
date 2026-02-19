@@ -43,7 +43,7 @@ createRoot(document.getElementById('root')).render(
                 <Routes>
                   <Route element={<App />}>
                     <Route index element={<Container />} />
-                    <Route path="/:pCategory/:category/pl/:pid" element={<Container />} />
+                    <Route path="/:pCategory/:category" element={<Container />} />
                     <Route path="/:slug/p/:productId" element={<ProductDetails />} />
 
                     <Route

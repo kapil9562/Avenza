@@ -137,7 +137,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   }, []);
 
 
-  const handleTabClick = (tab, pCategory, categoryId) => {
+  const handleTabClick = (tab, pCategory) => {
     if (tab === activeTab) return;
 
     setActiveTab(tab);
@@ -147,7 +147,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
       return;
     }
 
-    navigate(`/${pCategory}/${tab}/pl/${categoryId}`);
+    navigate(`/${pCategory}/${tab}`);
   };
 
 
@@ -158,6 +158,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
     const fetchCategories = async () => {
       const res = await getAllCategory();
+      console.log(res.data)
       setCategories(res.data);
     };
 
@@ -308,7 +309,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                       </div>
                     )}
                     <span className={`text-start ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-                      <p className=''>Hello! {(user?.name) ? user?.name.split(" ")[0] : "User"}</p>
+                      <p className=''>Hi, {(user?.name) ? user?.name.split(" ")[0] : "User"}</p>
                       <p className='text-sm font-medium'>{user?.email}</p>
                     </span>
                   </button>
@@ -419,7 +420,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     <div className={`w-full px-1 sm:px-5 md:px-10`}>
                       {item.categories.map((sub, i) => (
                         <div key={i} className={`cursor-pointer hover:text-[#FF6F61] px-4 whitespace-nowrap capitalize  py-1  $ ${activeTab === sub ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-gray-700"}`}
-                          onClick={() => { handleTabClick(sub, item.parentCategory, idx) }}>
+                          onClick={() => { handleTabClick(sub, item.parentCategory) }}>
                           {sub}
                         </div>
                       ))}

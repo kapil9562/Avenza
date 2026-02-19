@@ -6,6 +6,17 @@ import useScrollReveal from "../utils/useScrollReveal";
 
 const ease = "ease-[cubic-bezier(0.22,1,0.36,1)]";
 
+const brands = [
+  "https://www.shutterstock.com/image-vector/galati-romania-april-29-2023-600nw-2295394661.jpg",
+  "https://1000logos.net/wp-content/uploads/2021/04/Nivea-logo.png",
+  "https://mir-s3-cdn-cf.behance.net/projects/404/056c44149820671.Y3JvcCwyNjUzLDIwNzUsMTYyOCwyMzY.jpg",
+  "https://thecapitalmall.com/wp-content/uploads/2025/02/mamaearth-Capital-Mall-Vasai.png",
+  "https://vectorseek.com/wp-content/uploads/2023/08/Wild-Stone-Logo-Vector.svg-.png",
+  "https://upload.wikimedia.org/wikipedia/commons/2/29/Vivo_Logo.svg",
+  "https://cdn.shopify.com/s/files/1/0272/4714/9155/files/logo-aboutus.png?1207",
+  "https://i.pinimg.com/736x/3d/c2/77/3dc277d9b7eae42cb4fbef1f05909e61.jpg"
+]
+
 const About = () => {
   const { isDark } = useTheme();
   const { scrollRef } = useOutletContext();
@@ -14,7 +25,7 @@ const About = () => {
   const story = useScrollReveal(scrollRef, 0.3);
   const cards = useScrollReveal(scrollRef, 0.3);
   const stats = useScrollReveal(scrollRef, 0.3);
-  const team = useScrollReveal(scrollRef, 0.3);
+  const team = useScrollReveal(scrollRef, 0.5);
   const cta = useScrollReveal(scrollRef, 0.3);
 
   const bgMain = isDark
@@ -35,7 +46,8 @@ const About = () => {
       {/* Hero */}
       <section
         ref={hero.ref}
-        className={`py-24 px-6 text-center bg-white/6 transition-all duration-900 ${ease}
+        className={`py-15 px-6 text-center bg-white/6 transition-all duration-900 ${ease}
+        ${bgMain}
         ${hero.show
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-10"
@@ -51,7 +63,7 @@ const About = () => {
       {/* Story */}
       <section
         ref={story.ref}
-        className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center"
+        className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10"
       >
         <img
           src="/assets/story.png"
@@ -70,7 +82,7 @@ const About = () => {
               : "opacity-0 translate-x-16"
             }`}
         >
-          <h2 className="text-3xl font-bold mb-4">Our Story</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Story</h2>
           <p className="mb-4">
             Started with a simple idea — to make online shopping easy,
             affordable, and reliable.
@@ -79,10 +91,23 @@ const About = () => {
         </div>
       </section>
 
+      <section
+        className={`py-10 px-6 backdrop-blur-3xl transition-all duration-900 ${ease}
+        ${isDark && "bg-white/5"} ${bgMain}`}
+      >
+        <div className="animate-scroll flex flex-row gap-6">
+          {[...brands, ...brands].map((logo, idx) => (
+            <div className="min-w-50 min-h-25 bg-white text-center gap-8 rounded-xl flex justify-center items-center cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-md hover:shadow-black/6 shadow-black/2" key={idx}>
+              <img src={logo} alt="brand" className=" object-contain bg-contain w-30" />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Cards */}
       <section
         ref={cards.ref}
-        className="max-w-6xl mx-auto px-6 pb-20 grid md:grid-cols-3 gap-8"
+        className="max-w-6xl mx-auto px-6 pb-20 grid md:grid-cols-3 gap-8 pt-20"
       >
         {[
           {

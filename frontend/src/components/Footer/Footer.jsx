@@ -46,10 +46,34 @@ function Footer({ setActiveTab, scrollRef }) {
 
             {/* Social */}
             <ul className="flex items-center space-x-3 mt-9 text-2xl">
-              <FaFacebook className={`hover:text-orange-500 cursor-pointer`} />
-              <FaInstagram className={`hover:text-orange-500 cursor-pointer`} />
-              <FaTwitter className={`hover:text-orange-500 cursor-pointer`} />
-              <FaGithub className={`hover:text-orange-500 cursor-pointer`} />
+              <img
+                src="https://tse2.mm.bing.net/th/id/OIP._-N0rPk3XBfnfR9ZvP892wHaHa?pid=Api&P=0&h=180"
+                alt="facebook"
+                className={`h-10 w-10 rounded-full overflow-hidden cursor-pointer border-2 transition-all duration-300 hover:-translate-y-1 active:scale-95 ${isDark ? "border-gray-700" : "border-transparent"
+                  }`}
+              />
+
+              <img
+                src="https://cdn.prod.website-files.com/5d27c559203c3179a11b9e49/6947426ee56b8820a1950128_Instagram_icon.png"
+                alt="instagram"
+                className={`h-10 w-10 rounded-full overflow-hidden cursor-pointer border-2 transition-all duration-300 hover:-translate-y-1 active:scale-95 ${isDark ? "border-gray-700" : "border-transparent"
+                  }`}
+              />
+
+              <img
+                src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg?semt=ais_user_personalization&w=740&q=80"
+                alt="twitter"
+                className={`h-10 w-10 rounded-full overflow-hidden cursor-pointer border-2 transition-all duration-300 hover:-translate-y-1 active:scale-95 ${isDark ? "border-gray-700" : "border-transparent"
+                  }`}
+              />
+
+              <img
+                src="https://images.icon-icons.com/3685/PNG/512/github_logo_icon_229278.png"
+                alt="github"
+                className={`h-10 w-10 rounded-full object-cover cursor-pointer border-2 transition-all duration-300 hover:-translate-y-1 active:scale-95 ${isDark ? "border-gray-700" : "border-transparent"
+                  }`}
+              />
+
             </ul>
           </div>
 
@@ -98,7 +122,7 @@ function Footer({ setActiveTab, scrollRef }) {
               <p className="space-y-2 text-[16px] break-all whitespace-normal">
                 <span className="font-bold">
                   Email:{" "}
-                  <a href="adhikarikapil389@gmail.com" className="hover:text-orange-400 hover:underline font-medium ">adhikarikapil389@gmail.com</a>
+                  <a href="mailto:avenzabusiness2@gmail.com" className="hover:text-orange-400 hover:underline font-medium ">avenzabusiness2@gmail.com</a>
                 </span>
               </p>
               <p className="space-y-2 text-[16px]">
@@ -110,7 +134,7 @@ function Footer({ setActiveTab, scrollRef }) {
               <p className="space-y-2 text-[16px]">
                 <span className="font-bold">
                   Location:{" "}
-                  <a href="adhikarikapil389@gmail.com" className="hover:text-orange-400 hover:underline font-medium ">Almora, Uttarakhand, India</a>
+                  <a href="https://www.google.com/maps?q=Almora,Uttarakhand" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 hover:underline font-medium ">Almora, Uttarakhand, India</a>
                 </span>
               </p>
             </ul>

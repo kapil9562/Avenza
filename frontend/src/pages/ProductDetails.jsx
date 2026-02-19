@@ -38,7 +38,6 @@ function ProductDetails() {
                 setCurrentImg(data.images?.[0] || null);
                 setImgLoading(true);
             } catch (err) {
-                console.error(err);
                 setError(err);
             } finally {
                 setLoading(false);
@@ -49,7 +48,7 @@ function ProductDetails() {
     }, [productId]);
 
     useEffect(() => {
-        setActiveTab("")
+        setActiveTab("");
         product?.images?.forEach((src) => {
             const img = new Image();
             img.src = src;
@@ -93,7 +92,7 @@ function ProductDetails() {
                     <ProductDetailsSkeleton />
                 ) : (
                     <div className={`md:rounded-4xl flex flex-col justify-center items-center min-h-150 md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
-                        {error ? (
+                        {!product ? (
                             <div className="flex flex-col justify-center items-center gap-4">
                                 <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
                                 <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>

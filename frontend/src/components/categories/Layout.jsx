@@ -29,8 +29,6 @@ const Layout = React.memo(function Layout({ category, pid }) {
     const products = cache[cacheKey];
     const loading = !products;
 
-    const {category:getCategory} = useParams();
-
     const navigate = useNavigate();
 
     const { isDark } = useTheme();
@@ -44,6 +42,8 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const { isAuthenticated, loading: authloading } = useAuth();
 
+    const [error, setError] = useState("");
+ 
     useEffect(() => {
         if (!alert) return;
 
@@ -57,10 +57,15 @@ const Layout = React.memo(function Layout({ category, pid }) {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
+                setError("")
                 const params = { skip };
-                if (category !== "HOME") params.category = getCategory;
+                if (category !== "HOME") params.category = category;
 
                 const res = await getProducts(params);
+
+                if(!res?.data?.total) {
+                    setError("no any product found !")
+                }
 
                 setTotalItems(res?.data?.total);
 
@@ -68,6 +73,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                     setProducts(cacheKey, res?.data?.products);
                 }
             } catch (err) {
+                setError(err?.response?.data?.message || err?.message || "Something went wrong !")
                 console.error(err);
             }
         };
@@ -182,6 +188,16 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     return (
         <>
+            {error && <div className="flex flex-col justify-center items-center gap-4">
+                <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
+                <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
+                    We couldn't find what you were looking for. Let's start over.
+                </span>
+                <button className="min-w-35 px-4 py-3 border-[#FF6F61] border-2 text-[#FF6F61] rounded-sm cursor-pointer active:scale-95 transition-transform duration-300 font-semibold"
+                    onClick={() => {
+                        navigate('/');
+                    }}>Go To HomePage</button>
+            </div>}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 pb-10 animate-fadeUp will-change-transform">
 
                 {loading
