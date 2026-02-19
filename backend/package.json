@@ -20,7 +20,9 @@
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.0",
     "nodemailer": "^8.0.1",
-    "nodemon": "^1.0.2",
     "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
