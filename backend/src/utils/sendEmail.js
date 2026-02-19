@@ -1,19 +1,23 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
 });
 
 export const sendEmail = async ({ to, otp, subject }) => {
 
   let title = "Verify your Avenza sign-up";
   let description =
-  "We received a sign-up attempt with the following code. Please enter it in the browser window where you started signing up.";
-    
+    "We received a sign-up attempt with the following code. Please enter it in the browser window where you started signing up.";
+
   // Change content for password reset
   if (subject === "Password Reset OTP") {
     title = "Reset your Avenza password";
