@@ -15,7 +15,7 @@ app.use(express.json())
 const PORT = process.env.PORT || 8000
 
 app.use(cors({
-  origin: "https://avenza.onrender.com",
+  origin: "https://avenza.onrender.com/api",
   credentials: true
 }));
 
