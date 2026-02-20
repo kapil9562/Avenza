@@ -171,7 +171,7 @@ const emailSendOTP = async (req, res) => {
     } catch (err) {
         console.log("send otp error ::", err)
         res.status(400).json({
-            message: err
+            message: "Failed to send OTP"
         });
     }
 };
