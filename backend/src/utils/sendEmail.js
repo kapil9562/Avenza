@@ -7,17 +7,12 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // MUST be true for 465
+  secure: true,
+  family: 4, // force IPv4
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  // Add these specific timeout extensions
-  connectionTimeout: 30000, 
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-  debug: true,
-  logger: true,
 });
 
 export const sendEmail = async ({ to, otp, subject }) => {
