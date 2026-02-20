@@ -1,21 +1,11 @@
-import dns from "dns";
+import SibApiV3Sdk from "sib-api-v3-sdk";
 
-dns.setDefaultResultOrder("ipv4first");
-
-import nodemailer from "nodemailer";
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  family: 4,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const client = SibApiV3Sdk.ApiClient.instance;
+const apiKey = client.authentications["api-key"];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
 export const sendEmail = async ({ to, otp, subject }) => {
+  const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
   let title = "Verify your Avenza sign-up";
   let description = "We received a sign-up attempt with the following code. Please enter it in the browser window where you started signing up.";
@@ -32,12 +22,17 @@ export const sendEmail = async ({ to, otp, subject }) => {
     .replace("{{description}}", description)
     .replace("{{otp}}", otp);
 
-  await transporter.sendMail({
-    from: `"Avenza" <${process.env.EMAIL_USER}>`,
-    to,
+  const sendSmtpEmail = {
+    sender: {
+      email: process.env.EMAIL_USER,
+      name: "Avenza"
+    },
+    to: [{ email: to }],
     subject,
-    html: htmlContent,
-  });
+    htmlContent: htmlContent
+  };
+
+  await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
 
 
