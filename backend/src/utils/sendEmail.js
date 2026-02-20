@@ -16,6 +16,8 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
   connectionTimeout: 10000,
+  debug: true,
+  logger: true,
 });
 
 export const sendEmail = async ({ to, otp, subject }) => {
