@@ -19,7 +19,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
     const backdropRef = useRef(null);
     const navigate = useNavigate();
 
-    const { categories } = useProducts();
+    const { categories, setCache } = useProducts();
     const [currentIdx, setCurrentIdx] = useState(null);
 
     const categoryIcons = [
@@ -80,6 +80,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
         if (tab === activeTab) return;
 
         setActiveTab(tab);
+        setCache({});
 
         if (tab === "HOME") {
             navigate("/");
