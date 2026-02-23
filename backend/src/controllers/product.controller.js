@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Product from "../models/products.model.js";
 
 const getProducts = async (req, res) => {
-    let { skip = 0, limit = 30, category, search, productId, productIds } = req.query;
+    let { skip = 0, limit = 30, category, search, productId, productIds, inStock } = req.query;
 
     skip = parseInt(skip);
     limit = parseInt(limit);
@@ -15,13 +15,15 @@ const getProducts = async (req, res) => {
             filter.category = category;
         }
 
+        if (inStock === "true") {
+            filter.stock = { $gt: 0 }
+        }
+
+        if (inStock === "false") {
+            filter.stock = 0;
+        }
+
         if (productIds) {
-            if (!mongoose.Types.ObjectId.isValid(productId)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid productId"
-                });
-            }
             const idsArray = productIds
                 .split(",")
                 .filter(id => mongoose.Types.ObjectId.isValid(id));
