@@ -40,6 +40,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [openIndex, setOpenIndex] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const searchTimeout = useRef(null);
+   const { categories, setCategories, setCache } = useProducts();
 
   useEffect(() => {
     const q = searchParams.get("q") || "";
@@ -140,6 +141,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const handleTabClick = (tab, pCategory) => {
     if (tab === activeTab) return;
 
+    setCache({});
     setActiveTab(tab);
 
     if (tab === "HOME") {
@@ -149,9 +151,6 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
     navigate(`/${pCategory}/${tab}`);
   };
-
-
-  const { categories, setCategories } = useProducts();
 
   useEffect(() => {
     if (categories.length) return;
@@ -414,7 +413,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     </div>
                   </div>
                 </div>
-                {item.categories.length > 0 &&
+                {item?.categories?.length > 0 &&
                   (<div className={`${isDark ? " border-gray-800 bg-[#0F172A]" : "bg-white border-gray-200"} border-2 absolute w-full top-full left-0 flex flex-col opacity-0 transition-all duration-300 group-hover:opacity-100 invisible group-hover:visible py-2 ${openIndex === idx ? "opacity-100 visible" : "opacity-0 invisible"}`} ref={categoryRef}>
                     <div className={`w-full px-1 sm:px-5 md:px-10`}>
                       {item.categories.map((sub, i) => (

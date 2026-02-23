@@ -15,6 +15,7 @@ export const ProductsProvider = ({ children }) => {
 
   const value = {
     cache,
+    setCache,
     setProducts,
     categories,
     setCategories
