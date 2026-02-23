@@ -55,6 +55,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
     }, [alert]);
 
     useEffect(() => {
+        if (products) return;
         const fetchProducts = async () => {
             try {
                 setError("")

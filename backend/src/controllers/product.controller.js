@@ -40,7 +40,7 @@ const getProducts = async (req, res) => {
         const total = await Product.countDocuments(filter);
 
         // Get products
-        const products = await Product.find(filter)
+        const products = await Product.find(filter).sort({ productId: 1 })
             .skip(skip)
             .limit(limit)
 
