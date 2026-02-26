@@ -269,45 +269,51 @@ function ProductDetails() {
                                 <div className="w-full p-4 h-1">
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
                                 </div>
-                                <div className="pb-4 flex flex-col gap-4 px-6">
+                                <div className="pb-4 flex flex-col gap-4 px-6 w-full">
                                     <h1 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
                                         Customer Reviews
                                     </h1>
-                                    <div className="grid lg:grid-cols-3 gap-5">
-                                        {product?.reviews?.map((review, idx) => (
-                                            <div key={idx} className={idx !== product.reviews.length - 1 ? `${isDark ? "border-gray-600" : "border-gray-200"}  lg:border-r flex flex-row lg:pr-4 pb-4 lg:pb-0 border-b-2 lg:border-b-0` : "border-none flex flex-row lg:pr-4 pb-4 lg:pb-0"}>
-                                                <div className="flex gap-4">
-                                                    <img
-                                                        src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`}
-                                                        alt="User"
-                                                        className="w-10 h-10 rounded-full"
-                                                    />
-                                                    <div className="flex flex-col gap-2">
-                                                        <div className={`${isDark ? "text-[#FFFFFF]" : "text-black"} font-semibold flex flex-row items-center gap-2`}>
-                                                            <span>{review.reviewerName}</span>
-                                                            <span>
-                                                                {renderStars(review.rating)}
-                                                            </span>
+                                    {product?.reviews?.length > 0 ?
+                                        <div className="grid lg:grid-cols-3 gap-5">
+                                            {product?.reviews?.map((review, idx) => (
+                                                <div key={idx} className={idx !== product.reviews.length - 1 ? `${isDark ? "border-gray-600" : "border-gray-200"}  lg:border-r flex flex-row lg:pr-4 pb-4 lg:pb-0 border-b-2 lg:border-b-0` : "border-none flex flex-row lg:pr-4 pb-4 lg:pb-0"}>
+                                                    <div className="flex gap-4">
+                                                        <img
+                                                            src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`}
+                                                            alt="User"
+                                                            className="w-10 h-10 rounded-full"
+                                                        />
+                                                        <div className="flex flex-col gap-2">
+                                                            <div className={`${isDark ? "text-[#FFFFFF]" : "text-black"} font-semibold flex flex-row items-center gap-2`}>
+                                                                <span>{review.reviewerName}</span>
+                                                                <span>
+                                                                    {renderStars(review.rating)}
+                                                                </span>
+                                                            </div>
+                                                            <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                                                                {review.comment} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae, officiis?
+                                                            </p>
+                                                            <p className="text-[14px] text-gray-400 font-semibold">
+                                                                • {formattedDate(review.date)}
+                                                            </p>
                                                         </div>
-                                                        <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                                                            {review.comment} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae, officiis?
-                                                        </p>
-                                                        <p className="text-[14px] text-gray-400 font-semibold">
-                                                            • {formattedDate(review.date)}
-                                                        </p>
                                                     </div>
-                                                </div>
 
-                                            </div>
-                                        ))}
-                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        :
+                                        <div className="grid lg:grid-cols-3 gap-5">
+                                            <h1>No reviews yet. Be the first to review this product!</h1>
+                                        </div>
+                                    }
                                 </div>
 
                                 <div className="w-full p-4 h-1">
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
                                 </div>
                                 {/* Related Products */}
-                                <div className="pb-4 flex flex-col">
+                                <div className="pb-4 flex flex-col w-full">
                                     <h1 className={`text-2xl mb-2 font-serif sm:pl-6 pl-4 ${!isDark ? "text-black" : "text-gray-200"}`}>
                                         Related Products
                                     </h1>
