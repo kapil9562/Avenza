@@ -35,7 +35,11 @@ const getProducts = async (req, res) => {
         }
 
         if (search) {
-            filter.title = { $regex: search, $options: "i" };
+            filter.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { category: { $regex: search, $options: "i" } },
+                { brand: { $regex: search, $options: "i" } },
+            ];
         }
 
         // Total count
