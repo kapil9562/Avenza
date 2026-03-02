@@ -90,4 +90,51 @@ const getAllCategory = async (req, res) => {
     }
 };
 
-export { getProducts, getAllCategory };
+
+const productReview = async (req, res) => {
+    const { productId, rating, comment, reviewerName, reviewerEmail } = req.body;
+
+    if (!productId || !rating || !comment || !reviewerName || !reviewerEmail) {
+        return res.status(400).json({ msg: "All fields are required!" });
+    }
+
+    if (rating < 1 || rating > 5) {
+        return res.status(400).json({ msg: "Rating must be between 1 and 5" });
+    }
+
+    try {
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ msg: "Product not found!" });
+        }
+
+        // Create new review
+        const newReview = {
+            rating,
+            comment,
+            reviewerName,
+            reviewerEmail,
+            date: new Date()
+        };
+
+        product.reviews.push(newReview);
+
+        // 🔥 Recalculate Average Rating
+        const totalRating = product.reviews.reduce((acc, item) => acc + item.rating, 0);
+        product.rating = (totalRating / product.reviews.length).toFixed(1);
+
+        await product.save();
+
+        res.status(200).json({
+            msg: "Thank you for sharing your experience ❤️",
+            rating: product.rating
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export { getProducts, getAllCategory, productReview };

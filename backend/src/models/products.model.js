@@ -35,7 +35,10 @@ const productSchema = new mongoose.Schema({
     },
     price: Number,
     discountPercentage: Number,
-    rating: Number,
+    rating: {
+        type: Number,
+        default: 0
+    },
     stock: Number,
     tags: [String],
     brand: String,
@@ -52,5 +55,24 @@ const productSchema = new mongoose.Schema({
     images: [String],
     thumbnail: String
 }, { timestamps: true });
+
+productSchema.pre("save", function () {
+
+    if (this.reviews && this.reviews.length > 0) {
+
+        const totalRating = this.reviews.reduce(
+            (acc, review) => acc + (review.rating || 0),
+            0
+        );
+
+        this.rating = Number(
+            (totalRating / this.reviews.length).toFixed(1)
+        );
+
+    } else {
+        this.rating = 0;
+    }
+
+});
 
 export default mongoose.model("Product", productSchema);

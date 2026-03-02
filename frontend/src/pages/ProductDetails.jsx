@@ -4,8 +4,10 @@ import ProductDetailsSkeleton from "../utils/ProductDetailsSkeleton";
 import { formatINR } from "../utils/price";
 import Layout from "../components/categories/Layout";
 import { useTheme } from "../context/ThemeContext";
-import { getProducts } from "../api/api.js";
+import { getProducts, productReview } from "../api/api.js";
 import AddToCartBtn from "../utils/AddToCartBtn.jsx";
+import { IoStar } from "react-icons/io5";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function ProductDetails() {
     const { productId } = useParams();
@@ -19,14 +21,45 @@ function ProductDetails() {
 
     const { setActiveTab } = useOutletContext();
 
-    useEffect(() => {
-        setActiveTab("");
-    }, []);
-
+    const [rating, setRating] = useState(0);
+    const [hover, setHover] = useState(0);
+    const [showInput, setShowInput] = useState(false);
+    const [review, setReview] = useState("");
     const { isDark } = useTheme();
     const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
     const navigate = useNavigate();
+
+    const {user} = useAuth();
+
+    const submitReview = async () => {
+        if(!user) {
+            navigate('/login');
+            return;
+        }
+        try {
+            const res = await productReview({
+                productId,
+                rating,
+                comment: review,
+                reviewerName: user?.name,
+                reviewerEmail: user?.email
+            })
+            console.log(res)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleRatingClick = (value) => {
+        setRating(value);
+        setShowInput(true);
+    };
+
+
+    useEffect(() => {
+        setActiveTab("");
+    }, []);
 
     useEffect(() => {
         const fetchProductById = async () => {
@@ -291,7 +324,7 @@ function ProductDetails() {
                                                                 </span>
                                                             </div>
                                                             <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                                                                {review.comment} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae, officiis?
+                                                                {review.comment}
                                                             </p>
                                                             <p className="text-[14px] text-gray-400 font-semibold">
                                                                 • {formattedDate(review.date)}
@@ -307,6 +340,57 @@ function ProductDetails() {
                                             <h1>No reviews yet. Be the first to review this product!</h1>
                                         </div>
                                     }
+                                </div>
+
+                                <div className="w-full p-4 h-1">
+                                    <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
+                                </div>
+
+                                {/* Give Review */}
+                                <div className="w-full pb-4 flex flex-col gap-2 px-6">
+                                    <h2 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                        Give a Review
+                                    </h2>
+
+                                    {/* Stars */}
+                                    <div className="flex items-center gap-2 mb-4">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <IoStar
+                                                key={star}
+                                                size={32}
+                                                onClick={() => handleRatingClick(star)}
+                                                onMouseEnter={() => setHover(star)}
+                                                onMouseLeave={() => setHover(0)}
+                                                className={`cursor-pointer transition-all duration-200 outline-none ${star <= (hover || rating)
+                                                    ? "fill-yellow-400 text-yellow-400 scale-110"
+                                                    : "text-gray-300"
+                                                    }`}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    {/* Review Input */}
+                                    {showInput && (
+                                        <div className="transition-all duration-300">
+                                            <textarea
+                                                value={review}
+                                                onChange={(e) => setReview(e.target.value)}
+                                                placeholder="Write your review..."
+                                                className={`w-full p-3 border-2 rounded-xl focus:outline-none shadow-md resize-none ${isDark ? "focus:shadow-purple-900/40 border-gray-700 placeholder:text-gray-400 text-gray-200" : "focus:shadow-purple-300 border-gray-200"}`}
+                                                rows="4"
+                                                maxLength={200}
+                                            />
+
+                                            <button
+                                                className={`mt-3 px-6 py-2 bg-linear-to-r from-orange-400 via-orange-500 to-orange-600 text-white rounded-xl font-medium transition-all cursor-pointer`}
+                                                onClick={() => {
+                                                    submitReview();
+                                                }}
+                                            >
+                                                Submit Review
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="w-full p-4 h-1">
