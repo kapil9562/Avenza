@@ -8,6 +8,10 @@ import { getProducts, productReview } from "../api/api.js";
 import AddToCartBtn from "../utils/AddToCartBtn.jsx";
 import { IoStar } from "react-icons/io5";
 import { useAuth } from "../context/AuthContext.jsx";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { PiPencilLineFill } from "react-icons/pi";
+import { ImBin } from "react-icons/im";
+
 
 function ProductDetails() {
     const { productId } = useParams();
@@ -28,12 +32,14 @@ function ProductDetails() {
     const { isDark } = useTheme();
     const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
+    const [showOption, setShowOption] = useState(false);
+
     const navigate = useNavigate();
 
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     const submitReview = async () => {
-        if(!user) {
+        if (!user) {
             navigate('/login');
             return;
         }
@@ -322,6 +328,22 @@ function ProductDetails() {
                                                                 <span>
                                                                     {renderStars(review.rating)}
                                                                 </span>
+                                                                <div className={`h-fit w-fit justify-center items-center ${ review.reviewerEmail === user.email ? "flex" : "hidden"} ${isDark ? "text-gray-200" : "text-gray-800"} relative`}>
+                                                                    <button onClick={() => setShowOption(!showOption)} className="cursor-pointer">
+                                                                        <BsThreeDotsVertical />
+                                                                    </button>
+                                                                    <div className={`absolute top-full left-0 border-2 rounded-lg overflow-hidden ${showOption ? "block" : "hidden"} ${isDark ? "border-gray-700 bg-[#0F172A] " : "border-gray-200 bg-white"}`}>
+                                                                        <button className={`py-1 px-2 flex flex-row gap-2 items-center text-blue-500 cursor-pointer w-full ${isDark? "hover:bg-gray-800" : "hover:bg-gray-200"}`}>
+                                                                            <PiPencilLineFill/>
+                                                                            <span>Edit</span>
+                                                                        </button>
+                                                                        <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}/>
+                                                                        <button className={`py-1 px-2 flex flex-row gap-2 items-center text-red-500 cursor-pointer w-full ${isDark? "hover:bg-gray-800" : "hover:bg-gray-200"}`}>
+                                                                            <ImBin />
+                                                                            <span>Delete</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
                                                                 {review.comment}
@@ -336,18 +358,18 @@ function ProductDetails() {
                                             ))}
                                         </div>
                                         :
-                                        <div className="grid lg:grid-cols-3 gap-5">
+                                        <div className={`grid lg:grid-cols-3 gap-5 ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                                             <h1>No reviews yet. Be the first to review this product!</h1>
                                         </div>
                                     }
                                 </div>
 
-                                <div className="w-full p-4 h-1">
+                                <div className={`w-full p-4 h-1 ${product.reviews.find((review) => review.reviewerEmail === user.email) && "hidden"}`}>
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
                                 </div>
 
                                 {/* Give Review */}
-                                <div className="w-full pb-4 flex flex-col gap-2 px-6">
+                                <div className={`w-full pb-4 flex flex-col gap-2 px-6 ${product.reviews.find((review) => review.reviewerEmail === user.email) && "hidden"}`}>
                                     <h2 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
                                         Give a Review
                                     </h2>
