@@ -212,9 +212,9 @@ export default function Signup() {
       if (authResult['code']) {
 
         const result = await googleAuth(authResult['code']);
-        const { uid, email, name, avatar } = result.data.user;
-        const token = result.data.tokens.access_token
-        const userData = { uid, email, name, photo: avatar, token }
+        const { uid, email, name, avatar, _id } = result.data.user;
+        const token = result.data.tokens.access_token;
+        const userData = { uid, email, name, photo: avatar, token, _id };
 
         if (userData) {
           await login(userData);

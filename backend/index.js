@@ -6,6 +6,7 @@ import { authRouter } from './src/routes/authRouter.js';
 import { productRouter } from './src/routes/productRouter.js';
 import { cartRouter } from './src/routes/cartRouter.js';
 import { FavItemsRouter } from './src/routes/FavItemsRouter.js';
+import { orderRouter } from './src/routes/orderRouter.js';
 
 
 dotenv.config()
@@ -28,6 +29,7 @@ app.use('/api', authRouter)
 app.use('/api', productRouter)
 app.use('/api', cartRouter)
 app.use('/api', FavItemsRouter)
+app.use('/api', orderRouter)
 
 app.get("/ping", (req, res) => {
   res.send("Server is awake");

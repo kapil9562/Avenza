@@ -86,3 +86,11 @@ export const productReview = ({productId, rating, comment, reviewerName, reviewe
   reviewerName,
   reviewerEmail
 });
+
+export const saveAddress = ({userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country}) => api.post("/save-address", {
+  userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country
+});
+
+export const getAddress = ({userId}) => api.get(`/get-address?userId=${userId}`);
+
+export const buyNow = ({userId, productId, quantity, addressId}) => api.post("buy-now", {userId, productId, quantity, addressId});

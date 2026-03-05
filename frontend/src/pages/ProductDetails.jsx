@@ -122,6 +122,15 @@ function ProductDetails() {
         );
     };
 
+    const handleBuyNow = () => {
+        if(!user) {
+            navigate('/login');
+            return;
+        }
+
+        navigate(`/checkout/${productId}`);
+    }
+
 
     return (
         <div className={`flex flex-col gap-2 md:p-5 min-h-150 w-full pb-20 ${!isDark ? "bgImg" : "darkBgImg"}`}>
@@ -243,7 +252,7 @@ function ProductDetails() {
                                                 </div>
 
                                                 <button
-                                                    // onClick={() => {}}
+                                                    onClick={() => {handleBuyNow()}}
                                                     className="min-w-35 px-6 py-2 bg-[#FF6F61] text-[#FFFFFF] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300"
                                                 >
                                                     Buy Now

@@ -21,6 +21,7 @@ import About from './pages/About.jsx';
 import Whitelist from './pages/Whitelist.jsx';
 import ForgetPass from './pages/ForgetPass.jsx';
 import ResetPass from './pages/ResetPass.jsx';
+import CheckoutPage from './pages/checkoutPage.jsx';
 
 
 const GoogleAuthWrappper = () => {
@@ -45,6 +46,7 @@ createRoot(document.getElementById('root')).render(
                     <Route index element={<Container />} />
                     <Route path="/:pCategory/:category" element={<Container />} />
                     <Route path="/:slug/p/:productId" element={<ProductDetails />} />
+                    <Route path="/checkout/:productId" element={<CheckoutPage />} />
 
                     <Route
                       path="/carts"
