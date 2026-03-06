@@ -3,6 +3,7 @@ import { buyNow, getAddress, saveAddress } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useOrders } from "../context/OrdersContext";
 
 const CheckoutPage = () => {
 
@@ -25,6 +26,7 @@ const CheckoutPage = () => {
     const [errors, setErrors] = useState({});
 
     const { user } = useAuth();
+    const{fetchOrders} = useOrders();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,9 +98,12 @@ const CheckoutPage = () => {
 
             console.log(res);
 
+            fetchOrders();
+            
             if (res?.data?.url) {
                 window.location.href = res.data.url;
             }
+
 
         } catch (error) {
             console.log(error);

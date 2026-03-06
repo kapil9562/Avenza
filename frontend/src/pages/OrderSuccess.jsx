@@ -1,7 +1,8 @@
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { verifyPayment } from '../api/api.js'
 import { useEffect, useState } from "react";
+import { useOrders } from "../context/OrdersContext.jsx";
 
 const OrderSuccess = () => {
     const [searchParams] = useSearchParams();
@@ -12,16 +13,19 @@ const OrderSuccess = () => {
     const [error, setError] = useState("");
 
     const [loading, setLoading] = useState(true);
-
-    const navigate = useNavigate();
-
+ 
+    const {fetchOrders} = useOrders();
+  
     useEffect(() => {
 
         const verify = async () => {
             try {
                 const res = await verifyPayment({ orderId, sessionId });
 
-                res?.data?.success && setLoading(false);
+                if(res?.data?.success) {
+                    setLoading(false);
+                    fetchOrders();
+                }
             } catch (error) {
                 const msg = error?.data?.message || error?.message || "Something went wrong !"
                 setError(msg);

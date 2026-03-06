@@ -32,7 +32,6 @@ function ProductDetails() {
     const { isDark } = useTheme();
     const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
-    const [showOption, setShowOption] = useState(false);
     const [activeOption, setActiveOption] = useState(null);
 
     const navigate = useNavigate();
