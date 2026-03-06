@@ -312,7 +312,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     </span>
                   </button>
                   <div className={`${isDark ? "border-gray-700" : "border-gray-300"} w-full border-t-2`}></div>
-                  <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f]" : "hover:bg-pink-100  text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`}>
+                  <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f]" : "hover:bg-pink-100  text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`} onClick={() => navigate('/my-account/my-orders')}>
                     <LiaShoppingBagSolid className='text-xl' />
                     <span>My Orders</span>
                   </button>

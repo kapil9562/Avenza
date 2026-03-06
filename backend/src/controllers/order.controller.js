@@ -9,7 +9,7 @@ export const buyNow = async (req, res) => {
     try {
         const { userId, productId, quantity, addressId } = req.body;
 
-        const product = await Product.findOne({_id:productId});
+        const product = await Product.findOne({ _id: productId });
 
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
@@ -26,6 +26,7 @@ export const buyNow = async (req, res) => {
                 {
                     product: product._id,
                     name: product.title,
+                    image: product.thumbnail,
                     price: product.price,
                     quantity
                 }
@@ -45,7 +46,8 @@ export const buyNow = async (req, res) => {
                     price_data: {
                         currency: "inr",
                         product_data: {
-                            name: product.title
+                            name: product.title,
+                            images: [product.thumbnail]
                         },
                         unit_amount: product.price * 100
                     },
@@ -55,7 +57,7 @@ export const buyNow = async (req, res) => {
 
             mode: "payment",
 
-            success_url: `${process.env.CLIENT_URL}/success?orderId=${order._id}`,
+            success_url: `${process.env.CLIENT_URL}/success?orderId=${order._id}&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.CLIENT_URL}/cancel`
         });
 
@@ -66,6 +68,47 @@ export const buyNow = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const verifyPayment = async (req, res) => {
+    try {
+        const { orderId, sessionId } = req.body;
+
+        if (!orderId || !sessionId) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing data"
+            });
+        }
+
+        // get stripe session
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+        if (session.payment_status === "paid") {
+
+            await Order.findByIdAndUpdate(orderId, {
+                paymentStatus: "paid",
+                isPaid: true
+            });
+
+            return res.json({
+                success: true,
+                message: "Payment verified"
+            });
+        }
+
+        res.json({
+            success: false,
+            message: "Payment not completed"
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to verify payment !"
+        });
     }
 };
 
@@ -118,9 +161,40 @@ export const getAddress = async (req, res) => {
             success: true,
             address
         });
-        
+
     } catch (error) {
         return res.status(500).json({
+            error
+        })
+    }
+}
+
+export const getOrders = async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(402).json({
+            error: "userId required !",
+        })
+    }
+
+    try {
+        const orders = await Order.find({userId});
+        if(!orders) {
+            return res.status(402).json({
+                success: false,
+                msg: "No results found!"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            orders
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
             error
         })
     }

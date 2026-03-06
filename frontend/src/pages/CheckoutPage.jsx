@@ -97,7 +97,7 @@ const CheckoutPage = () => {
             console.log(res);
 
             if (res?.data?.url) {
-                window.location.href = res.data.url; // redirect to stripe
+                window.location.href = res.data.url;
             }
 
         } catch (error) {

@@ -22,6 +22,9 @@ import Whitelist from './pages/Whitelist.jsx';
 import ForgetPass from './pages/ForgetPass.jsx';
 import ResetPass from './pages/ResetPass.jsx';
 import CheckoutPage from './pages/checkoutPage.jsx';
+import OrderSuccess from './pages/OrderSuccess.jsx';
+import Orders from './pages/Orders.jsx';
+import { OrdersProvider } from './context/OrdersContext.jsx';
 
 
 const GoogleAuthWrappper = () => {
@@ -40,44 +43,48 @@ createRoot(document.getElementById('root')).render(
           <ProductsProvider>
             <FavItemsProvider>
               <CartProvider>
+                <OrdersProvider>
 
-                <Routes>
-                  <Route element={<App />}>
-                    <Route index element={<Container />} />
-                    <Route path="/:pCategory/:category" element={<Container />} />
-                    <Route path="/:slug/p/:productId" element={<ProductDetails />} />
-                    <Route path="/checkout/:productId" element={<CheckoutPage />} />
+                  <Routes>
+                    <Route element={<App />}>
+                      <Route index element={<Container />} />
+                      <Route path="/:pCategory/:category" element={<Container />} />
+                      <Route path="/:slug/p/:productId" element={<ProductDetails />} />
+                      <Route path="/checkout/:productId" element={<CheckoutPage />} />
+                      <Route path="/success" element={<OrderSuccess />} />
+                      <Route path="/my-account/my-orders" element={<Orders />} />
 
-                    <Route
-                      path="/carts"
-                      element={
-                        <ProtectedRoute>
-                          <CartDetails />
-                        </ProtectedRoute>
-                      }
-                    />
+                      <Route
+                        path="/carts"
+                        element={
+                          <ProtectedRoute>
+                            <CartDetails />
+                          </ProtectedRoute>
+                        }
+                      />
 
-                    <Route
-                      path="/whitelist"
-                      element={
-                        <ProtectedRoute>
-                          <Whitelist />
-                        </ProtectedRoute>
-                      }
-                    />
+                      <Route
+                        path="/whitelist"
+                        element={
+                          <ProtectedRoute>
+                            <Whitelist />
+                          </ProtectedRoute>
+                        }
+                      />
 
-                    <Route path="/about" element={<About />} />
-                    <Route path="/search" element={<SearchResults />} />
-                  </Route>
+                      <Route path="/about" element={<About />} />
+                      <Route path="/search" element={<SearchResults />} />
+                    </Route>
 
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<GoogleAuthWrappper />} />
-                  <Route path="/forgetpassword" element={<ForgetPass />} />
-                  <Route path="/reset-password/:email" element={<ResetPass />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<GoogleAuthWrappper />} />
+                    <Route path="/forgetpassword" element={<ForgetPass />} />
+                    <Route path="/reset-password/:email" element={<ResetPass />} />
 
-                  <Route path="*" element={<PageNotFound />} />
-                </Routes>
-
+                    <Route path="*" element={<PageNotFound />} />
+                  </Routes>
+                  
+                </OrdersProvider>
               </CartProvider>
             </FavItemsProvider>
           </ProductsProvider>
