@@ -21,10 +21,10 @@ import About from './pages/About.jsx';
 import Whitelist from './pages/Whitelist.jsx';
 import ForgetPass from './pages/ForgetPass.jsx';
 import ResetPass from './pages/ResetPass.jsx';
-import CheckoutPage from './pages/checkoutPage.jsx';
 import OrderSuccess from './pages/OrderSuccess.jsx';
 import Orders from './pages/Orders.jsx';
 import { OrdersProvider } from './context/OrdersContext.jsx';
+import CheckoutPage from './pages/CheckoutPage.jsx';
 
 
 const GoogleAuthWrappper = () => {
