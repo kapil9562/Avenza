@@ -33,6 +33,7 @@ function ProductDetails() {
     const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
     const [showOption, setShowOption] = useState(false);
+    const [activeOption, setActiveOption] = useState(null);
 
     const navigate = useNavigate();
 
@@ -51,9 +52,11 @@ function ProductDetails() {
                 reviewerName: user?.name,
                 reviewerEmail: user?.email
             })
-            console.log(res)
+            setReview("");
+            setRating(0);
+            setShowInput(false);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -72,7 +75,7 @@ function ProductDetails() {
             try {
                 setLoading(true);
                 const res = await getProducts({ productId });
-                const data = res.data.products[0];
+                const data = res.data.products[0] || null;
                 setProduct(data);
                 setCurrentImg(data.images?.[0] || null);
                 setImgLoading(true);
@@ -123,7 +126,7 @@ function ProductDetails() {
     };
 
     const handleBuyNow = () => {
-        if(!user) {
+        if (!user) {
             navigate('/login');
             return;
         }
@@ -131,6 +134,9 @@ function ProductDetails() {
         navigate(`/checkout/${productId}`);
     }
 
+    const hasUserReviewed = product?.reviews?.some(
+        (review) => review.reviewerEmail === user?.email
+    );
 
     return (
         <div className={`flex flex-col gap-2 md:p-5 min-h-150 w-full pb-20 ${!isDark ? "bgImg" : "darkBgImg"}`}>
@@ -172,7 +178,7 @@ function ProductDetails() {
                                             {currentImg && (
                                                 <img
                                                     src={currentImg}
-                                                    loading="lazy"
+                                                    loading="eager"
 
                                                     alt=""
                                                     onLoad={() => setImgLoading(false)}
@@ -252,7 +258,7 @@ function ProductDetails() {
                                                 </div>
 
                                                 <button
-                                                    onClick={() => {handleBuyNow()}}
+                                                    onClick={() => { handleBuyNow() }}
                                                     className="min-w-35 px-6 py-2 bg-[#FF6F61] text-[#FFFFFF] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300"
                                                 >
                                                     Buy Now
@@ -337,17 +343,19 @@ function ProductDetails() {
                                                                 <span>
                                                                     {renderStars(review.rating)}
                                                                 </span>
-                                                                <div className={`h-fit w-fit justify-center items-center ${ review.reviewerEmail === user.email ? "flex" : "hidden"} ${isDark ? "text-gray-200" : "text-gray-800"} relative`}>
-                                                                    <button onClick={() => setShowOption(!showOption)} className="cursor-pointer">
+                                                                <div className={`h-fit w-fit justify-center items-center ${user ? review.reviewerEmail === user?.email ? "flex" : "hidden" : "hidden"} ${isDark ? "text-gray-200" : "text-gray-800"} relative`}>
+                                                                    <button onClick={() =>
+                                                                        setActiveOption(activeOption === idx ? null : idx)
+                                                                    } className="cursor-pointer">
                                                                         <BsThreeDotsVertical />
                                                                     </button>
-                                                                    <div className={`absolute top-full left-0 border-2 rounded-lg overflow-hidden ${showOption ? "block" : "hidden"} ${isDark ? "border-gray-700 bg-[#0F172A] " : "border-gray-200 bg-white"}`}>
-                                                                        <button className={`py-1 px-2 flex flex-row gap-2 items-center text-blue-500 cursor-pointer w-full ${isDark? "hover:bg-gray-800" : "hover:bg-gray-200"}`}>
-                                                                            <PiPencilLineFill/>
+                                                                    <div className={`absolute top-full left-0 border-2 rounded-lg overflow-hidden ${activeOption === idx ? "block" : "hidden"} ${isDark ? "border-gray-700 bg-[#0F172A] " : "border-gray-200 bg-white"}`}>
+                                                                        <button className={`py-1 px-2 flex flex-row gap-2 items-center text-blue-500 cursor-pointer w-full ${isDark ? "hover:bg-gray-800" : "hover:bg-gray-200"}`}>
+                                                                            <PiPencilLineFill />
                                                                             <span>Edit</span>
                                                                         </button>
-                                                                        <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}/>
-                                                                        <button className={`py-1 px-2 flex flex-row gap-2 items-center text-red-500 cursor-pointer w-full ${isDark? "hover:bg-gray-800" : "hover:bg-gray-200"}`}>
+                                                                        <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`} />
+                                                                        <button className={`py-1 px-2 flex flex-row gap-2 items-center text-red-500 cursor-pointer w-full ${isDark ? "hover:bg-gray-800" : "hover:bg-gray-200"}`}>
                                                                             <ImBin />
                                                                             <span>Delete</span>
                                                                         </button>
@@ -373,12 +381,12 @@ function ProductDetails() {
                                     }
                                 </div>
 
-                                <div className={`w-full p-4 h-1 ${product.reviews.find((review) => review.reviewerEmail === user.email) && "hidden"}`}>
+                                <div className={`w-full p-4 h-1 ${user && !hasUserReviewed && "hidden"}`}>
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
                                 </div>
 
                                 {/* Give Review */}
-                                <div className={`w-full pb-4 flex flex-col gap-2 px-6 ${product.reviews.find((review) => review.reviewerEmail === user.email) && "hidden"}`}>
+                                <div className={`w-full pb-4 flex flex-col gap-2 px-6 ${user && !hasUserReviewed && "hidden"}`}>
                                     <h2 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
                                         Give a Review
                                     </h2>
