@@ -1,9 +1,10 @@
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useOutletContext } from "react-router-dom";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { verifyPayment } from '../api/api.js'
 import { useEffect, useState } from "react";
-import { useOrders } from "../context/OrdersContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import Lottie from 'lottie-react';
+import Loader from '../assets/paymentLoader.json'
 
 const OrderSuccess = () => {
     const [searchParams] = useSearchParams();
@@ -13,31 +14,32 @@ const OrderSuccess = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const [orderId, setOrderId] = useState("");
+    const { setActiveTab } = useOutletContext();
 
-    const { fetchOrders } = useOrders();
     const { user, isAuthenticated } = useAuth();
 
     useEffect(() => {
 
         const verify = async () => {
-            
-            if(!isAuthenticated) {
-                return
-            }
+
+            if (!isAuthenticated) return;
+
+            setLoading(true);
 
             try {
                 const res = await verifyPayment({ sessionId, userId: user._id });
 
                 if (res?.data?.success) {
                     setOrderId(res?.data?.order?._id);
-                    fetchOrders();
-                    setLoading(false);
                 }
             } catch (error) {
-                const msg = error?.data?.message || error?.message || "Something went wrong !"
+                const msg = error?.response?.data?.message || error?.message || "Something went wrong!";
                 console.log(error)
                 setError(msg);
-                setLoading(false);
+            } finally {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
             }
 
         };
@@ -46,12 +48,25 @@ const OrderSuccess = () => {
             verify();
         }
 
-    }, [sessionId, fetchOrders]);
+    }, [sessionId, isAuthenticated, user]);
+
+    useEffect(() => {
+        setActiveTab("");
+    }, [])
 
     return (
         <div className="min-h-150 flex items-center justify-center bg-gray-100 px-4">
             {loading ?
-                <div>loading...</div>
+                <div className="flex flex-col items-center justify-center relative">
+                    <Lottie
+                        animationData={Loader}
+                        loop={true}
+                        className="w-40 h-40 hue-rotate-50"
+                    />
+                    <p className="text-gray-500 font-semibold absolute bottom-4">
+                        Loading...
+                    </p>
+                </div>
                 :
                 !error ?
                     <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full text-center">

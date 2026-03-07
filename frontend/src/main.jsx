@@ -23,7 +23,6 @@ import ForgetPass from './pages/ForgetPass.jsx';
 import ResetPass from './pages/ResetPass.jsx';
 import OrderSuccess from './pages/OrderSuccess.jsx';
 import Orders from './pages/Orders.jsx';
-import { OrdersProvider } from './context/OrdersContext.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import PaymentFailed from './pages/PaymentFailed.jsx';
 
@@ -44,7 +43,6 @@ createRoot(document.getElementById('root')).render(
           <ProductsProvider>
             <FavItemsProvider>
               <CartProvider>
-                <OrdersProvider>
 
                   <Routes>
                     <Route element={<App />}>
@@ -55,6 +53,7 @@ createRoot(document.getElementById('root')).render(
                       <Route path="/success" element={<OrderSuccess />} />
                       <Route path="/cancel" element={<PaymentFailed />} />
                       <Route path="/my-account/my-orders" element={<Orders />} />
+                      <Route path="/my-account/my-orders/search-results" element={<Orders />} />
 
                       <Route
                         path="/carts"
@@ -86,7 +85,6 @@ createRoot(document.getElementById('root')).render(
                     <Route path="*" element={<PageNotFound />} />
                   </Routes>
                   
-                </OrdersProvider>
               </CartProvider>
             </FavItemsProvider>
           </ProductsProvider>

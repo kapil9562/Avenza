@@ -1,59 +1,153 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import Breadcrumb from "../utils/Breadcrumb";
 import { IoCheckboxSharp } from "react-icons/io5";
-import { RxSquare } from "react-icons/rx";
-import { RxCross1 } from "react-icons/rx";
-import { useOrders } from "../context/OrdersContext";
-import { formatINR } from "../utils/price";
+import { RxCross1, RxSquare } from "react-icons/rx";
 import { IoMdRadioButtonOn } from "react-icons/io";
+import { formatINR } from "../utils/price";
 import { useTheme } from "../context/ThemeContext";
+import { getOrders } from "../api/api";
+import { useAuth } from "../context/AuthContext";
+import OrderFilterSkeleton from "../utils/OrderFilterSkeleton";
+import OrderSkeleton from "../utils/OrderSkeleton";
+import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 
 const Orders = () => {
-    const [filter, setfilter] = useState({
-        orderStatus: {
-            "On the way": false,
-            "Delivered": false,
-            "Cancelled": false,
-            "Returned": false
-        },
-        orderTime: {
-            "Last 30 days": false,
-            "2024": false,
-            "2023": false,
-            "Older": false
-        }
+    const { isDark } = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const { user } = useAuth();
+
+    const [orders, setOrders] = useState([]);
+    const [totalOrders, setTotalOrders] = useState(0);
+    const [skip, setSkip] = useState(0);
+    const limit = 10;
+    const [loading, setLoading] = useState(false);
+    const { setActiveTab } = useOutletContext();
+
+    const [filter, setFilter] = useState({
+        orderStatus: [
+            { label: "On the way", checked: false },
+            { label: "Delivered", checked: false },
+            { label: "Cancelled", checked: false },
+            { label: "Returned", checked: false },
+        ],
+        orderTime: [
+            { label: "Last 30 days", checked: false },
+            { label: "2024", checked: false },
+            { label: "2023", checked: false },
+            { label: "Older", checked: false },
+        ],
     });
 
     const [filterTags, setFilterTags] = useState([]);
-    const { isDark } = useTheme();
 
     useEffect(() => {
-        const tags = [...Object.keys(filter.orderStatus).filter(k => filter.orderStatus[k]),
-        ...Object.keys(filter.orderTime).filter(k => filter.orderTime[k])]
+        const tags = [...filter.orderStatus.filter(item => item.checked).map(item => item.label),
+        ...filter.orderTime.filter(item => item.checked).map(item => item.label)]
 
         setFilterTags(tags);
     }, [filter]);
 
+    // --- Load filters from URL
+    useEffect(() => {
+        const query = new URLSearchParams(location.search);
+        const statusParam = query.get("status");
+        const timeParam = query.get("time");
+
+        setFilter((prev) => ({
+            orderStatus: prev.orderStatus.map((s) => ({
+                ...s,
+                checked: statusParam
+                    ? statusParam.split(",").map((t) => t.replaceAll("_", " ")).includes(s.label)
+                    : false,
+            })),
+            orderTime: prev.orderTime.map((t) => ({
+                ...t,
+                checked: timeParam
+                    ? timeParam.split(",").map((tt) => tt.replaceAll("_", " ")).includes(t.label)
+                    : false,
+            })),
+        }));
+
+        setSkip(0);
+    }, [location.search]);
+
+    const getActiveFilters = () => {
+        const activeStatus = filter.orderStatus.filter((s) => s.checked).map((s) => s.label);
+        const activeTime = filter.orderTime.filter((t) => t.checked).map((t) => t.label);
+        return { status: activeStatus, time: activeTime };
+    };
+
+    const fetchOrders = async (append = false) => {
+        setLoading(true);
+        const { status, time } = getActiveFilters();
+
+        try {
+            const res = await getOrders({
+                userId: user._id,
+                status,
+                time,
+                skip,
+                limit,
+            });
+
+            if (append) {
+                setOrders((prev) => [...prev, ...res.data.orders]);
+            } else {
+                setOrders(res.data.orders);
+            }
+
+            setTotalOrders(res.data.total || 0);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setTimeout(() => {
+                setLoading(false);
+            }, 200);
+        }
+    };
+
+    useEffect(() => {
+        fetchOrders(skip > 0);
+    }, [filter, skip]);
+
+
+    useEffect(() => {
+        const activeStatus = filter.orderStatus.filter((s) => s.checked).map((s) => s.label.replaceAll(" ", "_"));
+        const activeTime = filter.orderTime.filter((t) => t.checked).map((t) => t.label.replaceAll(" ", "_"));
+
+        const params = new URLSearchParams();
+        if (activeStatus.length) params.set("status", activeStatus.join(","));
+        if (activeTime.length) params.set("time", activeTime.join(","));
+
+        if (activeStatus.length || activeTime.length) {
+            navigate(`/my-account/my-orders/search-results?${params.toString()}`, { replace: true });
+        } else {
+            navigate(`/my-account/my-orders`, { replace: true });
+        }
+
+        setSkip(0);
+    }, [filter, navigate]);
+
     const removeTag = (tag) => {
-        setfilter(prev => {
-            if (tag in prev.orderStatus) {
+        setFilter(prev => {
+            if (prev.orderStatus.some(s => s.label === tag)) {
                 return {
                     ...prev,
-                    orderStatus: {
-                        ...prev.orderStatus,
-                        [tag]: false
-                    }
+                    orderStatus: prev.orderStatus.map(s =>
+                        s.label === tag ? { ...s, checked: false } : s
+                    )
                 };
             }
 
-            if (tag in prev.orderTime) {
+            if (prev.orderTime.some(t => t.label === tag)) {
                 return {
                     ...prev,
-                    orderTime: {
-                        ...prev.orderTime,
-                        [tag]: false
-                    }
+                    orderTime: prev.orderTime.map(t =>
+                        t.label === tag ? { ...t, checked: false } : t
+                    )
                 };
             }
 
@@ -62,31 +156,46 @@ const Orders = () => {
     };
 
     const clearAllFilter = () => {
-        setfilter(prev => {
-            const newStatus = {};
-            const newTime = {};
-
-            Object.keys(prev.orderStatus).forEach(key => {
-                newStatus[key] = false;
-            });
-
-            Object.keys(prev.orderTime).forEach(key => {
-                newTime[key] = false;
-            });
-
-            return {
-                ...prev,
-                orderStatus: newStatus,
-                orderTime: newTime
-            };
+        setFilter({
+            orderStatus: filter.orderStatus.map((s) => ({ ...s, checked: false })),
+            orderTime: filter.orderTime.map((t) => ({ ...t, checked: false })),
         });
     };
 
+    const loadMore = () => {
+        if (orders.length < totalOrders) {
+            setSkip((prev) => prev + limit);
+        }
+    };
+
+    const formatDate = (date) => {
+        const d = new Date(date);
+        return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
+    };
+
+    const formatName = (str) =>
+        str
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+
     const statusColors = {
-        processing: " text-yellow-600",
+        processing: "text-yellow-600",
         shipped: "bg-blue-100 text-blue-600",
         delivered: "bg-green-100 text-green-600",
         cancelled: "bg-red-100 text-red-600",
+    };
+
+    const paymentBadge = {
+        paid: isDark
+            ? "bg-green-900/40 text-green-400 border border-green-700"
+            : "bg-green-100 text-green-600 border border-green-300 shadow-md",
+        pending: isDark
+            ? "bg-yellow-900/40 text-yellow-400 border border-yellow-700"
+            : "bg-yellow-100 text-yellow-600 border border-yellow-300 shadow-md",
+        failed: isDark
+            ? "bg-red-900/40 text-red-400 border border-red-700"
+            : "bg-red-100 text-red-600 border border-red-300 shadow-md",
     };
 
     const statusMessages = {
@@ -96,167 +205,175 @@ const Orders = () => {
         cancelled: "Your order was cancelled as per your request."
     };
 
-    const { orders } = useOrders();
-
-    const formatName = (str) =>
-        str.split("-").map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(" ");
-
-
-    const paymentBadge = {
-        paid: isDark
-            ? "bg-green-900/40 text-green-400 border border-green-700"
-            : "bg-green-100 text-green-600 border border-green-300 shadow-md",
-
-        pending: isDark
-            ? "bg-yellow-900/40 text-yellow-400 border border-yellow-700"
-            : "bg-yellow-100 text-yellow-600 border border-yellow-300 shadow-md",
-
-        failed: isDark
-            ? "bg-red-900/40 text-red-400 border border-red-700"
-            : "bg-red-100 text-red-600 border border-red-300 shadow-md",
-    };
-
-    const formatDate = (date) => {
-        const d = new Date(date);
-
-        const day = String(d.getDate()).padStart(2, "0");
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const year = d.getFullYear();
-
-        return `${day}-${month}-${year}`;
-    };
+    useEffect(() => {
+        setActiveTab("");
+    }, []);
 
     return (
-        <div className="w-full sm:px-5 px-1 sm:py-5 pb-10 bg-[#F1F3F6]  min-h-[calc(100dvh-124px)] space-y-2">
+        <div className="w-full sm:px-5 px-1 sm:py-5 pb-10 bg-[#F1F3F6] min-h-[calc(100dvh-124px)] space-y-2">
             <Breadcrumb />
             <div className="flex flex-row gap-4">
-                <div className="bg-white w-90 h-fit shadow-md rounded">
-                    <div className="flex flex-col justify-center px-4 py-2 font-semibold border-b-2 border-gray-100">
+                {/* Filters Panel */}
+                <div className="bg-white w-80 h-fit shadow-md rounded">
+
+                    <div className="flex flex-col justify-center w-full gap-2 px-4 py-2 font-semibold">
                         <div className="flex flex-row justify-between items-center w-full">
                             <h1 className="text-xl">Filters</h1>
-                            <span className="text-blue-500 text-sm cursor-pointer hover:underline" onClick={clearAllFilter}>Clear all</span>
-                        </div>
-                        {filterTags.length > 0 &&
-                            <div className="flex flex-row gap-2 flex-wrap pt-2">
-                                {filterTags.map((tag, idx) => (
-                                    <button className="flex flex-row gap-2 items-center p-2 bg-[#e7e7e7] text-xs font-normal rounded hover:line-through cursor-pointer" onClick={() => removeTag(tag)} key={idx}>
-                                        <span>{tag}</span>
-                                        <RxCross1 />
-                                    </button>
-                                ))}
-                            </div>
-                        }
-                    </div>
-                    <div className="flex flex-col px-4 py-2 font-semibold border-b border-gray-200 gap-3">
-                        <h1 className="text-sm">ORDER STATUS</h1>
-                        <div className="space-y-2">
-                            {Object.entries(filter.orderStatus).map(([key, value], idx) => (
-                                <label className="space-x-2 cursor-pointer flex flex-row items-center" key={idx}
-                                    onClick={() =>
-                                        setfilter((prev) => ({
-                                            ...prev,
-                                            orderStatus: {
-                                                ...prev.orderStatus,
-                                                [key]: !prev.orderStatus[key]
-                                            }
-                                        }))
-                                    }>
-                                    {value ?
-                                        <IoCheckboxSharp size={18} className="text-blue-600" />
-                                        :
-                                        <RxSquare size={18} className={`text-[#c2c2c2]`} />}
-                                    <span className="font-normal">{key}</span>
-                                </label>
-                            ))}
+                            <button className="text-blue-500 text-sm cursor-pointer hover:underline" onClick={clearAllFilter}>
+                                Clear all
+                            </button>
                         </div>
                     </div>
+                    {loading ? (
+                        <OrderFilterSkeleton />
+                    ) : (
+                        <div className="pb-4">
+                            {filterTags.length > 0 &&
+                                <div className="flex flex-row gap-2 flex-wrap px-4 pb-2">
+                                    {filterTags.map((tag, idx) => (
+                                        <button className="flex flex-row gap-2 items-center p-2 bg-[#e7e7e7] text-xs font-normal rounded hover:line-through cursor-pointer" onClick={() => removeTag(tag)} key={idx}>
+                                            <span>{tag}</span>
+                                            <RxCross1 />
+                                        </button>
+                                    ))}
+                                </div>
+                            }
 
-                    <div className="flex flex-col px-4 py-2 font-semibold border-b border-gray-200 gap-3">
-                        <h1 className="text-sm">ORDER TIME</h1>
-                        <div className="space-y-2">
-                            {Object.entries(filter.orderTime).map(([key, value], idx) => (
-                                <label className="space-x-2 cursor-pointer flex flex-row items-center" key={idx}
-                                    onClick={() =>
-                                        setfilter((prev) => ({
-                                            ...prev,
-                                            orderTime: {
-                                                ...prev.orderTime,
-                                                [key]: !prev.orderTime[key]
+                            {/* Order Status */}
+
+                            <div className="flex flex-col px-4 py-2 font-semibold border-t-2 border-gray-200/30 gap-3">
+                                <h1 className="text-sm">ORDER STATUS</h1>
+                                <div className="space-y-2">
+                                    {filter.orderStatus.map((item, idx) => (
+                                        <label
+                                            key={idx}
+                                            className="space-x-2 cursor-pointer flex items-center"
+                                            onClick={() =>
+                                                setFilter((prev) => ({
+                                                    ...prev,
+                                                    orderStatus: prev.orderStatus.map((s, i) => (i === idx ? { ...s, checked: !s.checked } : s)),
+                                                }))
                                             }
-                                        }))
-                                    }>
-                                    {value ?
-                                        <IoCheckboxSharp size={18} className="text-blue-600" />
-                                        :
-                                        <RxSquare size={18} className={`text-[#c2c2c2]`} />}
-                                    <span className="font-normal">{key}</span>
-                                </label>
-                            ))}
+                                        >
+                                            {item.checked ? <IoCheckboxSharp size={18} className="text-blue-600" /> : <RxSquare size={18} className="text-[#c2c2c2]" />}
+                                            <span className="font-normal text-sm">{item.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                            {/* Order Time */}
+                            <div className="flex flex-col px-4 py-2 font-semibold border-t-2 border-gray-200/30 gap-3">
+                                <h1 className="text-sm">ORDER TIME</h1>
+                                <div className="space-y-2">
+                                    {filter.orderTime.map((item, idx) => (
+                                        <label
+                                            key={idx}
+                                            className="space-x-2 cursor-pointer flex items-center"
+                                            onClick={() =>
+                                                setFilter((prev) => ({
+                                                    ...prev,
+                                                    orderTime: prev.orderTime.map((t, i) => (i === idx ? { ...t, checked: !t.checked } : t)),
+                                                }))
+                                            }
+                                        >
+                                            {item.checked ? <IoCheckboxSharp size={18} className="text-blue-600" /> : <RxSquare size={18} className="text-[#c2c2c2]" />}
+                                            <span className="font-normal text-sm">{item.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
-                <div className="w-full flex flex-col gap-4">
-                    {orders.length > 0 &&
-                        orders.map((order, idx) => (
-                            <div className="px-5 bg-white rounded-lg border border-[#87878750] hover:shadow-lg transition-shadow duration-200 cursor-pointer ">
-                                <table
-                                    key={idx}
-                                    className="w-full table-fixed"
-                                >
-                                    <tbody>
-                                        <tr>
-                                            {/* Product */}
-                                            <td className="px-4 py-4 w-1/2 pl-10">
-                                                <div className="flex items-center gap-3">
-                                                    <img
-                                                        src={order?.orderItems[0]?.image}
-                                                        alt="img"
-                                                        className="h-20 w-20 object-cover rounded"
-                                                    />
-                                                    <div className="flex flex-col">
-                                                        <span>{order?.orderItems[0]?.name}</span>
-                                                        <span className="text-sm text-gray-500">
-                                                            Qty: {order?.orderItems[0]?.quantity}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </td>
 
-                                            {/* Amount */}
-                                            <td className="px-4 py-4 w-1/6">
-                                                ₹{formatINR(order?.totalAmount)}
-                                            </td>
+                {/* Orders List */}
+                <div className="w-full flex flex-col gap-2">
+                    {loading ?
+                        Array(4).fill(0).map((_, idx) => (
+                            <OrderSkeleton key={idx} />
+                        ))
+                        :
+                        orders.length > 0 ? (
+                            <>
+                                {orders.map((order) => (
+                                    <div key={order._id} className="px-5 bg-white rounded-lg border-2 border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)] transition-shadow duration-200 cursor-pointer">
+                                        <table className="w-full table-fixed">
+                                            <tbody>
+                                                <tr>
+                                                    {/* Product */}
+                                                    <td className="px-4 py-4 w-1/2 pl-10">
+                                                        <div className="flex items-center gap-3">
+                                                            <img src={order?.orderItems[0]?.image} alt="img" className="h-20 w-20 object-cover rounded" />
+                                                            <div className="flex flex-col">
+                                                                <span>{order?.orderItems[0]?.name}</span>
+                                                                <span className="text-sm text-gray-500">Qty: {order?.orderItems[0]?.quantity}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    {/* Amount */}
+                                                    <td className="px-4 py-4 w-1/6">₹{formatINR(order?.totalAmount)}</td>
+                                                    {/* Status */}
+                                                    <td className="px-4 py-4 w-1/3">
+                                                        <div>
+                                                            <span className="flex items-center gap-2 font-semibold">
+                                                                <IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
+                                                                {formatName(order?.orderStatus)}
+                                                            </span>
+                                                            <p className="text-sm">{statusMessages[order?.orderStatus]}</p>
+                                                        </div>
+                                                    </td>
+                                                    {/* Payment */}
+                                                    <td className="px-4 py-4 w-1/6">
+                                                        <div className="flex flex-col gap-2 justify-center items-center">
+                                                            <span>{formatDate(order?.createdAt)}</span>
+                                                            <span className={`${paymentBadge[order?.paymentStatus]} text-sm px-4 py-1 rounded-full flex w-fit items-center justify-center`}>
+                                                                {formatName(order?.paymentStatus)}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ))}
 
-                                            {/* Status */}
-                                            <td className="px-4 py-4 w-1/3">
-                                                <div>
-                                                    <span className="flex items-center gap-2 font-semibold">
-                                                        <IoMdRadioButtonOn
-                                                            className={statusColors[order?.orderStatus]}
-                                                        />
-                                                        {formatName(order?.orderStatus)}
-                                                    </span>
-
-                                                    <p className="text-sm text-gray-500">
-                                                        {statusMessages[order?.orderStatus]}
-                                                    </p>
-                                                </div>
-                                            </td>
-
-                                            {/* Payment */}
-                                            <td className="px-4 py-4 w-1/6">
-                                                <div className="flex flex-col gap-2 justify-center items-center">
-                                                    <span>{formatDate(order?.createdAt)}</span>
-                                                <span className={`${paymentBadge[order?.paymentStatus]} text-sm px-4 py-1 rounded-r-full rounded-l-full flex w-fit items-center justify-center`}>{formatName(order?.paymentStatus)}</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                {/* Load More */}
+                                <div className="w-full flex justify-center items-center font-semibold">
+                                    {orders.length < totalOrders ? (
+                                        <button
+                                            className="bg-white text-blue-500 px-4 py-2 rounded transition-shadow duration-200 hover:shadow-[0px_0px_8px_rgba(0,0,0,0.15)] border-2 border-[#87878730] cursor-pointer w-fit"
+                                            onClick={loadMore}
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Loading..." :
+                                                <span className="flex flex-row items-center gap-1">
+                                                    <MdOutlineKeyboardDoubleArrowDown size={20}/>
+                                                    Load More
+                                                </span>
+                                            }
+                                        </button>
+                                    ) :
+                                        (
+                                            <span
+                                                className="bg-white text-blue-500 px-4 py-2 rounded border-2 border-[#87878730]"
+                                            >
+                                                No More Results To Display
+                                            </span>
+                                        )}
+                                </div>
+                            </>
+                        ) : (
+                            <div className="h-[70dvh] bg-white shadow-md rounded flex justify-center items-center">
+                                <div className="flex flex-col justify-center items-center">
+                                    <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
+                                    <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
+                                    <p className="font-normal text-gray-500 text-sm mb-4">Edit filter or go back to My Orders Page</p>
+                                    <button className="border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => navigate('/my-account/my-orders')}>
+                                        <span>Go to My Orders</span>
+                                    </button>
+                                </div>
                             </div>
-                        ))}
+                        )}
                 </div>
             </div>
         </div>

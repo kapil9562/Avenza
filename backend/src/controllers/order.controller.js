@@ -181,30 +181,117 @@ export const getAddress = async (req, res) => {
 export const getOrders = async (req, res) => {
     const { userId } = req.query;
 
+    const status = req.query.status ? req.query.status.split(",") : [];
+    const time = req.query.time ? req.query.time.split(",") : [];
+
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = parseInt(req.query.skip) || 0;
+
     if (!userId) {
-        return res.status(402).json({
-            error: "userId required !",
-        })
+        return res.status(400).json({ error: "userId required!" });
     }
 
     try {
-        const orders = await Order.find({ userId });
-        if (!orders) {
-            return res.status(402).json({
-                success: false,
-                msg: "No results found!"
-            })
+        const filter = { userId };
+
+        // STATUS FILTER
+        if (status.length) {
+
+            const statusFilters = status.map((s) => {
+
+                if (s === "On the way") {
+                    return { orderStatus: "processing" };
+                }
+
+                return { orderStatus: s.toLowerCase() };
+
+            });
+
+            filter.$or = statusFilters;
         }
+
+        // TIME FILTER
+        if (time.length) {
+
+            const timeFilters = [];
+
+            time.forEach((t) => {
+
+                if (t === "Last 30 days") {
+
+                    const date = new Date();
+                    date.setDate(date.getDate() - 30);
+
+                    timeFilters.push({ createdAt: { $gte: date } });
+
+                }
+
+                else if (t === "2024") {
+
+                    timeFilters.push({
+                        createdAt: {
+                            $gte: new Date("2024-01-01"),
+                            $lte: new Date("2024-12-31"),
+                        },
+                    });
+
+                }
+
+                else if (t === "2023") {
+
+                    timeFilters.push({
+                        createdAt: {
+                            $gte: new Date("2023-01-01"),
+                            $lte: new Date("2023-12-31"),
+                        },
+                    });
+
+                }
+
+                else if (t === "Older") {
+
+                    timeFilters.push({
+                        createdAt: { $lt: new Date("2023-01-01") },
+                    });
+
+                }
+
+            });
+
+            if (timeFilters.length) {
+
+                if (filter.$or) {
+                    filter.$and = [
+                        { $or: filter.$or },
+                        { $or: timeFilters }
+                    ];
+                    delete filter.$or;
+                } else {
+                    filter.$or = timeFilters;
+                }
+
+            }
+
+        }
+
+        const total = await Order.countDocuments(filter);
+
+        const orders = await Order.find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
         res.status(200).json({
             success: true,
-            orders
-        })
+            orders,
+            total,
+            count: orders.length,
+        });
 
     } catch (error) {
         res.status(500).json({
             success: false,
-            error
-        })
+            error: error.message,
+        });
     }
-}
+};

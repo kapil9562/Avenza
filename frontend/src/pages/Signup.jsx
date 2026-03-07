@@ -9,7 +9,6 @@ import { googleAuth, sendOtp, verifyOtp } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 

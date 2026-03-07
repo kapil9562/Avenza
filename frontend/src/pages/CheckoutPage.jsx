@@ -3,7 +3,9 @@ import { buyNow, getAddress, saveAddress } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useOrders } from "../context/OrdersContext";
+import Lottie from "lottie-react";
+import loader from "../assets/loader2.json";
+import { useTheme } from "../context/ThemeContext";
 
 const CheckoutPage = () => {
 
@@ -21,12 +23,14 @@ const CheckoutPage = () => {
         country: "India"
     });
 
+    const [loading, setLoading] = useState(false);
+    const {isDark} = useTheme();
+
     const [originalAddress, setOriginalAddress] = useState(null);
 
     const [errors, setErrors] = useState({});
 
     const { user } = useAuth();
-    const{fetchOrders} = useOrders();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -65,6 +69,7 @@ const CheckoutPage = () => {
     const onSubmit = async (data) => {
         try {
 
+            setLoading(true);
             let addressId = formData.addressId;
 
             if (isAddressChanged() || !originalAddress?.addressId) {
@@ -95,10 +100,6 @@ const CheckoutPage = () => {
                 addressId
             });
 
-            console.log(res);
-
-            fetchOrders();
-            
             if (res?.data?.url) {
                 window.location.href = res.data.url;
             }
@@ -106,6 +107,10 @@ const CheckoutPage = () => {
 
         } catch (error) {
             console.log(error);
+        } finally {
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
         }
     };
 
@@ -142,9 +147,9 @@ const CheckoutPage = () => {
     }, []);
 
     return (
-        <div className="w-full min-h-150 pb-20 md:p-5">
-            <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl">
-                <h2 className="text-2xl font-semibold mb-6">Shipping Address</h2>
+        <div className="w-full min-h-150 md:p-5">
+            <div className={`max-w-2xl mx-auto p-6 rounded-xl ${isDark? "bg-gray-900 shadow-[0px_0px_20px_rgba(0,0,0,0.4)]" : "bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.2)]"}`}>
+                <h2 className={`text-2xl font-semibold mb-6 ${isDark? "text-white" : "text-gray-800"}`}>Shipping Address</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -156,7 +161,7 @@ const CheckoutPage = () => {
                             placeholder="Full Name"
                             value={formData.fullName}
                             onChange={handleChange}
-                            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                         />
                         {errors.fullName && (
                             <p className="text-red-500 text-sm">{errors.fullName}</p>
@@ -171,7 +176,7 @@ const CheckoutPage = () => {
                             placeholder="Phone Number"
                             value={formData.phone}
                             onChange={handleChange}
-                            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                         />
                         {errors.phone && (
                             <p className="text-red-500 text-sm">{errors.phone}</p>
@@ -186,7 +191,7 @@ const CheckoutPage = () => {
                             placeholder="House No, Street, Area"
                             value={formData.addressLine1}
                             onChange={handleChange}
-                            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                         />
                         {errors.addressLine1 && (
                             <p className="text-red-500 text-sm">{errors.addressLine1}</p>
@@ -200,7 +205,7 @@ const CheckoutPage = () => {
                         placeholder="Landmark (Optional)"
                         value={formData.addressLine2}
                         onChange={handleChange}
-                        className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                     />
 
                     {/* City + State */}
@@ -212,7 +217,7 @@ const CheckoutPage = () => {
                                 placeholder="City"
                                 value={formData.city}
                                 onChange={handleChange}
-                                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                             />
                             {errors.city && (
                                 <p className="text-red-500 text-sm">{errors.city}</p>
@@ -226,7 +231,7 @@ const CheckoutPage = () => {
                                 placeholder="State"
                                 value={formData.state}
                                 onChange={handleChange}
-                                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                             />
                             {errors.state && (
                                 <p className="text-red-500 text-sm">{errors.state}</p>
@@ -242,7 +247,7 @@ const CheckoutPage = () => {
                             placeholder="Pincode"
                             value={formData.pinCode}
                             onChange={handleChange}
-                            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
                         />
                         {errors.pinCode && (
                             <p className="text-red-500 text-sm">{errors.pinCode}</p>
@@ -252,9 +257,17 @@ const CheckoutPage = () => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+                        className="w-full min-h-12 border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d]  relative text-white py-3 rounded-lg transition cursor-pointer disabled:cursor-not-allowed flex justify-center items-center shadow-md"
+                        disabled={loading}
                     >
-                        Continue to Payment
+                        {loading ?
+                            <Lottie
+                                animationData={loader}
+                                loop={true}
+                                className="w-50 h-50 absolute "
+                            /> :
+                            <span className="font-semibold">Continue to Payment</span>
+                        }
                     </button>
 
                 </form>

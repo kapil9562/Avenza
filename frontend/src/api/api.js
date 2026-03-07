@@ -96,4 +96,8 @@ export const getAddress = ({userId}) => api.get(`/get-address?userId=${userId}`)
 export const buyNow = ({productId, quantity, addressId}) => api.post("buy-now", {productId, quantity, addressId});
 export const verifyPayment = ({ sessionId, userId }) => api.post("verify-payment", { sessionId, userId });
 
-export const getOrders = ({userId}) => api.get(`/get-orders?userId=${userId}`);
+export const getOrders = ({ userId, time = [], status = [], skip=0 }) => {
+  const statusParam = encodeURIComponent(status.join(",")); 
+  const timeParam = encodeURIComponent(time.join(",")); 
+  return api.get(`/get-orders?userId=${userId}&time=${timeParam}&status=${statusParam}&skip=${skip}`);
+};
