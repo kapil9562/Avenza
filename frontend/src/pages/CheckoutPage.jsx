@@ -90,7 +90,6 @@ const CheckoutPage = () => {
             }
 
             const res = await buyNow({
-                userId: user._id,
                 productId,
                 quantity: 1,
                 addressId

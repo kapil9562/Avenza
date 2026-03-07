@@ -132,7 +132,7 @@ const Orders = () => {
         <div className="w-full sm:px-5 px-1 sm:py-5 pb-10 bg-[#F1F3F6]  min-h-[calc(100dvh-124px)] space-y-2">
             <Breadcrumb />
             <div className="flex flex-row gap-4">
-                <div className="bg-white w-90 shadow-md rounded">
+                <div className="bg-white w-90 h-fit shadow-md rounded">
                     <div className="flex flex-col justify-center px-4 py-2 font-semibold border-b-2 border-gray-100">
                         <div className="flex flex-row justify-between items-center w-full">
                             <h1 className="text-xl">Filters</h1>

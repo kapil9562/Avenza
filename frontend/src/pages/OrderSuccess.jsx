@@ -3,41 +3,50 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { verifyPayment } from '../api/api.js'
 import { useEffect, useState } from "react";
 import { useOrders } from "../context/OrdersContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const OrderSuccess = () => {
     const [searchParams] = useSearchParams();
 
-    const orderId = searchParams.get("orderId");
     const sessionId = searchParams.get("session_id");
 
     const [error, setError] = useState("");
-
     const [loading, setLoading] = useState(true);
- 
-    const {fetchOrders} = useOrders();
-  
+    const [orderId, setOrderId] = useState("");
+
+    const { fetchOrders } = useOrders();
+    const { user, isAuthenticated } = useAuth();
+
     useEffect(() => {
 
         const verify = async () => {
-            try {
-                const res = await verifyPayment({ orderId, sessionId });
+            
+            if(!isAuthenticated) {
+                return
+            }
 
-                if(res?.data?.success) {
-                    setLoading(false);
+            try {
+                const res = await verifyPayment({ sessionId, userId: user._id });
+
+                if (res?.data?.success) {
+                    setOrderId(res?.data?.order?._id);
                     fetchOrders();
+                    setLoading(false);
                 }
             } catch (error) {
                 const msg = error?.data?.message || error?.message || "Something went wrong !"
+                console.log(error)
                 setError(msg);
+                setLoading(false);
             }
 
         };
 
-        if (orderId && sessionId) {
+        if (sessionId) {
             verify();
         }
 
-    }, []);
+    }, [sessionId, fetchOrders]);
 
     return (
         <div className="min-h-150 flex items-center justify-center bg-gray-100 px-4">

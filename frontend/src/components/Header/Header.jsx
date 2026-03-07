@@ -33,14 +33,14 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [filteredData, setFilteredData] = useState([]);
   const suggestions = useMemo(() => filteredData.slice(0, 5), [filteredData]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [searchType, setSearchType] = useState("");
+  const [searchType, setSearchType] = useState(null);
   const location = useLocation();
   const { user, logout, loading } = useAuth();
   const { totalItems } = useCart();
   const [openIndex, setOpenIndex] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const searchTimeout = useRef(null);
-   const { categories, setCategories, setCache } = useProducts();
+  const { categories, setCategories, setCache } = useProducts();
 
   useEffect(() => {
     const q = searchParams.get("q") || "";
@@ -64,7 +64,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
       const response = await getProducts({ limit: 0, title: input });
       const data = response.data.products;
       setFilteredData(data);
-      if (searchType != 'autosuggest') {
+      if (searchType !== 'autosuggest') {
         setShowDropdown(true);
       }
     } catch (error) {
@@ -102,7 +102,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
     setSearchResults(filteredData);
     setShowDropdown(false);
     setActiveTab(null);
-  }, [input, filteredData, searchType]);
+  }, [input, filteredData, searchType, navigate, setSearchResults, setActiveTab]);
 
   const handleEnter = (e) => {
     if (e.key !== "Enter") return;
@@ -114,7 +114,8 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
   const normalizeGooglePhoto = (url) => {
     if (!url) return null;
-    return url.split('=')[0] + '=s200';
+    const base = url.split("=")[0];
+    return `${base}=s200`;
   };
 
   const desktopSearchRef = useRef(null);
@@ -161,7 +162,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
     };
 
     fetchCategories();
-  }, []);
+  }, [categories]);
 
 
   return (
@@ -169,7 +170,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
       <div className='flex flex-row justify-between w-full min-h-15 sm:min-h-20 gap-4 sm:px-5 lg:px-10'>
 
-        <div className='flex flex-row justify-center items-center md:gap-3 gap:1'>
+        <div className='flex flex-row justify-center items-center md:gap-3 gap-1'>
           {/* categories taggle btn */}
           <div className='xl:hidden' onClick={() => setShow(true)}>
             <HiMiniBars3BottomLeft className={`${isDark ? "text-gray-300" : "text-gray-700"} lg:text-3xl text-2xl cursor-pointer`} />
@@ -277,7 +278,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
           </div>
           {user ? (
             <div className="relative group min-h-full flex cursor-pointer"
-              onClick={() => handleDropDown()}>
+              onClick={() => handleDropDown()} onMouseLeave={() => setIsActive(false)}>
               <div className='group-hover:shadow-[inset_0_-2px_0_0_#ff1774] min-h-full flex justify-center items-center p-2'>
                 {(user?.photo) ? (
                   <img
@@ -292,7 +293,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     <span className="font-['Sour_Gummy'] hidden sm:block">Profile</span>
                   </div>
                 )}
-                <div className={`${isActive ? "opacity-100" : "opacity-0 invisible"} ${isDark ? "bg-[#0F172A] shadow-[#0F172A] shadow-lg border-gray-700" : "bg-white shadow-gray-300 border-gray-200 shadow-xl"} absolute top-full flex flex-col justify-center text-lg font-semibold border-2 group-hover:opacity-100 group-hover:visible rounded-lg overflow-hidden z-90 right-0`}>
+                <div className={`${isActive ? "opacity-100" : "opacity-0 invisible"} ${isDark ? "bg-[#0F172A] shadow-[#0F172A] shadow-lg border-gray-700" : "bg-white shadow-gray-300 border-gray-200 shadow-xl"} absolute top-full flex flex-col justify-center text-lg font-semibold border-2 lg:group-hover:opacity-100 lg:group-hover:visible rounded-lg overflow-hidden z-90 right-0`}>
                   <button className={`${isDark ? "hover:bg-[#2e3d5f]" : "hover:bg-pink-100"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer`}>
                     {(user?.photo) ? (
                       <img
@@ -312,7 +313,11 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     </span>
                   </button>
                   <div className={`${isDark ? "border-gray-700" : "border-gray-300"} w-full border-t-2`}></div>
-                  <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f]" : "hover:bg-pink-100  text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`} onClick={() => navigate('/my-account/my-orders')}>
+                  <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f]" : "hover:bg-pink-100  text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`}
+                    onClick={(e) => {
+                      setIsActive(false);
+                      navigate('/my-account/my-orders');
+                    }}>
                     <LiaShoppingBagSolid className='text-xl' />
                     <span>My Orders</span>
                   </button>
