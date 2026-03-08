@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import Lottie from 'lottie-react';
 import Loader from '../assets/paymentLoader.json'
+import { useTheme } from "../context/ThemeContext.jsx";
 
 const OrderSuccess = () => {
     const [searchParams] = useSearchParams();
@@ -17,6 +18,7 @@ const OrderSuccess = () => {
     const { setActiveTab } = useOutletContext();
 
     const { user, isAuthenticated } = useAuth();
+    const {isDark} = useTheme();
 
     useEffect(() => {
 
@@ -55,7 +57,7 @@ const OrderSuccess = () => {
     }, [])
 
     return (
-        <div className="min-h-150 flex items-center justify-center bg-gray-100 px-4">
+        <div className={`min-h-150 flex items-center justify-center px-4 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
             {loading ?
                 <div className="flex flex-col items-center justify-center relative">
                     <Lottie
@@ -69,37 +71,37 @@ const OrderSuccess = () => {
                 </div>
                 :
                 !error ?
-                    <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full text-center">
+                    <div className={`shadow-xl rounded-2xl p-8 max-w-md w-full text-center border-2 ${isDark? "bg-gray-900 border-gray-800" : "bg-white border-transparent"}`}>
 
                         <div className="flex justify-center mb-4">
                             <FaRegCheckCircle size={70} className="text-green-500" />
                         </div>
 
-                        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                        <h1 className={`text-2xl font-bold mb-2 ${isDark? "text-gray-200" : "text-gray-800"}`}>
                             Order Placed Successfully 🎉
                         </h1>
 
-                        <p className="text-gray-600 mb-4">
+                        <p className={`mb-4 ${isDark? "text-gray-400" : "text-gray-600"}`}>
                             Thank you for your purchase. Your order has been placed successfully.
                         </p>
 
-                        <div className="bg-gray-100 p-3 rounded-lg mb-6">
-                            <p className="text-sm text-gray-500">Order ID</p>
-                            <p className="font-semibold text-gray-800">{orderId}</p>
+                        <div className={`p-3 rounded-lg mb-6 ${isDark? "bg-gray-800" : "bg-gray-100"}`}>
+                            <p className={`text-sm ${isDark? "text-gray-300" : "text-gray-500"}`}>Order ID</p>
+                            <p className={`font-semibold ${isDark? "text-white" : "text-gray-800"}`}>{orderId}</p>
                         </div>
 
                         <div className="flex flex-col gap-3">
 
                             <Link
                                 to="/my-account/my-orders"
-                                className="bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+                                className={`bg-[#FF6F61] border-[#ff3e2d] hover:bg-[#fc8479] text-white py-2 rounded-lg transition border-2`}
                             >
                                 View Orders
                             </Link>
 
                             <Link
                                 to="/"
-                                className="border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition"
+                                className={`border-2 py-2 rounded-lg transform-gpu ${isDark? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"}`}
                             >
                                 Continue Shopping
                             </Link>
@@ -107,8 +109,8 @@ const OrderSuccess = () => {
                         </div>
                     </div>
                     :
-                    <div>
-                        <h1>{error}</h1>
+                    <div className="max-w-2xl">
+                        <h1 className="text-red-500 text-lg whitespace-normal break-all text-center">{error}</h1>
                     </div>}
         </div>
     );

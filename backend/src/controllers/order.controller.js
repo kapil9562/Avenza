@@ -103,6 +103,9 @@ export const verifyPayment = async (req, res) => {
             stripeSessionId: sessionId
         });
 
+        product.stock -= quantity;
+        await product.save();
+
         res.json({
             success: true,
             message: "Order created successfully",
@@ -184,7 +187,7 @@ export const getOrders = async (req, res) => {
     const status = req.query.status ? req.query.status.split(",") : [];
     const time = req.query.time ? req.query.time.split(",") : [];
 
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 5;
     const skip = parseInt(req.query.skip) || 0;
 
     if (!userId) {

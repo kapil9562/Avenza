@@ -22,7 +22,7 @@ const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [totalOrders, setTotalOrders] = useState(0);
     const [skip, setSkip] = useState(0);
-    const limit = 10;
+    const limit = 5;
     const [loading, setLoading] = useState(false);
     const { setActiveTab } = useOutletContext();
 
@@ -210,11 +210,11 @@ const Orders = () => {
     }, []);
 
     return (
-        <div className="w-full sm:px-5 px-1 sm:py-5 pb-10 bg-[#F1F3F6] min-h-[calc(100dvh-124px)] space-y-2">
+        <div className={`w-full sm:px-5 px-1 sm:py-5 pb-10 min-h-[calc(100dvh-124px)] space-y-2 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
             <Breadcrumb />
             <div className="flex flex-row gap-4">
                 {/* Filters Panel */}
-                <div className="bg-white w-80 h-fit shadow-md rounded">
+                <div className={`w-80 h-fit border-2 rounded ${isDark? "bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)]" : "bg-white text-gray-800 shadow-[0px_0px_6px_rgba(0,0,0,0.15)]  border-transparent"}`}>
 
                     <div className="flex flex-col justify-center w-full gap-2 px-4 py-2 font-semibold">
                         <div className="flex flex-row justify-between items-center w-full">
@@ -231,7 +231,7 @@ const Orders = () => {
                             {filterTags.length > 0 &&
                                 <div className="flex flex-row gap-2 flex-wrap px-4 pb-2">
                                     {filterTags.map((tag, idx) => (
-                                        <button className="flex flex-row gap-2 items-center p-2 bg-[#e7e7e7] text-xs font-normal rounded hover:line-through cursor-pointer" onClick={() => removeTag(tag)} key={idx}>
+                                        <button className={`flex flex-row gap-2 items-center p-2 text-xs font-normal rounded hover:line-through cursor-pointer ${isDark? "bg-gray-800" : "bg-[#e7e7e7]"}`} onClick={() => removeTag(tag)} key={idx}>
                                             <span>{tag}</span>
                                             <RxCross1 />
                                         </button>
@@ -296,13 +296,14 @@ const Orders = () => {
                         orders.length > 0 ? (
                             <>
                                 {orders.map((order) => (
-                                    <div key={order._id} className="px-5 bg-white rounded-lg border-2 border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)] transition-shadow duration-200 cursor-pointer">
+                                    <div key={order._id} className={`px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"}`}>
+                                        <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
                                         <table className="w-full table-fixed">
                                             <tbody>
                                                 <tr>
                                                     {/* Product */}
                                                     <td className="px-4 py-4 w-1/2 pl-10">
-                                                        <div className="flex items-center gap-3">
+                                                        <div className="flex items-center gap-4">
                                                             <img src={order?.orderItems[0]?.image} alt="img" className="h-20 w-20 object-cover rounded" />
                                                             <div className="flex flex-col">
                                                                 <span>{order?.orderItems[0]?.name}</span>
@@ -341,7 +342,7 @@ const Orders = () => {
                                 <div className="w-full flex justify-center items-center font-semibold">
                                     {orders.length < totalOrders ? (
                                         <button
-                                            className="bg-white text-blue-500 px-4 py-2 rounded transition-shadow duration-200 hover:shadow-[0px_0px_8px_rgba(0,0,0,0.15)] border-2 border-[#87878730] cursor-pointer w-fit"
+                                            className={`text-blue-500 px-4 py-2 rounded transition-shadow duration-200 hover:shadow-[0px_0px_8px_rgba(0,0,0,0.15)] border-2 cursor-pointer w-fit ${isDark? "bg-gray-900 border-gray-800" : "bg-white border-[#87878730]"}`}
                                             onClick={loadMore}
                                             disabled={loading}
                                         >
@@ -355,7 +356,7 @@ const Orders = () => {
                                     ) :
                                         (
                                             <span
-                                                className="bg-white text-blue-500 px-4 py-2 rounded border-2 border-[#87878730]"
+                                                className={`text-blue-500 px-4 py-2 rounded border-2 ${isDark? "bg-gray-900 border-gray-800" : "bg-white border-[#87878730]"}`}
                                             >
                                                 No More Results To Display
                                             </span>
@@ -363,7 +364,7 @@ const Orders = () => {
                                 </div>
                             </>
                         ) : (
-                            <div className="h-[70dvh] bg-white shadow-md rounded flex justify-center items-center">
+                            <div className={`h-[70dvh] rounded flex justify-center items-center border-2 ${isDark? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
                                 <div className="flex flex-col justify-center items-center">
                                     <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
                                     <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
