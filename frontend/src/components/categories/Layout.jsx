@@ -194,7 +194,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     return (
         <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 pb-10 animate-fadeUp will-change-transform w-full h-full relative min-h-[50dvh]">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 pb-10 animate-fadeUp will-change-transform w-full h-full relative min-h-[calc(100dvh-112px)]">
 
                 {loading
                     ? Array(10)
@@ -205,7 +205,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                         (products?.filter(p => p.productId !== pid).map((product, idx) => (
                             <div
                                 key={product.productId}
-                                className={`animate-fadeUp will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
+                                className={`animate-fadeUp will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
                                 onClick={() => {
                                     navigate(`/${createSlug(product.title)}/p/${product._id}`);
                                 }}
