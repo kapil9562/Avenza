@@ -72,8 +72,8 @@ function SearchResults() {
     }
 
     return (
-        <div className={`${isDark ? "darkBgImg" : "bgImg"} min-h-screen pb-15 pt-2`}>
-            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 animate-fadeUp will-change-transform`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} min-h-[calc(100dvh-115px)] pb-15 pt-2`}>
+            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 animate-fadeUp will-change-transform relative min-h-[calc(100dvh-115px)]`}>
 
 
                 {loading
@@ -82,8 +82,8 @@ function SearchResults() {
                         .map((_, idx) => <ProductSkeleton key={idx} />)
                     :
                     products.length === 0 ?
-                        (<div className="flex flex-col justify-center items-center gap-4 col-span-full">
-                            <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
+                        (<div className="fixed inset-0 top-1/2 text-center h-fit w-fit left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-4 col-span-full">
+                            <img src='/noResult.png' alt="not found" className="h-40 object-contain" />
                             <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
                                 We couldn't find what you were looking for. Let's start over.
                             </span>
@@ -115,7 +115,7 @@ function SearchResults() {
                                             {product.title}
                                         </h2>
 
-                                        <p className={`text-sm mb-2 line-clamp-2 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                                        <p className={`text-sm mb-2 line-clamp-2 min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
                                             {product.description}
                                         </p>
                                         <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">

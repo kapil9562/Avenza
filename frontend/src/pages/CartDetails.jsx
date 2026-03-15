@@ -31,7 +31,7 @@ export default function CartDetails() {
     const total = subtotal + deliveryCharge;
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"} min-h-screen pb-15 relative`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} min-h-screen pb-15 relative`}>
             {loading && <Loader />}
             <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont `}>
 

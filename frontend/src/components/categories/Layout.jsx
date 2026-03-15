@@ -12,12 +12,15 @@ import { FaHeart } from "react-icons/fa6";
 import { GoAlertFill } from 'react-icons/go';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { formatINR } from '../../utils/price.js';
+import { AiOutlineReload } from "react-icons/ai";
 
 const Layout = React.memo(function Layout({ category, pid }) {
 
     const { cache, setProducts } = useProducts();
     const [searchParams, setSearchParams] = useSearchParams();
     const pageParam = Number(searchParams.get("page")) || 1;
+
+    const [loading, setLoading] = useState(false);
 
     const [page, setPage] = useState(pageParam);
     const [totalItems, setTotalItems] = useState(0);
@@ -27,7 +30,6 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const cacheKey = `${category}-${page}`;
     const products = cache[cacheKey];
-    const loading = !products;
 
     const navigate = useNavigate();
 
@@ -43,7 +45,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
     const { isAuthenticated, loading: authloading } = useAuth();
 
     const [error, setError] = useState("");
- 
+
     useEffect(() => {
         if (!alert) return;
 
@@ -58,13 +60,14 @@ const Layout = React.memo(function Layout({ category, pid }) {
         if (products) return;
         const fetchProducts = async () => {
             try {
-                setError("")
+                setLoading(true);
+                setError("");
                 const params = { skip };
                 if (category !== "HOME") params.category = category;
 
                 const res = await getProducts(params);
 
-                if(!res?.data?.total) {
+                if (!res?.data?.total) {
                     setError("no any product found !")
                 }
 
@@ -76,6 +79,8 @@ const Layout = React.memo(function Layout({ category, pid }) {
             } catch (err) {
                 setError(err?.response?.data?.message || err?.message || "Something went wrong !")
                 console.error(err);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -178,7 +183,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
         try {
             await toggleFavItems(ProductId);
         } catch (error) {
-            setAlert(error)
+            setAlert(error);
         }
     }
 
@@ -189,82 +194,87 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     return (
         <>
-            {error && <div className="flex flex-col min-h-[80dvh] justify-center items-center gap-4 px-10">
-                <img src='/assets/ItemNotFound.png' alt="not found" className="h-40 md:h-50 object-contain" />
-                <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg text-center`}>
-                    We couldn't find what you were looking for. Let's start over.
-                </span>
-                <button className="min-w-35 px-4 py-3 border-[#FF6F61] border-2 text-[#FF6F61] rounded-sm cursor-pointer active:scale-95 transition-transform duration-300 font-semibold"
-                    onClick={() => {
-                        navigate('/');
-                    }}>Go To HomePage</button>
-            </div>}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 pb-10 animate-fadeUp will-change-transform">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 pb-10 animate-fadeUp will-change-transform w-full h-full relative min-h-[50dvh]">
 
                 {loading
                     ? Array(10)
                         .fill(0)
                         .map((_, idx) => <ProductSkeleton key={idx} />)
-                    : products?.filter(p => p.productId !== pid).map((product, idx) => (
-                        <div
-                            key={product.productId}
-                            className={`animate-fadeUp will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
-                            onClick={() => {
-                                navigate(`/${createSlug(product.title)}/p/${product._id}`);
-                            }}
-                        >
+                    :
+                    products && products.length > 0 ?
+                        (products?.filter(p => p.productId !== pid).map((product, idx) => (
                             <div
-                                className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAddToFav(product._id);
-                                }}>
-                                {isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}
-                            </div>
-
-                            <ProductImage
-                                src={product.thumbnail}
-                                alt={product.title}
-                                className="max-w-[80%] max-h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
-                                idx={idx}
-                            />
-
-                            <div className="p-2">
-                                <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
-                                    {product.title}
-                                </h2>
-
-                                <p className={`text-sm mb-2 line-clamp-2 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
-                                    {product.description}
-                                </p>
-                                <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
-                                    {renderStars(product.rating)} ({product.rating.toFixed(1)})
+                                key={product.productId}
+                                className={`animate-fadeUp will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
+                                onClick={() => {
+                                    navigate(`/${createSlug(product.title)}/p/${product._id}`);
+                                }}
+                            >
+                                <div
+                                    className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToFav(product._id);
+                                    }}>
+                                    {isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}
                                 </div>
 
-                                <div className="flex flex-col gap-2 justify-between">
-                                    <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
-                                        <p className="text-lg font-semibold text-[#FF6F61]">
-                                            ₹{formatINR(product.price)}
-                                        </p>
+                                <ProductImage
+                                    src={product.thumbnail}
+                                    alt={product.title}
+                                    className="max-w-[80%] max-h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
+                                    idx={idx}
+                                />
 
-                                        <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
-                                            ₹
-                                            {(formatINR(Math.round(
-                                                (product.price * 100) /
-                                                (100 - product.discountPercentage)
-                                            )))}
-                                            <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
-                                        </p>
+                                <div className="p-2">
+                                    <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
+                                        {product.title}
+                                    </h2>
 
-                                        <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
-                                            {product.discountPercentage.toFixed(0)}% off
-                                        </p>
+                                    <p className={`text-sm mb-2 line-clamp-2 min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                                        {product.description}
+                                    </p>
+                                    <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
+                                        {renderStars(product.rating)} ({product.rating.toFixed(1)})
                                     </div>
-                                    <AddToCartBtn product={product} />
+
+                                    <div className="flex flex-col gap-2 justify-between">
+                                        <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
+                                            <p className="text-lg font-semibold text-[#FF6F61]">
+                                                ₹{formatINR(product.price)}
+                                            </p>
+
+                                            <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
+                                                ₹
+                                                {(formatINR(Math.round(
+                                                    (product.price * 100) /
+                                                    (100 - product.discountPercentage)
+                                                )))}
+                                                <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
+                                            </p>
+
+                                            <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
+                                                {product.discountPercentage.toFixed(0)}% off
+                                            </p>
+                                        </div>
+                                        <AddToCartBtn product={product} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        )))
+                        :
+                        (<div className={`rounded flex justify-center items-center absolute left-1/2 -translate-x-1/2 ${isDark? "text-gray-300" : "text-gray-800"}`}>
+                            <div className="flex flex-col justify-center items-center">
+                                <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
+                                <p className="font-semibold text-lg mb-2">Unable to load products</p>
+                                <p className="font-normal text-gray-500 text-sm mb-4">Try changing the category or refresh the page</p>
+                                <button className="border-2 flex flex-row items-center justify-center gap-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => window.location.reload()}>
+                                    <AiOutlineReload size={20}/>
+                                    <span>Reload</span>
+                                </button>
+                            </div>
+                        </div>)
+                }
             </div>
             {showPagination && (
 

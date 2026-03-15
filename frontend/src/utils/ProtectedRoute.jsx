@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
 
     if (loading) {
         return (
-            <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "cartBg"} absolute top-0 left-0 min-h-screen w-full z-999 justify-center items-center flex`}>
+            <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} absolute top-0 left-0 min-h-screen w-full z-999 justify-center items-center flex`}>
                 <Lottie
                         animationData={animationData}
                         loop

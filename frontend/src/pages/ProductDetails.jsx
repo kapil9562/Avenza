@@ -138,16 +138,16 @@ function ProductDetails() {
     );
 
     return (
-        <div className={`flex flex-col gap-2 md:p-5 min-h-150 w-full pb-20 ${!isDark ? "bgImg" : "darkBgImg"}`}>
+        <div className={`flex flex-col gap-2 md:p-5 min-h-[calc(100dvh-115px)] w-full ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"}`}>
 
             {loading ?
                 (
                     <ProductDetailsSkeleton />
                 ) : (
-                    <div className={`md:rounded-4xl flex flex-col justify-center items-center min-h-150 md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
+                    <div className={`md:rounded-xl flex flex-col justify-center items-center min-h-[calc(100dvh-115px)] md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
                         {!product ? (
-                            <div className="flex flex-col justify-center items-center gap-4">
-                                <img src='/assets/ItemNotFound.png' alt="not found" className="md:h-100 h-70 object-contain float-img" />
+                            <div className="flex flex-col h-full justify-center items-center gap-4 px-4 text-center">
+                                <img src='/noResult.png' alt="not found" className="h-40 object-contain" />
                                 <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
                                     We couldn't find what you were looking for. Let's start over.
                                 </span>
@@ -160,7 +160,7 @@ function ProductDetails() {
                         ) : (
                             <>
 
-                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 p-2 w-full">
+                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 p-2 w-full  pb-20">
                                     {/* IMAGE SECTION */}
                                     <div className="flex gap-3 justify-start items-start flex-col">
 

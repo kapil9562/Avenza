@@ -62,34 +62,6 @@ body {
   scrollbar-color: #c562b0d7 transparent;
 }
 
-.darkBgImg {
-  background-image: url('/assets/darkWebBg.png');
-  background-size: 100% auto;
-  background-repeat: repeat-y;
-  background-position: top center;
-}
-
-.bgImg {
-  background-image: url('/assets/webBg.png');
-  background-size: 100% auto;
-  background-repeat: repeat-y;
-  background-position: top center;
-}
-
-.signupBg {
-  background-image: url('/assets/SignupBg.png');
-  background-size: 100% auto;
-  background-repeat: repeat-y;
-  background-position: top center;
-}
-
-.cartBg {
-  background-image: url('/assets/cartBg.png');
-  background-size: 100% auto;
-  background-repeat: repeat-y;
-  background-position: top center;
-}
-
 .sideMenuBg {
   background-image: url('/assets/sideMenuBg.png');
   background-size: 100% auto;
@@ -102,15 +74,6 @@ body {
   background-size: 100% auto;
   background-repeat: repeat-y;
   background-position: top center;
-}
-
-.notFound {
-  width: "100%";
-  min-height: "100vh";
-  background-image: url('/assets/404.png');
-  background-size: "cover";
-  background-position: "center";
-  background-repeat: "no-repeat";
 }
 
 
@@ -180,11 +143,15 @@ body {
   0% {
     transform: translateY(0px);
   }
+
   50% {
-    transform: translateY(-15px); /* move up */
+    transform: translateY(-15px);
+    /* move up */
   }
+
   100% {
-    transform: translateY(0px); /* back down */
+    transform: translateY(0px);
+    /* back down */
   }
 }
 
@@ -193,6 +160,7 @@ body {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -206,4 +174,16 @@ body {
 
 .animate-scroll:hover {
   animation-play-state: paused;
+}
+
+.torch {
+  background: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%),
+      transparent 0%,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.9) 66%);
+}
+
+.glow {
+  text-shadow:
+    0 0 15px #fff
 }

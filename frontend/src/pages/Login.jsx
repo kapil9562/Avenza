@@ -66,7 +66,7 @@ export default function Login() {
     };
 
     return (
-        <div className={`${isDark ? "darkBgImg" : "signupBg"} h-dvh flex items-center justify-center px-4 bg-cover`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} h-dvh flex items-center justify-center px-4 bg-cover`}>
             <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 flex flex-col items-center`}>
 
                 {/* Header */}
