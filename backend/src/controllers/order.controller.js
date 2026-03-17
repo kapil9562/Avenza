@@ -27,7 +27,7 @@ export const buyNow = async (req, res) => {
                             name: product.title,
                             images: [product.thumbnail]
                         },
-                        unit_amount: product.price * 100
+                        unit_amount: product.price<100 ? (product.price + 100 ) * 100 : product.price * 100
                     },
                     quantity
                 }
@@ -80,7 +80,9 @@ export const verifyPayment = async (req, res) => {
 
         const product = await Product.findOne({ _id: productId });
 
-        const totalAmount = product.price * quantity;
+        const deliveryCharge = (product.price * quantity) < 100 ? 100 : 0;
+
+        const totalAmount = (product.price * quantity) + deliveryCharge;
 
         const order = await Order.create({
             userId,
@@ -90,6 +92,7 @@ export const verifyPayment = async (req, res) => {
                     name: product.title,
                     image: product.thumbnail,
                     price: product.price,
+                    deliveryCharge,
                     quantity
                 }
             ],

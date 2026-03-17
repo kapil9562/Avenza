@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Product from "../models/products.model.js";
 
 const getProducts = async (req, res) => {
-    let { skip = 0, limit = 30, category, search, productId, productIds, inStock } = req.query;
+    let { skip = 0, limit = 20, category, search, productId, productIds, inStock } = req.query;
 
     skip = parseInt(skip);
     limit = parseInt(limit);

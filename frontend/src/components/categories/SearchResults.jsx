@@ -77,7 +77,7 @@ function SearchResults() {
 
 
                 {loading
-                    ? Array(products.length)
+                    ? Array(10)
                         .fill(0)
                         .map((_, idx) => <ProductSkeleton key={idx} />)
                     :

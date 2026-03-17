@@ -25,8 +25,8 @@ const Layout = React.memo(function Layout({ category, pid }) {
     const [page, setPage] = useState(pageParam);
     const [totalItems, setTotalItems] = useState(0);
 
-    const totalPages = Math.ceil(totalItems / 30);
-    const skip = (page - 1) * 30;
+    const totalPages = Math.ceil(totalItems / 20);
+    const skip = (page - 1) * 20;
 
     const cacheKey = `${category}-${page}`;
     const products = cache[cacheKey];
@@ -37,7 +37,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const { scrollRef } = useOutletContext();
 
-    const showPagination = !pid && totalItems > 30 && !loading;
+    const showPagination = !pid && totalItems > 20 && !loading;
 
     const { toggleFavItems, favorites } = useFavItem();
     const [alert, setAlert] = useState("");
