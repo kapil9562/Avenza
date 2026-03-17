@@ -5,20 +5,50 @@ const addToCart = async (req, res) => {
   const { uid, product_id, price, qty } = req.body;
 
   try {
-    // Check if item already exists
     const existing = await Cart.findOne({ uid, productId: product_id });
 
     if (existing) {
-      existing.qty += qty;
+      const newQty = existing.qty + qty;
+
+      if (newQty > 5) {
+        return res.status(409).json({
+          success: false,
+          error: "limit exceeded!"
+        });
+      }
+
+      existing.qty = newQty;
       await existing.save();
-    } else {
-      await Cart.create({ uid, productId: product_id, price, qty });
+
+      return res.status(200).json({
+        success: true,
+        message: "Item quantity updated in cart"
+      });
     }
 
-    res.status(200).json({ success: true, message: "Item added to cart" });
+    const totalCart = await Cart.countDocuments({ uid });
+
+    if (totalCart >= 10) {
+      return res.status(409).json({
+        success: false,
+        error: "limit exceeded!"
+      });
+    }
+
+    await Cart.create({
+      uid,
+      productId: product_id,
+      price,
+      qty
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Item added to cart"
+    });
   } catch (err) {
     console.error("error :: ", err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -43,21 +73,40 @@ const updateQty = async (req, res) => {
     const item = await Cart.findOne({ uid, productId: product_id });
 
     if (!item) {
-      return res.status(404).json({ message: "Item not found" });
+      return res.status(404).json({
+        success: false,
+        error: "Item not found"
+      });
     }
 
-    item.qty += qtyChange;
+    const newQty = item.qty + qtyChange;
 
-    if (item.qty <= 0) {
+    if (newQty > 5) {
+      return res.status(409).json({
+        success: false,
+        error: "limit exceeded!"
+      });
+    }
+
+    if (newQty <= 0) {
       await item.deleteOne();
-      return res.status(200).json({ message: "Item removed from cart" });
+      return res.status(200).json({
+        success: true,
+        message: "Item removed from cart"
+      });
     }
 
+    item.qty = newQty;
     await item.save();
-    res.status(200).json(item);
+
+    return res.status(200).json({
+      success: true,
+      message: "Cart updated successfully",
+      item
+    });
   } catch (err) {
     console.error("error :: ", err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 

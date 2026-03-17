@@ -4,6 +4,8 @@ import { useTheme } from "../context/ThemeContext";
 import { ProductSkeleton } from "../utils";
 import FavItems from "./FavItems";
 import { useEffect } from "react";
+import Lottie from "lottie-react";
+import emptyFav from "../assets/emptyFav.json"
 
 export default function Whitelist() {
     const { items, loading, clearAll } = useFavItem();
@@ -27,7 +29,7 @@ export default function Whitelist() {
     }
 
     return (
-        <div className={`min-h-dvh md:pt-4 pt-2 flex flex-col gap-2 font-bold nunitoFont text-white relative ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"}`}>
+        <div className={`min-h-[calc(100dvh-112px)] md:pt-4 pt-2 flex flex-col gap-2 font-bold nunitoFont text-white relative ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"}`}>
             <div className={`w-full flex flex-row justify-between items-center sm:px-5 px-1 lg:px-10 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                 <h1 className={`sm:text-3xl text-lg `}>
                     Favourite Products <span className="text-pink-500">❤️</span>
@@ -36,14 +38,24 @@ export default function Whitelist() {
             </div>
 
             {items.length === 0 ? (
-                <div className="text-gray-500 absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center text-center">No favorites yet. Start exploring and add what you love ❤️
-                    <button className="text-[#6366F1] underline cursor-pointer"
-                        onClick={() => {
-                            navigate('/');
-                            setActiveTab("HOME");
-                        }}>
-                        Start Shopping
-                    </button>
+                <div className="text-gray-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center text-center">
+                    <div className="relative flex flex-col justify-center items-center gap-4">
+                        <Lottie
+                            animationData={emptyFav}
+                            loop
+                            className="h-30 w-fit"
+                        />
+                        <div className="flex flex-col justify-center items-center">
+                            <span>No favorites yet. Start exploring and add what you love ❤️</span>
+                            <button className="text-[#6366F1] underline cursor-pointer"
+                                onClick={() => {
+                                    navigate('/');
+                                    setActiveTab("HOME");
+                                }}>
+                                Start Shopping
+                            </button>
+                        </div>
+                    </div>
                 </div>
             ) : (
 

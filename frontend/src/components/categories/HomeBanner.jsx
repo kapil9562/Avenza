@@ -14,15 +14,15 @@ function HomeBanner() {
     const banners = [
         {
             id: 1,
-            link: '/assets/banner1.png'
+            link: '/assets/banner1.webp'
         },
         {
             id: 2,
-            link: '/assets/banner2.png'
+            link: '/assets/banner2.webp'
         },
         {
             id: 3,
-            link: '/assets/banner3.jpg'
+            link: '/assets/banner3.webp'
         }
     ];
 

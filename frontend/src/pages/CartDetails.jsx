@@ -6,6 +6,8 @@ import { useOutletContext, useNavigate } from "react-router-dom";
 import Loader from "../utils/Loader"
 import { useTheme } from "../context/ThemeContext";
 import { TiShoppingCart } from "react-icons/ti";
+import Lottie from "lottie-react";
+import emptyCart from "../assets/emptyCart.json"
 
 export default function CartDetails() {
 
@@ -19,11 +21,11 @@ export default function CartDetails() {
         setActiveTab("");
     }, []);
 
-    const clearCart = async() => {
+    const clearCart = async () => {
         try {
             await clearAll();
         } catch (error) {
-            console.log("clear cart error ::",error);
+            console.log("clear cart error ::", error);
         }
     }
 
@@ -31,7 +33,7 @@ export default function CartDetails() {
     const total = subtotal + deliveryCharge;
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} min-h-screen pb-15 relative`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} min-h-[calc(100dvh-112px)] pb-15 relative`}>
             {loading && <Loader />}
             <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont `}>
 
@@ -43,14 +45,24 @@ export default function CartDetails() {
                     </div>
 
                     {items.length === 0 ? (
-                        <div className="text-gray-500 absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">Your cart is empty
-                            <a className="text-[#6366F1] underline cursor-pointer"
-                                onClick={() => {
-                                    navigate('/');
-                                    setActiveTab("HOME");
-                                }}>
-                                Shop now
-                            </a>
+                        <div className="text-gray-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">
+                            <div className="relative">
+                                <Lottie
+                                    animationData={emptyCart}
+                                    loop
+                                    className="h-60 w-fit"
+                                />
+                                <div className="flex flex-col justify-center items-center">
+                                    <span>Your cart is empty</span>
+                                    <a className="text-[#6366F1] underline cursor-pointer"
+                                        onClick={() => {
+                                            navigate('/');
+                                            setActiveTab("HOME");
+                                        }}>
+                                        Shop now
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     ) : (
                         <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} rounded-2xl`}>

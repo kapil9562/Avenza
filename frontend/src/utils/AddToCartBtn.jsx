@@ -6,6 +6,7 @@ import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { useTheme } from '../context/ThemeContext';
+import successCheck from "../assets/successCheck.json"
 
 function AddToCartBtn({ product }) {
 
@@ -17,7 +18,7 @@ function AddToCartBtn({ product }) {
     const [success, setSuccess] = useState(null)
     const [error, setError] = useState("");
 
-    const {isDark} =useTheme();
+    const { isDark } = useTheme();
 
     const handleAddToCart = async () => {
 
@@ -67,7 +68,7 @@ function AddToCartBtn({ product }) {
                     e.stopPropagation();
                     handleAddToCart();
                 }}
-                className={`w-full px-6 py-5 border border-[#FF6F61] text-[#FF6F61] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden ${isDark? "hover:bg-red-900/20" : "hover:bg-red-50"}`}
+                className={`w-full px-6 py-5 border border-[#FF6F61] text-[#FF6F61] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden ${isDark ? "hover:bg-red-900/20" : "hover:bg-red-50"}`}
                 disabled={loadingId === product.productId || success}
             >
                 {loadingId === product.productId ? (
@@ -78,8 +79,12 @@ function AddToCartBtn({ product }) {
                     />
                 ) : (
                     success === product.productId ?
-                        <div className='animate-fadeUp flex flex-row justify-center items-center font-semibold gap-1 text-green-600'>
-                            <BsCheckCircleFill />
+                        <div className='animate-fadeUp flex flex-row justify-center items-center font-semibold text-green-600 gap-1'>
+                            <Lottie
+                                animationData={successCheck}
+                                loop={false}
+                                className='h-6 w-6'
+                            />
                             <span>Added</span>
                         </div> : "Add to Cart"
                 )}
@@ -87,7 +92,7 @@ function AddToCartBtn({ product }) {
             <div className={`absolute bottom-full left-0 mb-2 bg-red-100 text-red-600 flex justify-between items-center p-1 border-l-2 border-red-400 rounded-md gap-5 px-2 transition-opacity duration-300 ${error ? "opacity-100 visible" : "opacity-0 invisible"}`}>
                 <div className='flex justify-center items-center flex-row gap-2'>
                     <GoAlertFill size={22} />
-                    <p className='leading-tight'>{error}</p>
+                    <p className='leading-tight font-semibold'>{error}</p>
                 </div>
             </div>
         </div>
