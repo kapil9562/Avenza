@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ProductSkeleton, ProductImage } from '../../utils/index'
 import { useNavigate, useOutletContext, useParams, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../../context/ProductsContext';
@@ -18,33 +18,36 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const { cache, setProducts } = useProducts();
     const [searchParams, setSearchParams] = useSearchParams();
-    const pageParam = Number(searchParams.get("page")) || 1;
-
-    const [loading, setLoading] = useState(false);
-
-    const [page, setPage] = useState(pageParam);
+    const [loading, setLoading] = useState(true);
+    const page = Math.max(1, Number(searchParams.get("page")) || 1);
     const [totalItems, setTotalItems] = useState(0);
-
-    const totalPages = Math.ceil(totalItems / 20);
-    const skip = (page - 1) * 20;
-
+    const PAGE_SIZE = 20;
+    const skip = (page - 1) * PAGE_SIZE;
+    const totalPages = Math.ceil(totalItems / PAGE_SIZE);
     const cacheKey = `${category}-${page}`;
     const products = cache[cacheKey];
-
     const navigate = useNavigate();
-
     const { isDark } = useTheme();
-
     const { scrollRef } = useOutletContext();
-
-    const showPagination = !pid && totalItems > 20 && !loading;
-
+    const showPagination = !pid && totalPages > 1;
     const { toggleFavItems, favorites } = useFavItem();
     const [alert, setAlert] = useState("");
-
     const { isAuthenticated, loading: authloading } = useAuth();
-
     const [error, setError] = useState("");
+    const prevCategoryRef = useRef(category);
+
+    const scrollToTop = () => {
+        scrollRef.current?.scrollTo({ top: 0, behavior: "instant" });
+    };
+
+    useEffect(() => {
+        if (prevCategoryRef.current !== category) {
+            prevCategoryRef.current = category;
+            setTotalItems(0);
+            setError("");
+            setSearchParams({}, { replace: true });
+        }
+    }, [category, setSearchParams]);
 
     useEffect(() => {
         if (!alert) return;
@@ -57,54 +60,57 @@ const Layout = React.memo(function Layout({ category, pid }) {
     }, [alert]);
 
     useEffect(() => {
-        if (products) return;
+        let cancelled = false;
+
         const fetchProducts = async () => {
             try {
-                setLoading(true);
+                setLoading(!products);
                 setError("");
+
                 const params = { skip };
                 if (category !== "HOME") params.category = category;
 
                 const res = await getProducts(params);
+                if (cancelled) return;
 
-                if (!res?.data?.total) {
-                    setError("no any product found !")
-                }
+                const fetchedProducts = res?.data?.products ?? [];
+                const total = res?.data?.total ?? 0;
 
-                setTotalItems(res?.data?.total);
+                setTotalItems(total);
+                setProducts(cacheKey, fetchedProducts);
 
-                if (!products) {
-                    setProducts(cacheKey, res?.data?.products);
+
+                if (total === 0) {
+                    setError("No products found!");
                 }
             } catch (err) {
-                setError(err?.response?.data?.message || err?.message || "Something went wrong !")
-                console.error(err);
+                if (cancelled) return;
+                setError(
+                    err?.response?.data?.message ||
+                    err?.message ||
+                    "Unable to load products!"
+                );
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProducts();
-    }, [category, page]);
+
+        return () => {
+            cancelled = true;
+        };
+    }, [category, skip, cacheKey]);
 
 
-    const nextPage = () => {
-        const next = Math.min(page + 1, totalPages);
-        setPage(next);
-        setSearchParams({ page: next });
+    const goToPage = (nextPage) => {
+        const safePage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
+        setSearchParams(safePage === 1 ? {} : { page: String(safePage) });
+        scrollToTop();
     };
 
-    const prevPage = () => {
-        const prev = Math.max(page - 1, 1);
-        setPage(prev);
-        setSearchParams({ page: prev });
-    };
-
-
-    useEffect(() => {
-        setPage(1);
-        setSearchParams({});
-    }, [category]);
+    const nextPage = () => goToPage(page + 1);
+    const prevPage = () => goToPage(page - 1);
 
     const getVisiblePages = (current, total) => {
         const pages = [];
@@ -156,21 +162,11 @@ const Layout = React.memo(function Layout({ category, pid }) {
         );
     };
 
-    useEffect(() => {
-        const paramPage = Number(searchParams.get("page")) || 1;
-        setPage(paramPage);
-    }, [searchParams]);
-
     const createSlug = (text) => {
         return text
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/(^-|-$)/g, "");
-    }
-
-    const currentPageHandler = (currPage) => {
-        setPage(currPage);
-        setSearchParams({ page: currPage });
     }
 
     const handleAddToFav = async (ProductId) => {
@@ -201,79 +197,79 @@ const Layout = React.memo(function Layout({ category, pid }) {
                         .fill(0)
                         .map((_, idx) => <ProductSkeleton key={idx} />)
                     :
-                    products && products.length > 0 ?
-                        (products?.filter(p => p.productId !== pid).map((product, idx) => (
-                            <div
-                                key={product.productId}
-                                className={`animate-fadeUp will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
-                                onClick={() => {
-                                    navigate(`/${createSlug(product.title)}/p/${product._id}`);
-                                }}
-                            >
-                                <div
-                                    className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleAddToFav(product._id);
-                                    }}>
-                                    {isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}
-                                </div>
-
-                                <ProductImage
-                                    src={product.thumbnail}
-                                    alt={product.title}
-                                    className="max-w-[80%] max-h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
-                                    idx={idx}
-                                />
-
-                                <div className="p-2">
-                                    <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
-                                        {product.title}
-                                    </h2>
-
-                                    <p className={`text-sm mb-2 line-clamp-2 min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
-                                        {product.description}
-                                    </p>
-                                    <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
-                                        {renderStars(product.rating)} ({product.rating.toFixed(1)})
-                                    </div>
-
-                                    <div className="flex flex-col gap-2 justify-between">
-                                        <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
-                                            <p className="text-lg font-semibold text-[#FF6F61]">
-                                                ₹{formatINR(product.price)}
-                                            </p>
-
-                                            <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
-                                                ₹
-                                                {(formatINR(Math.round(
-                                                    (product.price * 100) /
-                                                    (100 - product.discountPercentage)
-                                                )))}
-                                                <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
-                                            </p>
-
-                                            <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
-                                                {product.discountPercentage.toFixed(0)}% off
-                                            </p>
-                                        </div>
-                                        <AddToCartBtn product={product} />
-                                    </div>
-                                </div>
-                            </div>
-                        )))
-                        :
-                        (<div className={`rounded flex justify-center items-center absolute left-1/2 -translate-x-1/2 ${isDark? "text-gray-300" : "text-gray-800"}`}>
+                    error && products?.length <= 0 ?
+                        (<div className={`rounded flex justify-center items-center absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 ${isDark ? "text-gray-300" : "text-gray-800"}`}>
                             <div className="flex flex-col justify-center items-center">
                                 <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
                                 <p className="font-semibold text-lg mb-2">Unable to load products</p>
                                 <p className="font-normal text-gray-500 text-sm mb-4">Try changing the category or refresh the page</p>
                                 <button className="border-2 flex flex-row items-center justify-center gap-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => window.location.reload()}>
-                                    <AiOutlineReload size={20}/>
+                                    <AiOutlineReload size={20} />
                                     <span>Reload</span>
                                 </button>
                             </div>
-                        </div>)
+                        </div>
+                        ) : (
+                            products?.filter(p => p.productId !== pid).map((product, idx) => (
+                                <div
+                                    key={product.productId}
+                                    className={`animate-fadeUp will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
+                                    onClick={() => {
+                                        navigate(`/${createSlug(product.title)}/p/${product._id}`);
+                                    }}
+                                >
+                                    <div
+                                        className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleAddToFav(product._id);
+                                        }}>
+                                        {isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}
+                                    </div>
+
+                                    <ProductImage
+                                        src={product.thumbnail}
+                                        alt={product.title}
+                                        className="max-w-[80%] max-h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
+                                        idx={idx}
+                                    />
+
+                                    <div className="p-2">
+                                        <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
+                                            {product.title}
+                                        </h2>
+
+                                        <p className={`text-sm mb-2 line-clamp-2 min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                                            {product.description}
+                                        </p>
+                                        <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
+                                            {renderStars(product.rating)} ({product.rating.toFixed(1)})
+                                        </div>
+
+                                        <div className="flex flex-col gap-2 justify-between">
+                                            <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
+                                                <p className="text-lg font-semibold text-[#FF6F61]">
+                                                    ₹{formatINR(product.price)}
+                                                </p>
+
+                                                <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
+                                                    ₹
+                                                    {(formatINR(Math.round(
+                                                        (product.price * 100) /
+                                                        (100 - product.discountPercentage)
+                                                    )))}
+                                                    <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
+                                                </p>
+
+                                                <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
+                                                    {product.discountPercentage.toFixed(0)}% off
+                                                </p>
+                                            </div>
+                                            <AddToCartBtn product={product} />
+                                        </div>
+                                    </div>
+                                </div>
+                            )))
                 }
             </div>
             {showPagination && (
@@ -284,7 +280,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                         <button
                             onClick={() => {
                                 prevPage();
-                                scrollRef.current?.scrollTo({ top: 0, behavior: "instant", });
+                                scrollToTop();
                             }}
                             disabled={page === 1}
                             className={`${isDark ? "shadow-lg shadow-[#0F172A]" : "shadow-lg shadow-gray-400"} flex flex-row justify-center items-center p-2 border-[#ff5545] border-2 bg-[#FF6F61] text-white rounded-full disabled:opacity-50 cursor-pointer`}
@@ -300,8 +296,8 @@ const Layout = React.memo(function Layout({ category, pid }) {
                                 <button
                                     key={p}
                                     onClick={() => {
-                                        currentPageHandler(p);
-                                        scrollRef.current?.scrollTo({ top: 0, behavior: "instant", });
+                                        goToPage(p);
+                                        scrollToTop();
                                     }}
                                     className={`${isDark ? "shadow-lg shadow-[#0F172A]" : "shadow-lg shadow-gray-400"} sm:h-10 sm:w-10 h-fit w-7 rounded-lg sm:rounded-xl font-semibold border-2 cursor-pointer ${page === p ? "bg-[#FF6F61] text-white border-[#ff5545]" : "bg-white text-black border-transparent"}`}
                                 >
@@ -314,7 +310,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                         <button
                             onClick={() => {
                                 nextPage();
-                                scrollRef.current?.scrollTo({ top: 0, behavior: "instant", });
+                                scrollToTop();
                             }}
                             disabled={page === totalPages}
                             className={`${isDark ? "shadow-lg shadow-[#0F172A]" : "shadow-lg shadow-gray-400"} flex flex-row justify-center items-center p-2 bg-[#FF6F61] text-white rounded-full disabled:opacity-50 border-[#ff5545] border-2 cursor-pointer`}

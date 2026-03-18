@@ -76,7 +76,6 @@ body {
   background-position: top center;
 }
 
-
 @keyframes shimmer {
   100% {
     transform: translateX(100%);

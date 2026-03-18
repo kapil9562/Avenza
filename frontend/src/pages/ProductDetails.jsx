@@ -22,6 +22,7 @@ function ProductDetails() {
     const [imgLoading, setImgLoading] = useState(true);
     const [price, setPrice] = useState();
     const [error, setError] = useState("");
+    const [refreshReviews, setRefreshReviews] = useState(0);
 
     const { setActiveTab } = useOutletContext();
 
@@ -54,6 +55,8 @@ function ProductDetails() {
             setReview("");
             setRating(0);
             setShowInput(false);
+            setRefreshReviews((prev) => prev + 1);
+
         } catch (error) {
             console.error(error);
         }
@@ -79,17 +82,16 @@ function ProductDetails() {
                 setCurrentImg(data.images?.[0] || null);
                 setImgLoading(true);
             } catch (err) {
-                setError(err);
+                setError(err?.response?.data?.message || err?.message || "Unable to load product");
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProductById();
-    }, [productId]);
+    }, [productId, refreshReviews]);
 
     useEffect(() => {
-        setActiveTab("");
         product?.images?.forEach((src) => {
             const img = new Image();
             img.src = src;
@@ -177,11 +179,9 @@ function ProductDetails() {
                                             {currentImg && (
                                                 <img
                                                     src={currentImg}
-                                                    loading="eager"
-
-                                                    alt=""
+                                                    alt="Thumbnail"
                                                     onLoad={() => setImgLoading(false)}
-                                                    className={`max-h-full object-contain transition-opacity duration-300 ${imgLoading ? "opacity-0" : "opacity-100"
+                                                    className={`max-h-full object-contain transition-all duration-500 ease-out ${imgLoading ? "opacity-0" : "opacity-100"
                                                         }`}
                                                 />
                                             )}
@@ -380,56 +380,60 @@ function ProductDetails() {
                                     }
                                 </div>
 
-                                <div className={`w-full p-4 h-1 ${user && !hasUserReviewed && "hidden"}`}>
-                                    <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
-                                </div>
+                                {user && !hasUserReviewed &&
+                                    (<div className={`w-full p-4 h-1`}>
+                                        <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
+                                    </div>)
+                                }
 
                                 {/* Give Review */}
-                                <div className={`w-full pb-4 flex flex-col gap-2 px-6 ${user && !hasUserReviewed && "hidden"}`}>
-                                    <h2 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
-                                        Give a Review
-                                    </h2>
+                                {user && !hasUserReviewed &&
+                                    (<div className={`w-full pb-4 flex flex-col gap-2 px-6`}>
+                                        <h2 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                            Give a Review
+                                        </h2>
 
-                                    {/* Stars */}
-                                    <div className="flex items-center gap-2 mb-4">
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <IoStar
-                                                key={star}
-                                                size={32}
-                                                onClick={() => handleRatingClick(star)}
-                                                onMouseEnter={() => setHover(star)}
-                                                onMouseLeave={() => setHover(0)}
-                                                className={`cursor-pointer transition-all duration-200 outline-none ${star <= (hover || rating)
-                                                    ? "fill-yellow-400 text-yellow-400 scale-110"
-                                                    : "text-gray-300"
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-
-                                    {/* Review Input */}
-                                    {showInput && (
-                                        <div className="transition-all duration-300">
-                                            <textarea
-                                                value={review}
-                                                onChange={(e) => setReview(e.target.value)}
-                                                placeholder="Write your review..."
-                                                className={`w-full p-3 border-2 rounded-xl focus:outline-none shadow-md resize-none ${isDark ? "focus:shadow-purple-900/40 border-gray-700 placeholder:text-gray-400 text-gray-200" : "focus:shadow-purple-300 border-gray-200"}`}
-                                                rows="4"
-                                                maxLength={200}
-                                            />
-
-                                            <button
-                                                className={`mt-3 px-6 py-2 bg-linear-to-r from-orange-400 via-orange-500 to-orange-600 text-white rounded-xl font-medium transition-all cursor-pointer`}
-                                                onClick={() => {
-                                                    submitReview();
-                                                }}
-                                            >
-                                                Submit Review
-                                            </button>
+                                        {/* Stars */}
+                                        <div className="flex items-center gap-2 mb-4">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <IoStar
+                                                    key={star}
+                                                    size={32}
+                                                    onClick={() => handleRatingClick(star)}
+                                                    onMouseEnter={() => setHover(star)}
+                                                    onMouseLeave={() => setHover(0)}
+                                                    className={`cursor-pointer transition-all duration-200 outline-none ${star <= (hover || rating)
+                                                        ? "fill-yellow-400 text-yellow-400 scale-110"
+                                                        : "text-gray-300"
+                                                        }`}
+                                                />
+                                            ))}
                                         </div>
-                                    )}
-                                </div>
+
+                                        {/* Review Input */}
+                                        {showInput && (
+                                            <div className="transition-all duration-300">
+                                                <textarea
+                                                    value={review}
+                                                    onChange={(e) => setReview(e.target.value)}
+                                                    placeholder="Write your review..."
+                                                    className={`w-full p-3 border-2 rounded-xl focus:outline-none shadow-md resize-none ${isDark ? "focus:shadow-purple-900/40 border-gray-700 placeholder:text-gray-400 text-gray-200" : "focus:shadow-purple-300 border-gray-200"}`}
+                                                    rows="4"
+                                                    maxLength={200}
+                                                />
+
+                                                <button
+                                                    className={`mt-3 px-6 py-2 bg-linear-to-r from-orange-400 via-orange-500 to-orange-600 text-white rounded-xl font-medium transition-all cursor-pointer`}
+                                                    onClick={() => {
+                                                        submitReview();
+                                                    }}
+                                                >
+                                                    Submit Review
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>)
+                                }
 
                                 <div className="w-full p-4 h-1">
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
