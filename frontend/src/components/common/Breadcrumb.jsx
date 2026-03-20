@@ -1,6 +1,6 @@
 import { Link, useLocation, useOutletContext } from "react-router-dom";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const Breadcrumb = () => {
   const location = useLocation();

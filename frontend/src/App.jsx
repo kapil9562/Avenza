@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./index.css";
-import { Footer, Header } from "./components";
+import { Footer, Header, SideMenu } from "./components";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useTheme } from "./context/ThemeContext";
-import SideMenu from "./components/sideMenu/SideMenu";
 import Snowfall from "react-snowfall";
 
 function App() {

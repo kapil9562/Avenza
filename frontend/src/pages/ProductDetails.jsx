@@ -1,11 +1,9 @@
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import ProductDetailsSkeleton from "../utils/ProductDetailsSkeleton";
-import { formatINR } from "../utils/price";
-import Layout from "../components/categories/Layout";
-import { useTheme } from "../context/ThemeContext";
+import {ProductDetailsSkeleton, Layout, AddToCartBtn} from "../components";
+import { formatINR } from "../utils/price.js";
+import { useTheme } from "../context/ThemeContext.jsx";
 import { getProducts, productReview } from "../api/api.js";
-import AddToCartBtn from "../utils/AddToCartBtn.jsx";
 import { IoStar } from "react-icons/io5";
 import { useAuth } from "../context/AuthContext.jsx";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -140,13 +138,13 @@ function ProductDetails() {
     );
 
     return (
-        <div className={`flex flex-col gap-2 md:p-5 min-h-[calc(100dvh-115px)] w-full ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"}`}>
+        <div className={`flex flex-col gap-2 md:p-5 lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] w-full ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"}`}>
 
             {loading ?
                 (
                     <ProductDetailsSkeleton />
                 ) : (
-                    <div className={`md:rounded-xl flex flex-col justify-center items-center min-h-[calc(100dvh-115px)] md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
+                    <div className={`md:rounded-xl flex flex-col justify-center items-center lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
                         {!product ? (
                             <div className="flex flex-col h-full justify-center items-center gap-4 px-4 text-center">
                                 <img src='/noResult.png' alt="not found" className="h-40 object-contain" />

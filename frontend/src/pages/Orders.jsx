@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
-import Breadcrumb from "../utils/Breadcrumb";
+import {Breadcrumb, OrderFilterSkeleton, OrderSkeleton} from "../components";
 import { IoCheckboxSharp } from "react-icons/io5";
 import { RxCross1, RxSquare } from "react-icons/rx";
 import { IoMdRadioButtonOn } from "react-icons/io";
@@ -8,8 +8,6 @@ import { formatINR } from "../utils/price";
 import { useTheme } from "../context/ThemeContext";
 import { getOrders } from "../api/api";
 import { useAuth } from "../context/AuthContext";
-import OrderFilterSkeleton from "../utils/OrderFilterSkeleton";
-import OrderSkeleton from "../utils/OrderSkeleton";
 import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 
 const Orders = () => {
@@ -210,7 +208,7 @@ const Orders = () => {
     }, []);
 
     return (
-        <div className={`w-full sm:px-5 px-1 sm:py-5 pb-10 min-h-[calc(100dvh-124px)] space-y-2 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
+        <div className={`w-full sm:px-5 px-1 sm:py-5 pb-10 lg:min-h-[calc(100dvh-124px)] md:min-h-[calc(100dvh-92px)] min-h-[calc(100dvh-124px)] space-y-2 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
             <Breadcrumb />
             <div className="flex flex-row gap-4">
                 {/* Filters Panel */}

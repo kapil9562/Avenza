@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { formatINR } from "../utils/price";
-import CartItem from "./CartItem";
+import {CartItem, Loader} from "../components";
 import { useCart } from "../context/CartContext";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import Loader from "../utils/Loader"
 import { useTheme } from "../context/ThemeContext";
 import { TiShoppingCart } from "react-icons/ti";
 import Lottie from "lottie-react";
@@ -33,7 +32,7 @@ export default function CartDetails() {
     const total = subtotal + deliveryCharge;
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} min-h-[calc(100dvh-112px)] pb-15 relative`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] pb-15 relative`}>
             {loading && <Loader />}
             <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont `}>
 

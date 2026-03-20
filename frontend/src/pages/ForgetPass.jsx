@@ -4,7 +4,6 @@ import { MdEmail } from "react-icons/md";
 import { sendResetOtp, verifyResetOTP } from "../api/api";
 import { useTheme } from "../context/ThemeContext";
 import { GoAlertFill } from "react-icons/go";
-import Loader from "../utils/Loader";
 import { useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";

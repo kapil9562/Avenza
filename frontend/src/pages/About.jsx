@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FaShippingFast, FaLock, FaHeadset } from "react-icons/fa";
 import { useTheme } from "../context/ThemeContext";
 import { useOutletContext } from "react-router-dom";
-import useScrollReveal from "../utils/useScrollReveal";
+import useScrollReveal from "../hooks/useScrollReveal";
 
 const ease = "ease-[cubic-bezier(0.22,1,0.36,1)]";
 
@@ -42,7 +42,7 @@ const About = () => {
   }, []);
 
   return (
-    <div className={`w-full min-h-screen ${bgMain} ${textMain}`}>
+    <div className={`w-full lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] ${bgMain} ${textMain}`}>
       {/* Hero */}
       <section
         ref={hero.ref}

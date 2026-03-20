@@ -9,6 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
+import GoogleLoginBtn from "../components/common/GoogleLoginBtn";
 
 export default function Login() {
     const [loading, setLoading] = useState(false);
@@ -123,6 +124,16 @@ export default function Login() {
                         /> : "Login"}
                     </button>
                 </div>
+
+                {/* Divider */}
+                <div className="w-full flex flex-row items-center justify-center my-2">
+                    <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
+                    <span className="px-2 text text-gray-400 font-semibold">or</span>
+                    <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
+                </div>
+
+                {/* Google Button */}
+                <GoogleLoginBtn loading={loading} setLoading={setLoading} />
 
                 <button className={`text-[#6366F1] font-medium cursor-pointer active:underline hover:underline mt-4`}
                     onClick={() => navigate('/forgetpassword')}>Forget Password ?</button>

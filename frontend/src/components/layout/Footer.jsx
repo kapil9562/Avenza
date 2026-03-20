@@ -1,4 +1,3 @@
-// components/Footer.jsx
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";

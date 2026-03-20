@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
-import { ProductSkeleton, ProductImage } from '../../utils/index';
-import { useSearch } from '../../context/SearchContext';
-import { useTheme } from '../../context/ThemeContext';
-import AddToCartBtn from '../../utils/AddToCartBtn';
-import { formatINR } from '../../utils/price';
-import { getProducts } from '../../api/api';
+import { ProductSkeleton, ProductImage, AddToCartBtn } from '../components';
+import { useSearch } from '../context/SearchContext';
+import { useTheme } from '../context/ThemeContext';
+import { formatINR } from '../utils/price';
+import { getProducts } from '../api/api';
 
 function SearchResults() {
 
@@ -72,7 +71,7 @@ function SearchResults() {
     }
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} min-h-[calc(100dvh-115px)] pb-15 pt-2`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] pb-15 pt-2`}>
             <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 animate-fadeUp will-change-transform relative min-h-[calc(100dvh-115px)]`}>
 
 

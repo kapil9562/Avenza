@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { formatINR } from "../utils/price";
+import { formatINR } from "../../utils/price";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { ImBin } from "react-icons/im";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import { GoAlertFill } from "react-icons/go";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const CartItem = React.memo(function CartItem({ item }) {
 

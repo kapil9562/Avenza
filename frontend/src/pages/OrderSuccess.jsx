@@ -57,7 +57,7 @@ const OrderSuccess = () => {
     }, [])
 
     return (
-        <div className={`min-h-150 flex items-center justify-center px-4 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
+        <div className={`lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center px-4 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
             {loading ?
                 <div className="flex flex-col items-center justify-center relative">
                     <Lottie

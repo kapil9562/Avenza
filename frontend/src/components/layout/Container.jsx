@@ -1,6 +1,6 @@
 import React from 'react'
-import Layout from '../categories/Layout';
-import HomeBanner from '../categories/HomeBanner';
+import Layout from './Layout';
+import {HomeBanner} from '../index';
 import { useTheme } from '../../context/ThemeContext';
 import { useParams } from 'react-router-dom';
 

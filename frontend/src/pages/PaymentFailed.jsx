@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const PaymentFailed = () => {
 
     return (
-        <div className="min-h-[calc(100dvh-124px)] flex items-center justify-center flex-col">
+        <div className="lg:min-h-[calc(100dvh-124px)] md:min-h-[calc(100dvh-92px)] min-h-[calc(100dvh-124px)] flex items-center justify-center flex-col">
             <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full text-center space-y-4 border-2 border-gray-200/30">
 
                 <div className="flex justify-center">

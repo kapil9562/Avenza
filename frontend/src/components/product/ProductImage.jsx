@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const bgImages = ['/assets/1.png', '/assets/2.png', '/assets/3.png', '/assets/4.png'];
 const darkBgImages = ['/assets/d1.png', '/assets/d2.png', '/assets/d3.png', '/assets/d4.png'];

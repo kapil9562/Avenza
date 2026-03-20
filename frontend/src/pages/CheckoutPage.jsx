@@ -147,7 +147,7 @@ const CheckoutPage = () => {
     }, []);
 
     return (
-        <div className="w-full min-h-150 md:p-5">
+        <div className="w-full lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] md:p-5">
             <div className={`max-w-2xl mx-auto p-6 rounded-xl ${isDark? "bg-gray-900 shadow-[0px_0px_20px_rgba(0,0,0,0.4)]" : "bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.2)]"}`}>
                 <h2 className={`text-2xl font-semibold mb-6 ${isDark? "text-white" : "text-gray-800"}`}>Shipping Address</h2>
 

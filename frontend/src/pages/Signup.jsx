@@ -4,13 +4,13 @@ import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { useGoogleLogin } from '@react-oauth/google'
-import { googleAuth, sendOtp, verifyOtp } from "../api/api";
+import { sendOtp, verifyOtp } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
+import GoogleLoginBtn from "../components/common/GoogleLoginBtn";
 
 const OTP_LENGTH = 6;
 
@@ -203,37 +203,6 @@ export default function Signup() {
     setTimeout(() => emailInputRef.current?.focus(), 100);
   };
 
-
-
-  const responseGoogle = async (authResult) => {
-    try {
-      setLoading(true);
-      if (authResult['code']) {
-
-        const result = await googleAuth(authResult['code']);
-        const { uid, email, name, avatar, _id } = result.data.user;
-        const token = result.data.tokens.access_token;
-        const userData = { uid, email, name, photo: avatar, token, _id };
-
-        if (userData) {
-          await login(userData);
-          setTimeout(() => {
-            navigate('/');
-            setLoading(false);
-          }, 2000);
-        }
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("google login error:: ", error)
-    }
-  }
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: responseGoogle,
-    onError: responseGoogle,
-    flow: 'auth-code'
-  })
-
   return (
     <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative h-dvh flex items-center justify-center p-4`}>
       <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 overflow-hidden`}>
@@ -362,23 +331,7 @@ export default function Signup() {
           </div>
 
           {/* Google Button */}
-          <button
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className={`${isDark ? "bg-[#0F172A] shadow-[#0F172A]" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} w-full flex flex-row justify-center shadow-sm rounded-xl p-3 items-center gap-2 cursor-pointer`}
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google"
-              className="w-5 h-5"
-            />
-            <span className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"}`}>
-              Continue with {" "}
-              <span className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} font-semibold`}>
-                Google
-              </span>
-            </span>
-          </button>
+          <GoogleLoginBtn loading={loading} setLoading={setLoading}/>
 
           <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-4 sm:mt-6`}>
             By signing up, you agree to our{" "}

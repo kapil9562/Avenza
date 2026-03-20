@@ -172,7 +172,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
         <div className='flex flex-row justify-center items-center md:gap-3 gap-1'>
           {/* categories taggle btn */}
-          <div className='xl:hidden' onClick={() => setShow(true)}>
+          <div className='lg:hidden' onClick={() => setShow(true)}>
             <HiMiniBars3BottomLeft className={`${isDark ? "text-gray-300" : "text-gray-700"} lg:text-3xl text-2xl cursor-pointer`} />
           </div>
 
@@ -395,7 +395,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
       </div>
 
       {/* categories dropdown for large screen */}
-      <div className={`xl:flex hidden flex-row border-t-2  px-1 sm:px-5 lg:px-10 relative ${isDark ? "border-gray-800" : "border-gray-200"}`}>
+      <div className={`lg:flex hidden flex-row border-t-2  px-1 sm:px-5 lg:px-10 relative ${isDark ? "border-gray-800" : "border-gray-200"}`}>
         <div className='no-scrollbar overflow-x-auto flex flex-row gap-2 font-[Roboto_Serif] tracking-tight'>
 
           <div className={`flex justify-center items-center cursor-pointer py-1 gap-4 relative after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left group after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100 ${isDark ? "text-gray-200" : "text-gray-700"} ${activeTab === "HOME" ? "pointer-events-none" : "pointer-events-auto"}`} onClick={() => handleTabClick("HOME")}>

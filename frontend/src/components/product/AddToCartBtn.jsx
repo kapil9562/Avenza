@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { useTheme } from '../context/ThemeContext';
-import successCheck from "../assets/successCheck.json"
+import { useTheme } from '../../context/ThemeContext';
+import successCheck from "../../assets/successCheck.json"
 
 function AddToCartBtn({ product }) {
 

@@ -1,4 +1,4 @@
-import ProductSkeleton from "./ProductSkeleton";
-import ProductImage from "./ProductImage";
+import { useOnlineStatus } from "./OnlineStatus";
+import { formatINR } from "./price";
 
-export {ProductImage, ProductSkeleton};
+export {useOnlineStatus, formatINR};

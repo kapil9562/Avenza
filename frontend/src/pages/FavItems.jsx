@@ -2,9 +2,7 @@ import React from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useFavItem } from '../context/FavItemsContext';
-import { ProductImage } from "../utils";
-import AddToCartBtn from "../utils/AddToCartBtn";
-import { FaRegHeart } from "react-icons/fa6";
+import { ProductImage, AddToCartBtn } from "../components";
 import { RxCross2 } from "react-icons/rx";
 
 function FavItems({ item, idx }) {
