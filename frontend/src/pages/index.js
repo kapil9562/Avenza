@@ -1,6 +1,6 @@
 import About from "./About";
 import CartDetails from "./CartDetails";
-import CheckoutPage from "./checkoutPage";
+import CheckoutPage from "./CheckoutPage";
 import FavItems from "./FavItems";
 import ForgetPass from "./ForgetPass";
 import Login from "./Login";
