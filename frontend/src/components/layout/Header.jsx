@@ -179,7 +179,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
           {/* LOGO */}
           <div className='cursor-pointer flex justify-center items-center' onClick={() => {
             setActiveTab("HOME");
-            navigate('/')
+            navigate('/home')
           }}>
             <img src='/assets/logo.png' alt="logo" className='sm:w-40 w-25 object-cover' />
           </div>

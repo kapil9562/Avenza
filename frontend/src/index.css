@@ -186,3 +186,19 @@ body {
   text-shadow:
     0 0 15px #fff
 }
+
+@font-face {
+  font-family: 'Xplor';
+  src: url('./assets/fonts/xplor.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'PlaylistScript';
+  src: url('./assets/fonts/PlaylistScript.otf') format('opentype');
+}
+
+
+@theme {
+  --font-xplor: 'Xplor';
+  --font-playlistScript: 'PlaylistScript';
+}

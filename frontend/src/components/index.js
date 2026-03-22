@@ -14,5 +14,7 @@ import OrderFilterSkeleton from './skeletons/OrderFilterSkeleton.jsx';
 import OrderSkeleton from './skeletons/OrderSkeleton.jsx';
 import ProductDetailsSkeleton from './skeletons/ProductDetailsSkeleton.jsx';
 import ProductSkeleton from './skeletons/ProductSkeleton.jsx';
+import Hero from './hero/Hero.jsx';
+import ResponsiveLanding from './common/ResponsiveLanding.jsx'
 
-export {Header, Footer, Container, CartItem, Breadcrumb, Loader, ProtectedRoute, HomeBanner, Layout, SideMenu, AddToCartBtn, ProductImage, OrderFilterSkeleton, OrderSkeleton, ProductDetailsSkeleton, ProductSkeleton };
+export {Header, Footer, Container, CartItem, Breadcrumb, Loader, ProtectedRoute, HomeBanner, Layout, SideMenu, AddToCartBtn, ProductImage, OrderFilterSkeleton, OrderSkeleton, ProductDetailsSkeleton, ProductSkeleton, Hero, ResponsiveLanding};

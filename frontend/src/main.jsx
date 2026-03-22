@@ -3,7 +3,7 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login, ProductDetails, Signup, CartDetails, SearchResults, PageNotFound, About, Whitelist, ForgetPass, ResetPass, OrderSuccess, Orders, CheckoutPage, PaymentFailed } from './pages'
-import { Container, ProtectedRoute } from './components'
+import { Container, ProtectedRoute, ResponsiveLanding } from './components'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { CartProvider } from './context/CartContext.jsx'
 import { SearchProvider } from './context/SearchContext.jsx'
@@ -23,8 +23,9 @@ createRoot(document.getElementById('root')).render(
                 <CartProvider>
 
                   <Routes>
+                    <Route path='/' element={<ResponsiveLanding/>}/>
                     <Route element={<App />}>
-                      <Route index element={<Container />} />
+                      <Route path='/home' element={<Container />} />
                       <Route path="/:pCategory/:category" element={<Container />} />
                       <Route path="/:slug/p/:productId" element={<ProductDetails />} />
                       <Route
