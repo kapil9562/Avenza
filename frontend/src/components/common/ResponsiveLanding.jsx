@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import {Hero} from "..";
+import { Hero } from "..";
 
 function ResponsiveLanding() {
-  const [isMdUp, setIsMdUp] = useState(window.innerWidth >= 768);
+  const [isMobile] = useState(() => {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    return /android|iphone|ipad|ipod|opera mini|iemobile|mobile/i.test(ua);
+  });
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMdUp(window.innerWidth >= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return isMdUp ? <Hero /> : <Navigate to="/home" replace />;
+  return isMobile ? <Navigate to="/home" replace /> : <Hero />;
 }
 
 export default ResponsiveLanding;
