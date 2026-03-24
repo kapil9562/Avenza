@@ -105,8 +105,16 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
     }, [show]);
 
     return (
-        <div className={`w-full h-dvh absolute inset-0 top-0 left-0 z-99 ${show ? `translate-x-0 ${isDark ? "bg-[#00000080]" : "bg-[#00000050]"}` : "-translate-x-full transition-transform duration-500 bg-transparent overflow-hidden"} cursor-pointer`}>
-            <div className={` ${show ? "block translate-x-0" : " -translate-x-full"}  top-0 z-99 w-70 transition-all duration-300 overflow-y-auto h-screen no-scrollbar will-change-scroll cursor-default ${isDark ? "sideMenuDarkBg" : "sideMenuBg"} pb-15`} ref={backdropRef}>
+        <div>
+
+            <div
+                className={`fixed inset-0 z-99 transition-opacity duration-700 cursor-pointer ease-in-out ${show
+                        ? `opacity-100 pointer-events-auto ${isDark ? "bg-black/50" : "bg-black/30"}`
+                        : "opacity-0 pointer-events-none bg-transparent"
+                    }`}
+            />
+
+            <div className={` ${show ? "block translate-x-0" : " -translate-x-full"} absolute  top-0 z-99 w-70 transition-all duration-500 overflow-y-auto h-screen no-scrollbar will-change-transform transform-gpu cursor-default ${isDark ? "sideMenuDarkBg" : "sideMenuBg"} pb-15`} ref={backdropRef}>
                 <div className={`flex flex-row pt-3 pl-1 items-center gap-3 sticky top-0 z-50 pb-2 border-b-2 justify-between px-4 ${isDark ? "border-gray-800 sideMenuDarkBg" : "border-gray-200 sideMenuBg"}`}>
                     {/* LOGO */}
                     <div className='cursor-pointer flex justify-center items-center' onClick={() => handleTabClick("HOME")}>
@@ -119,7 +127,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                 </div>
 
                 <div className='h-auto p-4 gap-1 flex flex-col'>
-                    <div className={`${isDark ? "bg-[#0F172A90] backdrop-blur-[1px] border-gray-800" : "bg-[#ffffff90] border-gray-200"} rounded-2xl border-2 overflow-hidden`}>
+                    <div className={`${isDark ? "bg-[#0F172A90] backdrop-blur-[1px] border-gray-800" : "bg-[#ffffff90] border-gray-200"} rounded-2xl border-2 overflow-hidden pb-2`}>
                         <div className={`${isDark ? "text-gray-300" : "text-gray-700"} px-4 py-2 p-4 items-center gap-4 flex flex-row  cursor-pointer ${activeTab === "HOME" && `${isDark ? "bg-[#0a193c]" : "bg-[#dadada90]"} `}`} onClick={() => handleTabClick("HOME")}>
                             <IoHome size={24} />
                             <span className='font-semibold flex justify-center items-center'>HOME</span>
@@ -132,25 +140,28 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                                 return (
                                     <div
                                         key={idx}
-                                        className="flex flex-col"
+                                        className="flex flex-col cursor-pointer group"
                                     >
                                         <div className={`flex flex-row px-4 py-2 w-full items-center gap-4 ${isParentActive && `${isDark ? "bg-[#0a193c]" : "bg-[#dadada90]"} cursor-pointer`} relative`} onClick={() => currentIdx === idx ? setCurrentIdx(null) : setCurrentIdx(idx)}>
                                             <Icon size={24} style={{ color }} />
                                             <span className={`font-semibold flex justify-center items-center`} style={{ color }}>
                                                 {item.parentCategory}
                                             </span>
-                                            <IoIosArrowUp className={`absolute right-5 text-gray-700 ${currentIdx === idx && "rotate-180 text-orange-500"} duration-300`} />
+                                            <IoIosArrowUp className={`absolute right-5 text-gray-700 group-hover:text-orange-500 ${currentIdx === idx && "rotate-180 text-orange-500"} duration-300`} />
                                         </div>
-                                        {<div className={`flex flex-col capitalize ${currentIdx === idx ? "max-h-500" : "max-h-0"} overflow-hidden transition-[max-height] duration-500 will-change-transform ease-in-out`}>
-                                            {item.categories.map((sub, i) => (
-                                                <div className='font-semibold text-gray-700 w-full pl-20 hover:text-orange-500' key={i}>
-                                                    <li className={`${activeTab === sub ? "text-orange-500" : isDark ? "text-gray-300" : "text-gray-700"} hover:text-orange-500 w-fit cursor-pointer`}
-                                                        onClick={() => handleTabClick(sub, item.parentCategory)}
-                                                    >
-                                                        {sub}
-                                                    </li>
-                                                </div>
-                                            ))}
+                                        {<div className={`grid transition-all duration-500 ease-in-out ${currentIdx === idx ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                            }`}>
+                                            <div className='min-h-0 overflow-hidden'>
+                                                {item.categories.map((sub, i) => (
+                                                    <div className='font-semibold text-gray-700 w-full pl-20 hover:text-orange-500' key={i}>
+                                                        <li className={`${activeTab === sub ? "text-orange-500" : isDark ? "text-gray-300" : "text-gray-700"} hover:text-orange-500 w-fit cursor-pointer`}
+                                                            onClick={() => handleTabClick(sub, item.parentCategory)}
+                                                        >
+                                                            {sub}
+                                                        </li>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>}
                                     </div>
                                 );
