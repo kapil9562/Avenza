@@ -114,19 +114,20 @@ function SearchResults() {
                                             {product.title}
                                         </h2>
 
-                                        <p className={`text-sm mb-2 line-clamp-2 min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                                        <p className={`text-sm line-clamp-1 md:line-clamp-2 md:min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
                                             {product.description}
                                         </p>
-                                        <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
+                                        <div className=" text-sm flex flex-row text-amber-400 items-center gap-2">
                                             {renderStars(product.rating)} ({product.rating})
                                         </div>
 
-                                        <div className="flex flex-col gap-2 justify-between">
-                                            <div className="flex flex-row flex-wrap space-x-2 space-y-0 items-center w-fit">
+                                        <div className="flex flex-col justify-between">
+                                            <div className="flex flex-row flex-wrap items-center w-fit">
                                                 <p className="text-lg font-semibold text-[#FF6F61]">
                                                     ₹{formatINR(product.price)}
                                                 </p>
-
+                                            </div>
+                                            <div className='flex flex-row gap-2 mb-2'>
                                                 <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
                                                     ₹
                                                     {(formatINR(Math.round(
