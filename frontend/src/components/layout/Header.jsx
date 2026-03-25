@@ -146,7 +146,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
     setActiveTab(tab);
 
     if (tab === "HOME") {
-      navigate("/");
+      navigate("/home");
       return;
     }
 

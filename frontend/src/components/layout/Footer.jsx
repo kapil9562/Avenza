@@ -23,7 +23,7 @@ function Footer({ setActiveTab, scrollRef }) {
                 className="cursor-pointer"
                 onClick={() => {
                   setActiveTab("HOME");
-                  navigate("/");
+                  navigate("/home");
                   if (location.pathname === "/") {
                     scrollRef.current?.scrollTo({
                       top: 0,

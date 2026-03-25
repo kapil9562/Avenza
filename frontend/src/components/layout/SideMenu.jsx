@@ -83,7 +83,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
         setCache({});
 
         if (tab === "HOME") {
-            navigate("/");
+            navigate("/home");
             setShow(false);
             return;
         }

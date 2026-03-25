@@ -1,10 +1,56 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { IoLocationSharp } from "react-icons/io5";
 import { FaInstagram, FaWhatsapp, FaGithub, FaLinkedinIn, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import Lottie from 'lottie-react';
+import menuBar from '../../assets/menu.json';
 
 function Hero() {
     const navigate = useNavigate();
+    const openWhatsApp = () => {
+        const phone = "918791029562";
+        const message = "Hello Kapil!";
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+    };
+
+    const [isOpen, setIsOpen] = useState(false);
+    const lottieRef = useRef(null);
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    const STOP_FRAME = 35;
+
+    useEffect(() => {
+        // initial state
+        lottieRef.current?.goToAndStop(0, true);
+    }, []);
+
+    const handleClick = () => {
+        if (!lottieRef.current || isAnimating) return;
+
+        setIsAnimating(true);
+
+        if (!isOpen) {
+            // OPEN: 0 -> 35
+            lottieRef.current.goToAndStop(0, true);
+            lottieRef.current.playSegments([0, STOP_FRAME], true);
+            setIsOpen(true);
+        } else {
+            // CLOSE: 35 -> 0
+            lottieRef.current.goToAndStop(STOP_FRAME, true);
+            lottieRef.current.playSegments([STOP_FRAME, 0], true);
+            setIsOpen(false);
+        }
+    };
+
+    const handleComplete = () => {
+        if (isOpen) {
+            lottieRef.current?.goToAndStop(STOP_FRAME, true);
+        } else {
+            lottieRef.current?.goToAndStop(0, true);
+        }
+        setIsAnimating(false);
+    };
+
     return (
         <div className='h-dvh overflow-y-auto custom-scroll scroll-smooth bg-gradient-to-br from-[#fff7fb] via-[#f9d9e9] to-[#e8dcff] relative z-0 overflow-x-hidden'>
             <div className="absolute top-[-80px] left-[-60px] w-72 h-72 bg-[#f3a4c7]/30 rounded-full blur-3xl"></div>
@@ -43,6 +89,65 @@ function Hero() {
                         Get Started
                     </button>
                 </div>
+                <div className='cursor-pointer relative' onClick={() => {
+                    handleClick();
+                }}>
+                    <Lottie
+                        animationData={menuBar}
+                        className='h-8 w-8 hue-rotate-50'
+                        loop={false}
+                        autoplay={false}
+                        lottieRef={lottieRef}
+                        onComplete={handleComplete}
+                    />
+                </div>
+                <ul className={`rounded-xl absolute right-5 top-15 border border-gray-400 justify-center items-start text-[16px] flex-col text-white shadow-md z-99 bg-black/20 backdrop-blur-lg w-50 md:hidden flex ${isOpen ? "opacity-100 scale-100 visible" : "opacity-0 scale-60 invisible"} transition-all origin-top-right duration-500`}>
+                    <div className='w-full  active:bg-black/60 transition-colors duration-150 rounded-xl'
+                        onClick={() => {
+                            handleClick();
+                            navigate("/home");
+                        }}>
+                        <li className="w-full cursor-pointer pt-2 pb-2 border-b border-b-gray-400 px-4">
+                            <a
+                                className={
+                                    `h-full w-full font-medium`
+                                }
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    </div>
+                    <div className='w-full  active:bg-black/60 transition-colors duration-150 rounded-xl'
+                        onClick={() => {
+                            handleClick();
+                            navigate("/about");
+                        }}>
+                        <li className="w-full cursor-pointer pt-2 pb-2 border-b border-b-gray-400 px-4">
+                            <a
+                                className={
+                                    `h-full w-full font-medium`
+                                }
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    </div>
+                    <div className='w-full  active:bg-black/60 transition-colors duration-150 rounded-xl'
+                        onClick={() => {
+                            handleClick();
+                            navigate("/home");
+                        }}>
+                        <li className="w-full cursor-pointer pt-2 pb-2 px-4">
+                            <a
+                                className={
+                                    `h-full w-full font-medium`
+                                }
+                            >
+                                CONTACT
+                            </a>
+                        </li>
+                    </div>
+                </ul>
             </header>
 
             <section className="overflow-hidden relative z-0  min-h-[90dvh] flex items-center flex-col justify-between">
@@ -99,8 +204,8 @@ function Hero() {
                 </main>
                 <footer className='w-full flex flex-col justify-center items-center pb-10 md:pb-0 gap-4'>
                     <div className='flex flex-row justify-between w-full items-center md:px-10 px-5 h-[10dvh] gap-4'>
-                        <div className='flex flex-row'>
-                            <IoLocationSharp className='text-4xl text-[#EC9453]' />
+                        <div className='flex flex-row hover:underline cursor-pointer' onClick={() => window.open("https://www.google.com/maps/search/?api=1&query=DHARANAULA+ROAD%2C+ALMORA%2C+UTTARAKHAND%2C+INDIA+263601")}>
+                            <IoLocationSharp className='text-4xl text-[#FF6F61]' />
                             <div className='flex flex-col font-semibold leading-[1.2] font-sans tracking-wider'>
                                 <span>UTTARAKHAND, INDIA</span>
                                 <span>DHARANAULA ROAD, ALMORA, 263601</span>
@@ -108,16 +213,16 @@ function Hero() {
                         </div>
                         <div className='flex flex-col relative z-0 gap-2 items-end md:mb-8'>
                             <div className='flex flex-row gap-2'>
-                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]'>
+                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]' onClick={() => window.open("https://www.instagram.com/kapil_art_official")}>
                                     <FaInstagram className='text-2xl text-white' />
                                 </div>
-                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]'>
+                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]' onClick={() => window.open("https://www.linkedin.com/in/kapil-adhikari9562")}>
                                     <FaLinkedinIn className='text-2xl text-white' />
                                 </div>
-                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]'>
+                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]' onClick={() => window.open("https://github.com/kapil9562")}>
                                     <FaGithub className='text-2xl text-white' />
                                 </div>
-                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]'>
+                                <div className='h-10 w-10 flex justify-center items-center rounded-full cursor-pointer hover:-translate-y-1 transition-transform duration-300 bg-[#FF6F61]' onClick={openWhatsApp}>
                                     <FaWhatsapp className='text-2xl text-white' />
                                 </div>
                             </div>

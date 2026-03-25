@@ -39,7 +39,7 @@ function PageNotFound({ type = "404" }) {
     if (window.history.length > 1) {
       navigate(-1);
     } else {
-      navigate("/");
+      navigate("/home");
     }
   };
 
