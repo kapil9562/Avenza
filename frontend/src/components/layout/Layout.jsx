@@ -230,7 +230,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                                     <ProductImage
                                         src={product.thumbnail}
                                         alt={product.title}
-                                        className="max-w-[80%] max-h-40 object-contain transition-all duration-400 sm:group-hover:scale-120 relative z-5 will-change-transform"
+                                        className="max-w-[80%] max-h-40 object-contain transition-all duration-500 sm:group-hover:scale-120 relative z-5 will-change-transform"
                                         idx={idx}
                                     />
 

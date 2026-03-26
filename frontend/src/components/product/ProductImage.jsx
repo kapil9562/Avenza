@@ -5,7 +5,6 @@ const bgImages = ['/assets/1.png', '/assets/2.png', '/assets/3.png', '/assets/4.
 const darkBgImages = ['/assets/d1.png', '/assets/d2.png', '/assets/d3.png', '/assets/d4.png'];
 
 export default function ProductImage({ src, alt, className, idx }) {
-  const [loaded, setLoaded] = useState(false);
   const {isDark} = useTheme();
 
   const bg = !isDark
@@ -28,8 +27,7 @@ export default function ProductImage({ src, alt, className, idx }) {
         loading="eager"
         decoding="async"
         fetchPriority='low'
-        onLoad={() => setLoaded(true)}
-        className={`${className} ${loaded ? "opacity-100" : "opacity-0"
+        className={`${className} animate-easeIn"
           }`}
       />
     </div>

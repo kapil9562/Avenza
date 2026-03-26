@@ -348,7 +348,7 @@ const Orders = () => {
                         orders.length > 0 ? (
                             <>
                                 {orders.map((order) => (
-                                    <div key={order._id} className={`px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"}`}>
+                                    <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"} animate-fadeIn`}>
                                         <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
                                         <table className="w-full table-fixed">
                                             <tbody>
@@ -356,7 +356,10 @@ const Orders = () => {
                                                     {/* Product */}
                                                     <td className="px-4 py-4 w-1 sm:w-1/2 lg:pl-10 pl-0">
                                                         <div className="flex items-center gap-4">
-                                                            <img src={order?.orderItems[0]?.image} alt="img" className="h-20 w-20 object-cover rounded" />
+                                                            <img 
+                                                            src={order?.orderItems[0]?.image} 
+                                                            alt="img"
+                                                            className={`h-20 w-20 object-cover rounded transition-all duration-500 animate-easeIn`} />
                                                             <div className="flex flex-col">
                                                                 <span>{order?.orderItems[0]?.name}</span>
                                                                 <span className="text-sm text-gray-500 hidden sm:table-cell">Qty: {order?.orderItems[0]?.quantity}</span>
@@ -430,7 +433,7 @@ const Orders = () => {
                                 </div>
                             </>
                         ) : (
-                            <div className={`h-[70dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
+                            <div className={`easeIn h-[70dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
                                 <div className="flex flex-col justify-center items-center">
                                     <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
                                     <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
