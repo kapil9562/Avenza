@@ -13,12 +13,10 @@ const Breadcrumb = () => {
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(" ");
 
-
-
   return (
     <div className={`flex text-xs font-normal ${isDark? "text-gray-400" : "text-[#878787]"}`}>
       <Link
-        to='/'
+        to='/home'
         onClick={() => {
           setActiveTab("HOME");
         }}

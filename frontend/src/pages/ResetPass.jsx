@@ -49,7 +49,7 @@ export default function ResetPass() {
             await login(userData);
             setAlert(res?.data?.message);
             setTimeout(() => {
-                navigate('/');
+                navigate('/home');
                 setLoading(false);
             }, 2000);
         } catch (error) {

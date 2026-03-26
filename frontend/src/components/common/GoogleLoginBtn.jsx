@@ -17,14 +17,13 @@ function GoogleLoginBtn({ setLoading, loading }) {
             if (authResult['code']) {
 
                 const result = await googleAuth(authResult['code']);
-                const { uid, email, name, avatar, _id } = result?.data?.user;
-                const token = result?.data?.tokens?.access_token;
-                const userData = { uid, email, name, photo: avatar, token, _id };
+                const userData = result?.data?.user;
+                // const token = result?.data?.tokens?.access_token;
 
                 if (userData) {
                     await login(userData);
                     setTimeout(() => {
-                        navigate('/');
+                        navigate('/home');
                         setLoading(false);
                     }, 2000);
                 }

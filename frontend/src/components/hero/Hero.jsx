@@ -52,62 +52,65 @@ function Hero() {
     };
 
     return (
-        <div className='h-dvh overflow-y-auto custom-scroll scroll-smooth bg-gradient-to-br from-[#fff7fb] via-[#f9d9e9] to-[#e8dcff] relative z-0 overflow-x-hidden'>
-            <div className="absolute top-[-80px] left-[-60px] w-72 h-72 bg-[#f3a4c7]/30 rounded-full blur-3xl"></div>
+        <div className='h-dvh overflow-y-auto custom-scroll scroll-smooth bg-linear-to-br from-[#fff7fb] via-[#f9d9e9] to-[#e8dcff] relative z-0 overflow-x-hidden'>
+            <div className="absolute -top-20 -left-15 w-72 h-72 bg-[#f3a4c7]/30 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 right-0  w-80 h-80 bg-[#c7b6ff]/30 rounded-full blur-3xl"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#f8c7dd]/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 bg-[#f8c7dd]/20 rounded-full blur-3xl"></div>
 
-            <header className='h-[8dvh] md:h-[10dvh] flex flex-row justify-between items-center w-full md:px-10 px-5 md:border-b-0  border-b border-gray-300 sticky top-0 z-99 backdrop-blur-2xl'>
-                {/* LOGO */}
-                <div className='cursor-pointer flex justify-center items-center relative z-0'>
-                    <img src='/assets/logo.png' alt="logo" className='md:w-40 w-30 object-cover' />
-                </div>
+            <header className='h-[8dvh] md:h-[10dvh] sticky top-0 z-99'>
+                <nav className='h-full w-full flex flex-row justify-between items-center md:px-10 px-5 md:border-b-0  border-b-2 border-pink-200 backdrop-blur-2xl'>
+                    {/* LOGO */}
+                    <div className='cursor-pointer flex justify-center items-center relative z-0'>
+                        <img src='/assets/logo.png' alt="logo" className='md:w-40 w-30 object-cover' />
+                    </div>
 
-                <div className='font-semibold font-mono tracking-widest flex-row items-center justify-center h-full text-gray-800 md:flex hidden'>
-                    <div className='px-4 cursor-pointer text-center flex justify-center items-center pt-4 h-full relative group' onClick={() => navigate("/home")}>
-                        <span className='relative z-1'>HOME</span>
-                        <div className='absolute top-0 left-0 h-0 group-hover:h-full w-full bg-[#FF6F61] border-[#ff3e2d] z-0 transition-[height] duration-300 group-hover:border-b-2 transform-gpu will-change-transform'></div>
+                    <div className='font-semibold font-mono tracking-widest flex-row items-center justify-center h-full text-gray-800 md:flex hidden'>
+                        <div className='px-4 cursor-pointer text-center flex justify-center items-center pt-4 h-full relative group' onClick={() => navigate("/home")}>
+                            <span className='relative z-1'>HOME</span>
+                            <div className='absolute top-0 left-0 h-0 group-hover:h-full w-full bg-[#FF6F61] border-[#ff3e2d] z-0 transition-[height] duration-300 group-hover:border-b-2 transform-gpu will-change-transform'></div>
+                        </div>
+                        <div className='px-4 cursor-pointer text-center flex justify-center items-center pt-4 h-full relative group' onClick={() => navigate("/about")}>
+                            <span className='relative z-1'>ABOUT</span>
+                            <div className='absolute top-0 left-0 h-0 group-hover:h-full w-full bg-[#FF6F61] border-[#ff3e2d] z-0 transition-[height] duration-300 group-hover:border-b-2 transform-gpu will-change-transform'></div>
+                        </div>
+                        <div className='px-4 cursor-pointer text-center flex justify-center items-center pt-4 h-full relative group' onClick={() => navigate("/home")}>
+                            <span className='relative z-1'>CONTACT</span>
+                            <div className='absolute top-0 left-0 h-0 group-hover:h-full w-full bg-[#FF6F61] border-[#ff3e2d] z-0 transition-[height] duration-300 group-hover:border-b-2 transform-gpu will-change-transform'></div>
+                        </div>
                     </div>
-                    <div className='px-4 cursor-pointer text-center flex justify-center items-center pt-4 h-full relative group' onClick={() => navigate("/about")}>
-                        <span className='relative z-1'>ABOUT</span>
-                        <div className='absolute top-0 left-0 h-0 group-hover:h-full w-full bg-[#FF6F61] border-[#ff3e2d] z-0 transition-[height] duration-300 group-hover:border-b-2 transform-gpu will-change-transform'></div>
-                    </div>
-                    <div className='px-4 cursor-pointer text-center flex justify-center items-center pt-4 h-full relative group' onClick={() => navigate("/home")}>
-                        <span className='relative z-1'>CONTACT</span>
-                        <div className='absolute top-0 left-0 h-0 group-hover:h-full w-full bg-[#FF6F61] border-[#ff3e2d] z-0 transition-[height] duration-300 group-hover:border-b-2 transform-gpu will-change-transform'></div>
-                    </div>
-                </div>
 
-                <div className='space-x-4 md:flex flex-row hidden'>
-                    <button className='text-gray-800 cursor-pointer font-bold font-[Nunito] hover:text-orange-400 transition-colors duration-200'>
-                        Sign in
-                    </button>
-                    <button
-                        className="px-5 py-2 rounded-xl hover:rounded-4xl bg-[#FF6F61] border-[#ff3e2d] border-2 text-white/80 font-medium shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 cursor-pointer font-[Sour_Gummy]"
-                        onClick={() => navigate("/home")}
-                    >
-                        Get Started
-                    </button>
-                </div>
-                <div className='cursor-pointer relative' onClick={() => {
-                    handleClick();
-                }}>
-                    <Lottie
-                        animationData={menuBar}
-                        className='h-8 w-8 hue-rotate-50'
-                        loop={false}
-                        autoplay={false}
-                        lottieRef={lottieRef}
-                        onComplete={handleComplete}
-                    />
-                </div>
-                <ul className={`rounded-xl absolute right-5 top-15 border border-gray-400 justify-center items-start text-[16px] flex-col text-white shadow-md z-99 bg-black/20 backdrop-blur-lg w-50 md:hidden flex ${isOpen ? "opacity-100 scale-100 visible" : "opacity-0 scale-60 invisible"} transition-all origin-top-right duration-500`}>
-                    <div className='w-full  active:bg-black/60 transition-colors duration-150 rounded-xl'
+                    <div className='space-x-4 md:flex flex-row hidden'>
+                        <button className='text-gray-800 cursor-pointer font-bold font-[Nunito] hover:text-orange-400 transition-colors duration-200'>
+                            Sign in
+                        </button>
+                        <button
+                            className="px-5 py-2 rounded-xl hover:rounded-4xl bg-[#FF6F61] border-[#ff3e2d] border-2 text-white/80 font-medium shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 cursor-pointer font-[Sour_Gummy]"
+                            onClick={() => navigate("/home")}
+                        >
+                            Get Started
+                        </button>
+                    </div>
+                    <div className='cursor-pointer relative md:hidden' onClick={() => {
+                        handleClick();
+                    }}>
+                        <Lottie
+                            animationData={menuBar}
+                            className='h-8 w-8 hue-rotate-50'
+                            loop={false}
+                            autoplay={false}
+                            lottieRef={lottieRef}
+                            onComplete={handleComplete}
+                        />
+                    </div>
+                </nav>
+
+                <ul className={`rounded-xl absolute right-5 top-full border-2 border-pink-200 justify-center items-start text-[16px] flex-col text-gray-700 shadow-md z-99 bg-pink/20 backdrop-blur-xl w-50 md:hidden flex overflow-hidden ${isOpen ? "opacity-100 scale-100 visible" : "opacity-0 scale-60 invisible"} transition-all origin-top-right duration-500`}>
+                    <div className='w-full hover:text-orange-500 active:bg-pink-200 transition-colors duration-150'
                         onClick={() => {
                             handleClick();
                             navigate("/home");
                         }}>
-                        <li className="w-full cursor-pointer pt-2 pb-2 border-b border-b-gray-400 px-4">
+                        <li className="w-full cursor-pointer pt-2 pb-2 border-b-2 border-b-pink-200 px-4">
                             <a
                                 className={
                                     `h-full w-full font-medium`
@@ -117,12 +120,12 @@ function Hero() {
                             </a>
                         </li>
                     </div>
-                    <div className='w-full  active:bg-black/60 transition-colors duration-150 rounded-xl'
+                    <div className='w-full hover:text-orange-500 active:bg-pink-200 transition-colors duration-150'
                         onClick={() => {
                             handleClick();
                             navigate("/about");
                         }}>
-                        <li className="w-full cursor-pointer pt-2 pb-2 border-b border-b-gray-400 px-4">
+                        <li className="w-full cursor-pointer pt-2 pb-2 border-b-2 border-b-pink-200 px-4">
                             <a
                                 className={
                                     `h-full w-full font-medium`
@@ -132,7 +135,7 @@ function Hero() {
                             </a>
                         </li>
                     </div>
-                    <div className='w-full  active:bg-black/60 transition-colors duration-150 rounded-xl'
+                    <div className='w-full hover:text-orange-500 active:bg-pink-200 transition-colors duration-150'
                         onClick={() => {
                             handleClick();
                             navigate("/home");

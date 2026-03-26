@@ -24,7 +24,7 @@ function Footer({ setActiveTab, scrollRef }) {
                 onClick={() => {
                   setActiveTab("HOME");
                   navigate("/home");
-                  if (location.pathname === "/") {
+                  if (location.pathname === "/home") {
                     scrollRef.current?.scrollTo({
                       top: 0,
                       behavior: "smooth",
@@ -86,27 +86,42 @@ function Footer({ setActiveTab, scrollRef }) {
                 className={`hover:text-orange-500 cursor-pointer w-fit relative after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100`}
                 onClick={() => {
                   setActiveTab('HOME');
-                  navigate('/')
-                  if (location.pathname === "/") {
+                  navigate('/home')
+                  if (location.pathname === "/home") {
                     scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }}
               >
                 Home
               </li>
-              <li className={`hover:text-orange-500 cursor-pointer w-fit relative after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100`} onClick={() => navigate('/about')}>
+              <li className={`hover:text-orange-500 cursor-pointer w-fit relative after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100`} onClick={() => {
+                navigate('/about');
+                if (location.pathname === "/about") {
+                  scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}>
                 About
               </li>
               <li
                 className={`hover:text-orange-500 cursor-pointer w-fit relative after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100`}
                 onClick={() => {
-                  setActiveTab('')
-                  navigate('/carts')
+                  setActiveTab('');
+                  navigate('/carts');
+                  if (location.pathname === "/carts") {
+                    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                  }
                 }}
               >
                 Cart
               </li>
-              <li className={`hover:text-orange-500 cursor-pointer w-fit relative after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100`} onClick={() => navigate('/whitelist')}>
+              <li
+                className={`hover:text-orange-500 cursor-pointer w-fit relative after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100`}
+                onClick={() => {
+                  navigate('/whitelist');
+                  if (location.pathname === "/whitelist") {
+                    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}>
                 Whitelist
               </li>
             </ul>

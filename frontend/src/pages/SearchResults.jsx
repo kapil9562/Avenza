@@ -89,7 +89,7 @@ function SearchResults() {
                             <button className="min-w-35 px-4 py-3 border-[#FF6F61] border-2 text-[#FF6F61] rounded-sm cursor-pointer active:scale-95 transition-transform duration-300 font-semibold"
                                 onClick={() => {
                                     setActiveTab('HOME');
-                                    navigate('/');
+                                    navigate('/home');
                                 }}>Go To HomePage</button>
                         </div>
                         ) : (

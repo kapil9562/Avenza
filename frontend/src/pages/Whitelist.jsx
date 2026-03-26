@@ -49,7 +49,7 @@ export default function Whitelist() {
                             <span>No favorites yet. Start exploring and add what you love ❤️</span>
                             <button className="text-[#6366F1] underline cursor-pointer"
                                 onClick={() => {
-                                    navigate('/');
+                                    navigate('/home');
                                     setActiveTab("HOME");
                                 }}>
                                 Start Shopping

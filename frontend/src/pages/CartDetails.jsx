@@ -55,7 +55,7 @@ export default function CartDetails() {
                                     <span>Your cart is empty</span>
                                     <a className="text-[#6366F1] underline cursor-pointer"
                                         onClick={() => {
-                                            navigate('/');
+                                            navigate('/home');
                                             setActiveTab("HOME");
                                         }}>
                                         Shop now

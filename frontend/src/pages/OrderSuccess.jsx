@@ -100,7 +100,7 @@ const OrderSuccess = () => {
                             </Link>
 
                             <Link
-                                to="/"
+                                to="/home"
                                 className={`border-2 py-2 rounded-lg transform-gpu ${isDark? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"}`}
                             >
                                 Continue Shopping

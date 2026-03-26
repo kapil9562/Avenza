@@ -48,7 +48,7 @@ export default function Login() {
             if (userData) {
                 await login(userData);
                 setTimeout(() => {
-                    navigate('/');
+                    navigate('/home');
                     setLoading(false);
                 }, 2000);
             }

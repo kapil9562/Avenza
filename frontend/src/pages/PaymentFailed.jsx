@@ -29,7 +29,7 @@ const PaymentFailed = () => {
                     </Link>
 
                     <Link
-                        to="/"
+                        to="/home"
                         className="border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition"
                     >
                         Go Back

@@ -60,7 +60,13 @@ const googleLogin = async (req, res) => {
         // 4️⃣ Respond
         res.status(200).json({
             message: "Google login successful",
-            user,
+            user: {
+                _id: user._id,
+                uid: user.uid,
+                name: user.name,
+                email: user.email,
+                photo: user.avatar
+            },
             tokens
         });
 
@@ -112,6 +118,7 @@ const emailLogin = async (req, res) => {
                 return res.json({
                     message: "Login successful",
                     user: {
+                        _id: user._id,
                         uid: user.uid,
                         name: user.name,
                         email: user.email,
@@ -233,6 +240,7 @@ const verifyOTP = async (req, res) => {
         res.status(201).json({
             message: "Signup successful",
             user: {
+                _id: user._id,
                 uid: user.uid,
                 name: user.name,
                 email: user.email,

@@ -172,7 +172,7 @@ export default function Signup() {
       if (userData) {
         await login(userData);
         setTimeout(() => {
-          navigate('/');
+          navigate('/home');
           setLoading(false);
         }, 2000);
       }
@@ -198,7 +198,6 @@ export default function Signup() {
   const handleChangeEmail = () => {
     setOtpSent(false);
     setOtp(Array(OTP_LENGTH).fill(""));
-    // setConfirmation(null);
     setError("");
     setTimeout(() => emailInputRef.current?.focus(), 100);
   };
