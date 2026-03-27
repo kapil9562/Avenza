@@ -8,7 +8,7 @@ import { formatINR } from "../utils/price";
 import { useTheme } from "../context/ThemeContext";
 import { getOrders } from "../api/api";
 import { useAuth } from "../context/AuthContext";
-import { MdOutlineKeyboardDoubleArrowDown, MdArrowForwardIos } from "react-icons/md";
+import { MdOutlineKeyboardDoubleArrowDown, MdArrowForwardIos, MdKeyboardArrowDown } from "react-icons/md";
 import { IoFilterSharp } from "react-icons/io5";
 
 const Orders = () => {
@@ -27,6 +27,8 @@ const Orders = () => {
     const [showLoading, setShowLoading] = useState(false);
     const [openFilters, setOpenFilters] = useState(false);
     const filterRef = useRef(null);
+    const boxRef = useRef(null);
+    const [showIndicator, setShowIndicator] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -236,6 +238,31 @@ const Orders = () => {
         setActiveTab("");
     }, []);
 
+    const checkScroll = () => {
+        const el = boxRef.current;
+        if (!el) return;
+
+        const hasScrollableContent = el.scrollHeight > el.clientHeight;
+        const isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+
+        setShowIndicator(hasScrollableContent && !isAtBottom);
+    };
+
+    useEffect(() => {
+        checkScroll();
+
+        const el = boxRef.current;
+        if (!el) return;
+
+        el.addEventListener("scroll", checkScroll);
+        window.addEventListener("resize", checkScroll);
+
+        return () => {
+            el.removeEventListener("scroll", checkScroll);
+            window.removeEventListener("resize", checkScroll);
+        };
+    }, [loadMore]);
+
     const FilterContent = () => (
         <div className={`w-full h-full border-2 rounded ${isDark ? "bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)]" : "bg-white text-gray-800 shadow-[0px_0px_6px_rgba(0,0,0,0.15)]  border-transparent"}`}>
 
@@ -338,112 +365,123 @@ const Orders = () => {
                     <FilterContent />
                 </div>
 
-                {/* Orders List */}
-                <div className="w-full flex flex-col gap-2">
-                    {loading ?
-                        Array(5).fill(0).map((_, idx) => (
-                            <OrderSkeleton key={idx} />
-                        ))
-                        :
-                        orders.length > 0 ? (
-                            <>
-                                {orders.map((order) => (
-                                    <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"} animate-fadeIn`}>
-                                        <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
-                                        <table className="w-full table-fixed">
-                                            <tbody>
-                                                <tr>
-                                                    {/* Product */}
-                                                    <td className="px-4 py-4 w-1 sm:w-1/2 lg:pl-10 pl-0">
-                                                        <div className="flex items-center gap-4">
-                                                            <img 
-                                                            src={order?.orderItems[0]?.image} 
-                                                            alt="img"
-                                                            className={`h-20 w-20 object-cover rounded transition-all duration-500 animate-easeIn`} />
-                                                            <div className="flex flex-col">
-                                                                <span>{order?.orderItems[0]?.name}</span>
-                                                                <span className="text-sm text-gray-500 hidden sm:table-cell">Qty: {order?.orderItems[0]?.quantity}</span>
-                                                                <span className="text-sm text-gray-500 flex flex-row items-center gap-1 sm:hidden"><IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
-                                                                    {formatName(order?.orderStatus)}</span>
+                <div className="h-fit w-full relative">
+                    {/* Orders List */}
+                    <div className="w-full h-[75dvh] overflow-x-hidden overflow-y-scroll no-scrollbar flex flex-col gap-2 scroll-smooth will-change-scroll relative" ref={boxRef}>
+                        {loading ?
+                            Array(5).fill(0).map((_, idx) => (
+                                <OrderSkeleton key={idx} />
+                            ))
+                            :
+                            orders.length > 0 ? (
+                                <>
+                                    {orders.map((order) => (
+                                        <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"} animate-fadeIn`}>
+                                            <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
+                                            <table className="w-full table-fixed">
+                                                <tbody>
+                                                    <tr>
+                                                        {/* Product */}
+                                                        <td className="px-4 py-4 w-1 sm:w-1/2 lg:pl-10 pl-0">
+                                                            <div className="flex items-center gap-4">
+                                                                <img
+                                                                    src={order?.orderItems[0]?.image}
+                                                                    alt="img"
+                                                                    className={`h-20 w-20 object-cover rounded transition-all duration-500 animate-easeIn`} />
+                                                                <div className="flex flex-col">
+                                                                    <span>{order?.orderItems[0]?.name}</span>
+                                                                    <span className="text-sm text-gray-500 hidden sm:table-cell">Qty: {order?.orderItems[0]?.quantity}</span>
+                                                                    <span className="text-sm text-gray-500 flex flex-row items-center gap-1 sm:hidden"><IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
+                                                                        {formatName(order?.orderStatus)}</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    {/* Amount */}
-                                                    <td className="px-4 py-4 w-1/6 sm:table-cell hidden">₹{formatINR(order?.totalAmount)}</td>
-                                                    {/* Status */}
-                                                    <td className="px-4 py-4 w-1/3 hidden md:table-cell">
-                                                        <div>
-                                                            <span className="flex items-center gap-2 font-semibold">
-                                                                <IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
-                                                                {formatName(order?.orderStatus)}
-                                                            </span>
-                                                            <p className="text-sm">{statusMessages[order?.orderStatus]}</p>
-                                                        </div>
-                                                    </td>
-                                                    {/* Payment */}
-                                                    <td className="px-4 py-4 w-1/6 hidden sm:table-cell">
-                                                        <div className="flex flex-col gap-2 justify-center items-center">
-                                                            <span className="text-sm xl:text-[16px]">{formatDate(order?.createdAt)}</span>
-                                                            <span className={`${paymentBadge[order?.paymentStatus]} text-sm px-4 py-1 rounded-full flex w-fit items-center justify-center`}>
-                                                                {formatName(order?.paymentStatus)}
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-4 py-4 w-1/10 sm:hidden">
-                                                        <MdArrowForwardIos className="text-lg text-gray-700" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                ))}
+                                                        </td>
+                                                        {/* Amount */}
+                                                        <td className="px-4 py-4 w-1/6 sm:table-cell hidden">₹{formatINR(order?.totalAmount)}</td>
+                                                        {/* Status */}
+                                                        <td className="px-4 py-4 w-1/3 hidden md:table-cell">
+                                                            <div>
+                                                                <span className="flex items-center gap-2 font-semibold">
+                                                                    <IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
+                                                                    {formatName(order?.orderStatus)}
+                                                                </span>
+                                                                <p className="text-sm">{statusMessages[order?.orderStatus]}</p>
+                                                            </div>
+                                                        </td>
+                                                        {/* Payment */}
+                                                        <td className="px-4 py-4 w-1/6 hidden sm:table-cell">
+                                                            <div className="flex flex-col gap-2 justify-center items-center">
+                                                                <span className="text-sm xl:text-[16px]">{formatDate(order?.createdAt)}</span>
+                                                                <span className={`${paymentBadge[order?.paymentStatus]} text-sm px-4 py-1 rounded-full flex w-fit items-center justify-center`}>
+                                                                    {formatName(order?.paymentStatus)}
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-4 py-4 w-1/10 sm:hidden">
+                                                            <MdArrowForwardIos className="text-lg text-gray-700" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ))}
 
-                                {showLoading &&
-                                    Array(4).fill(0).map((_, idx) => (
-                                        <OrderSkeleton key={idx} />
-                                    ))
-                                }
+                                    {showLoading &&
+                                        Array(4).fill(0).map((_, idx) => (
+                                            <OrderSkeleton key={idx} />
+                                        ))
+                                    }
 
-                                {/* Load More */}
-                                <div className="w-full flex justify-center items-center font-semibold">
-                                    {orders.length < totalOrders ? (
-                                        <button
-                                            className={`text-[#FF6F61] px-4 py-2 rounded transition-shadow duration-200 hover:shadow-[0px_0px_8px_rgba(0,0,0,0.15)] border-2 cursor-pointer w-fit ${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-[#87878730]"}`}
-                                            onClick={() => {
-                                                setShowLoading(true);
-                                                loadMore();
-                                            }}
-                                            disabled={loading}
-                                        >
-                                            {loading ? "Loading..." :
-                                                <span className="flex flex-row items-center gap-1">
-                                                    <MdOutlineKeyboardDoubleArrowDown size={20} />
-                                                    Load More
-                                                </span>
-                                            }
-                                        </button>
-                                    ) :
-                                        (
-                                            <span
-                                                className={`text-[#FF6F61] px-4 py-2 rounded border-2 ${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-[#87878730]"}`}
+                                    {/* Load More */}
+                                    <div className="w-full flex justify-center items-center font-semibold">
+                                        {orders.length < totalOrders ? (
+                                            <button
+                                                className={`text-[#FF6F61] px-4 py-2 rounded transition-shadow duration-200 hover:shadow-[0px_0px_8px_rgba(0,0,0,0.15)] border-2 cursor-pointer w-fit ${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-[#87878730]"}`}
+                                                onClick={() => {
+                                                    setShowLoading(true);
+                                                    loadMore();
+                                                }}
+                                                disabled={loading}
                                             >
-                                                No More Results To Display
-                                            </span>
-                                        )}
+                                                {loading ? "Loading..." :
+                                                    <span className="flex flex-row items-center gap-1">
+                                                        <MdOutlineKeyboardDoubleArrowDown size={20} />
+                                                        Load More
+                                                    </span>
+                                                }
+                                            </button>
+                                        ) :
+                                            (
+                                                <span
+                                                    className={`text-[#FF6F61] px-4 py-2 rounded border-2 ${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-[#87878730]"}`}
+                                                >
+                                                    No More Results To Display
+                                                </span>
+                                            )}
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={`easeIn h-[70dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
+                                        <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
+                                        <p className="font-normal text-gray-500 text-sm mb-4">Edit filter or go back to My Orders Page</p>
+                                        <button className="border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => navigate('/my-account/my-orders')}>
+                                            <span>Go to My Orders</span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </>
-                        ) : (
-                            <div className={`easeIn h-[70dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
-                                <div className="flex flex-col justify-center items-center">
-                                    <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
-                                    <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
-                                    <p className="font-normal text-gray-500 text-sm mb-4">Edit filter or go back to My Orders Page</p>
-                                    <button className="border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => navigate('/my-account/my-orders')}>
-                                        <span>Go to My Orders</span>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                            )
+                        }
+
+
+                    </div>
+                    <div
+                        className={`pointer-events-none absolute z-10 bottom-0 left-1/2 -translate-x-1/2 transition-all duration-300 ${showIndicator ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                            }`}
+                    >
+                        <MdKeyboardArrowDown size={40} className="animate-bounce text-gray-600" />
+                    </div>
                 </div>
             </div>
         </div>

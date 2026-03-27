@@ -46,7 +46,7 @@ function GoogleLoginBtn({ setLoading, loading }) {
                 className={`${isDark ? "bg-[#0F172A] shadow-[#0F172A] border-gray-800" : "bg-[#F9FAFB] border-[#E5E7EB] shadow-gray-200"} w-full flex flex-row justify-center shadow-sm rounded-xl p-3 items-center gap-2 border-2 ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
                 <img
-                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    src="/googleLogo.svg"
                     alt="Google"
                     className="w-5 h-5"
                 />
