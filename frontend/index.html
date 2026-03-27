@@ -15,7 +15,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Style+Script&display=swap" rel="stylesheet">
-
+  
+  <link rel="preload" as="image" href="/heroImg.webp" />
   <link rel="preload" as="image" href="/assets/banner1.webp" />
   <link rel="preload" as="image" href="/assets/banner2.webp" />
   <link rel="preload" as="image" href="/assets/banner3.webp" />
@@ -33,7 +34,6 @@
   <link rel="preload" as="image" href="/assets/d2.png" />
   <link rel="preload" as="image" href="/assets/d3.png" />
   <link rel="preload" as="image" href="/assets/d4.png" />
-  <link rel="preload" as="image" href="/heroImg.png" />
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,6 +46,7 @@
   <script>
     window.addEventListener('load', () => {
       const preloaded = [
+        "/heroImg.webp",
         "/assets/banner1.webp",
         "/assets/banner2.webp",
         "/assets/banner3.webp",
@@ -62,8 +63,7 @@
         "/assets/d1.png",
         "/assets/d2.png",
         "/assets/d3.png",
-        "/assets/d4.png",
-        "/heroImg.png"
+        "/assets/d4.png"
       ];
 
       preloaded.forEach(src => {

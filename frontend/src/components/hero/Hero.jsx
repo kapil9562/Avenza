@@ -175,7 +175,7 @@ function Hero() {
                     </div>
 
                     <div className='h-full w-fit relative z-0'>
-                        <img src="/heroImg.png" alt="img" className='md:h-full h-100 w-fit object-contain' />
+                        <img src="/heroImg.webp" alt="img" className='md:h-full h-100 w-fit object-contain' />
 
                         <div className='flex-col justify-center items-center gap-5 w-[40%] flex md:hidden absolute sm:-right-20 -right-5 top-1/2 -translate-y-1/2'>
                             <div className='flex flex-col items-end font-[Montserrat] relative z-0'>
