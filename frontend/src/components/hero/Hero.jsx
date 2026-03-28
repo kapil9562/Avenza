@@ -57,7 +57,7 @@ function Hero() {
             <div className="absolute bottom-0 right-0  w-80 h-80 bg-[#c7b6ff]/30 rounded-full blur-3xl"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 bg-[#f8c7dd]/20 rounded-full blur-3xl"></div>
 
-            <header className='h-[8dvh] md:h-[10dvh] sticky top-0 z-99'>
+            <header className='h-[8dvh] md:h-[10dvh] sticky top-0 z-99 animate-fadeDown'>
                 <nav className='h-full w-full flex flex-row justify-between items-center md:px-10 px-5 md:border-b-0  border-b-2 border-pink-200 backdrop-blur-2xl'>
                     {/* LOGO */}
                     <div className='cursor-pointer flex justify-center items-center relative z-0'>
@@ -157,7 +157,7 @@ function Hero() {
 
                 <main className='md:h-[75dvh] w-full flex md:flex-row flex-col justify-center items-center md:px-20 lg:px-0 px-10 py-5 md:py-0'>
 
-                    <div className='relative md:w-[40%] flex justify-center md:items-center flex-col w-full z-2'>
+                    <div className='animate-fadeRight relative md:w-[40%] flex justify-center md:items-center flex-col w-full z-2'>
                         <div className=''>
                             <div className='relative'>
                                 <span className='lg:text-4xl md:text-3xl text-xl font-extralight font-xplor'>NEW ARRIVALS</span>
@@ -174,7 +174,7 @@ function Hero() {
                         </div>
                     </div>
 
-                    <div className='h-full w-fit relative z-0'>
+                    <div className='animate-fadeIn h-full w-fit relative z-0'>
                         <img src="/heroImg.webp" alt="img" className='md:h-full h-100 w-fit object-contain' />
 
                         <div className='flex-col justify-center items-center gap-5 w-[40%] flex md:hidden absolute sm:-right-20 -right-5 top-1/2 -translate-y-1/2'>
@@ -192,7 +192,7 @@ function Hero() {
                         <div className='w-60 h-60 absolute bg-[#FF6F6180] rounded-full -z-10 -right-25 -top-15 md:hidden'></div>
                     </div>
 
-                    <div className='flex-col justify-center items-center gap-5 w-[40%] hidden md:flex'>
+                    <div className='flex-col animate-fadeLeft justify-center items-center gap-5 w-[40%] hidden md:flex'>
                         <div className='flex flex-col items-end ont-[Montserrat] relative z-0'>
                             <span className='font-bold lg:text-4xl md:text-3xl text-4xl'>FOR</span>
                             <h1 className='font-bold lg:text-6xl md:text-5xl text-6xl'>ONLINE</h1>
@@ -205,7 +205,7 @@ function Hero() {
                         </div>
                     </div>
                 </main>
-                <footer className='w-full flex flex-col justify-center items-center pb-10 md:pb-0 gap-4'>
+                <footer className='w-full flex flex-col justify-center items-center pb-10 md:pb-0 gap-4 animate-fadeUp2'>
                     <div className='flex flex-row justify-between w-full items-center md:px-10 px-5 h-[10dvh] gap-4'>
                         <div className='flex flex-row hover:underline cursor-pointer' onClick={() => window.open("https://www.google.com/maps/search/?api=1&query=DHARANAULA+ROAD%2C+ALMORA%2C+UTTARAKHAND%2C+INDIA+263601")}>
                             <IoLocationSharp className='text-4xl text-[#FF6F61]' />

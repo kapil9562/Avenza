@@ -184,7 +184,7 @@ body {
 
 .glow {
   text-shadow:
-    0 0 15px #fff
+    0 0 15px #FF6F61
 }
 
 @font-face {
@@ -201,4 +201,83 @@ body {
 @theme {
   --font-xplor: 'Xplor';
   --font-playlistScript: 'PlaylistScript';
+}
+
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeRight {
+  animation: fadeRight 1.2s ease forwards;
+}
+
+@keyframes fadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeLeft {
+  animation: fadeLeft 1.2s ease forwards;
+}
+
+@keyframes fadeIn{
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease forwards;
+}
+
+@keyframes fadeDown{
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeDown {
+  animation: fadeDown 1.2s ease forwards;
+}
+
+@keyframes fadeUp2 {
+  from {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeUp2 {
+  animation: fadeUp2 1.2s ease forwards;
 }

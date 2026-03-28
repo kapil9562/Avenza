@@ -54,7 +54,7 @@ function PageNotFound({ type = "404" }) {
     <div
       className={`min-h-dvh w-full flex items-center justify-center overflow-hidden`}
       style={{
-        backgroundImage: `url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`,
+        backgroundImage: `url(/pageNotFound.webp)`,
         backgroundSize: "cover",
         backgroundPosition: "center"
       }}
@@ -69,7 +69,7 @@ function PageNotFound({ type = "404" }) {
         <span className='text-white text-sm'>Hmm, the page you were looking for doesn’t seem to exist anymore.</span>
         <button
           className="w-fit mt-6 px-6 sm:px-8 py-2 sm:py-3 rounded-full text-white font-medium 
-                     bg-linear-to-b from-[#7e2f22] to-[#5d192b]
+                     bg-linear-to-b from-[#FF6F61] to-pink-400
                      transition-all duration-300 text-base sm:text-lg
                      active:scale-95 cursor-pointer"
           onClick={handleGoBack}

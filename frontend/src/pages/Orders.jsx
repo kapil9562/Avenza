@@ -29,6 +29,7 @@ const Orders = () => {
     const filterRef = useRef(null);
     const boxRef = useRef(null);
     const [showIndicator, setShowIndicator] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -105,6 +106,8 @@ const Orders = () => {
     };
 
     const fetchOrders = async (append = false) => {
+
+        setError("");
         showLoading ? setLoading(false) : setLoading(true);
         const { status, time } = getActiveFilters();
 
@@ -120,12 +123,19 @@ const Orders = () => {
             if (append) {
                 setOrders((prev) => [...prev, ...res.data.orders]);
             } else {
-                setOrders(res.data.orders);
+                setOrders(res?.data?.orders);
+                if(res?.data?.orders?.length <= 0) {
+                    setError("No orders found!");
+                }
             }
 
-            setTotalOrders(res.data.total || 0);
+            setTotalOrders(res?.data?.total || 0);
         } catch (err) {
-            console.error(err);
+            setError(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Unable to load orders!"
+            )
         } finally {
             setTimeout(() => {
                 setLoading(false);
@@ -210,9 +220,9 @@ const Orders = () => {
 
     const statusColors = {
         processing: "text-yellow-600",
-        shipped: "bg-blue-100 text-blue-600",
-        delivered: "bg-green-100 text-green-600",
-        cancelled: "bg-red-100 text-red-600",
+        shipped: "text-blue-600",
+        delivered: "text-green-600",
+        cancelled: "text-red-600",
     };
 
     const paymentBadge = {
@@ -261,7 +271,7 @@ const Orders = () => {
             el.removeEventListener("scroll", checkScroll);
             window.removeEventListener("resize", checkScroll);
         };
-    }, [loadMore]);
+    }, [orders.length, totalOrders, loading]);
 
     const FilterContent = () => (
         <div className={`w-full h-full border-2 rounded ${isDark ? "bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)]" : "bg-white text-gray-800 shadow-[0px_0px_6px_rgba(0,0,0,0.15)]  border-transparent"}`}>
@@ -367,13 +377,24 @@ const Orders = () => {
 
                 <div className="h-fit w-full relative">
                     {/* Orders List */}
-                    <div className="w-full h-[75dvh] overflow-x-hidden overflow-y-scroll no-scrollbar flex flex-col gap-2 scroll-smooth will-change-scroll relative" ref={boxRef}>
+                    <div className="w-full lg:h-[75dvh] h-[78dvh] overflow-x-hidden overflow-y-scroll no-scrollbar flex flex-col gap-2 scroll-smooth will-change-scroll relative" ref={boxRef}>
                         {loading ?
                             Array(5).fill(0).map((_, idx) => (
                                 <OrderSkeleton key={idx} />
                             ))
                             :
-                            orders.length > 0 ? (
+                            error && orders?.length <= 0 ? (
+                                <div className={`easeIn lg:h-[75dvh] h-[78dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
+                                        <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
+                                        <p className="font-normal text-gray-500 text-sm mb-4">Edit filter or go back to My Orders Page</p>
+                                        <button className="border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => navigate('/my-account/my-orders')}>
+                                            <span>Go to My Orders</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
                                 <>
                                     {orders.map((order) => (
                                         <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"} animate-fadeIn`}>
@@ -460,17 +481,6 @@ const Orders = () => {
                                             )}
                                     </div>
                                 </>
-                            ) : (
-                                <div className={`easeIn h-[70dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
-                                    <div className="flex flex-col justify-center items-center">
-                                        <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
-                                        <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
-                                        <p className="font-normal text-gray-500 text-sm mb-4">Edit filter or go back to My Orders Page</p>
-                                        <button className="border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => navigate('/my-account/my-orders')}>
-                                            <span>Go to My Orders</span>
-                                        </button>
-                                    </div>
-                                </div>
                             )
                         }
 
