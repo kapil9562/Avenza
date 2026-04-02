@@ -6,7 +6,7 @@ export const api = axios.create({
 });
 
 // export const api = axios.create({
-//   baseURL: 'http://localhost:8000/api'
+//   baseURL: 'http://192.168.1.19:8000/api'
 // });
 
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
@@ -101,3 +101,5 @@ export const getOrders = ({ userId, time = [], status = [], skip=0 }) => {
   const timeParam = encodeURIComponent(time.join(",")); 
   return api.get(`/get-orders?userId=${userId}&time=${timeParam}&status=${statusParam}&skip=${skip}`);
 };
+
+export const getOrderDetail = ({userId, orderId}) => api.get(`/get-order-detail?userId=${userId}&orderId=${orderId}`);

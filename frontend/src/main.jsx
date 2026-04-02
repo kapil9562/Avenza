@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login, ProductDetails, Signup, CartDetails, SearchResults, PageNotFound, About, Whitelist, ForgetPass, ResetPass, OrderSuccess, Orders, CheckoutPage, PaymentFailed } from './pages'
+import { Login, ProductDetails, Signup, CartDetails, SearchResults, PageNotFound, About, Whitelist, ForgetPass, ResetPass, OrderSuccess, Orders, CheckoutPage, PaymentFailed, OrderDetail } from './pages'
 import { Container, ProtectedRoute, ResponsiveLanding } from './components'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { CartProvider } from './context/CartContext.jsx'
@@ -60,6 +60,13 @@ createRoot(document.getElementById('root')).render(
                         element={
                           <ProtectedRoute>
                             <Orders />
+                          </ProtectedRoute>
+                        } />
+                      <Route
+                        path="/my-account/my-orders/:id"
+                        element={
+                          <ProtectedRoute>
+                            <OrderDetail />
                           </ProtectedRoute>
                         } />
 

@@ -22,7 +22,14 @@ const orderSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: true,
+    },
+
+    orderId : {
+        type: String,
+        required: true,
+        unique: true,
+        index: true
     },
 
     orderItems: [orderItemSchema],
@@ -47,7 +54,7 @@ const orderSchema = new mongoose.Schema({
 
     orderStatus: {
         type: String,
-        enum: ["processing", "shipped", "delivered", "cancelled"],
+        enum: ["processing", "packed", "shipped", "out_for_delivery", "delivered", "cancelled"],
         default: "processing"
     },
 

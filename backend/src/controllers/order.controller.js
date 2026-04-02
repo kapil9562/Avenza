@@ -27,7 +27,7 @@ export const buyNow = async (req, res) => {
                             name: product.title,
                             images: [product.thumbnail]
                         },
-                        unit_amount: product.price<100 ? (product.price + 100 ) * 100 : product.price * 100
+                        unit_amount: product.price < 100 ? (product.price + 100) * 100 : product.price * 100
                     },
                     quantity
                 }
@@ -84,8 +84,12 @@ export const verifyPayment = async (req, res) => {
 
         const totalAmount = (product.price * quantity) + deliveryCharge;
 
+        const now = new Date();
+        const orderId = `OD${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}${Math.floor(100000 + Math.random() * 900000)}`;
+
         const order = await Order.create({
             userId,
+            orderId,
             orderItems: [
                 {
                     product: product._id,
@@ -104,7 +108,7 @@ export const verifyPayment = async (req, res) => {
             totalAmount,
             shippingAddress: addressId,
             stripeSessionId: sessionId
-        });
+        }).select("-stripeSessionId");
 
         product.stock -= quantity;
         await product.save();
@@ -150,7 +154,7 @@ export const saveAddress = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            error
+            error: "Internal server error",
         });
     }
 }
@@ -179,7 +183,7 @@ export const getAddress = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({
-            error
+            error: "Internal server error",
         })
     }
 }
@@ -282,7 +286,7 @@ export const getOrders = async (req, res) => {
 
         const total = await Order.countDocuments(filter);
 
-        const orders = await Order.find(filter)
+        const orders = await Order.find(filter).select("-stripeSessionId")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
@@ -297,7 +301,40 @@ export const getOrders = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            error: error.message,
+            error: "Internal server error",
         });
     }
+};
+
+export const getOrderDetail = async (req, res) => {
+    const { userId, orderId } = req.query;
+
+    if (!userId || !orderId) {
+        return res.status(400).json({
+            error: "userId and orderId are required!"
+        })
+    }
+
+    try {
+        const order = await Order.findOne({
+            userId,
+            orderId
+        }).select("-stripeSessionId");
+
+        if (!order) {
+            return res.status(404).json({
+                error: "order not found!"
+            });
+        }
+
+        return res.status(200).json({
+            order
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            error: "Internal server error",
+        })
+    }
+
 };

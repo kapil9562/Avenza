@@ -13,5 +13,6 @@ import ResetPass from "./ResetPass";
 import SearchResults from "./SearchResults";
 import Signup from "./Signup";
 import Whitelist from "./Whitelist";
+import OrderDetail from "./OrderDetail";
 
-export {About, CartDetails, CheckoutPage, FavItems, ForgetPass, Login, Orders, OrderSuccess, PageNotFound, PaymentFailed, ProductDetails, ResetPass, SearchResults, Signup, Whitelist}
+export {About, CartDetails, CheckoutPage, FavItems, ForgetPass, Login, Orders, OrderSuccess, PageNotFound, PaymentFailed, ProductDetails, ResetPass, SearchResults, Signup, Whitelist, OrderDetail}

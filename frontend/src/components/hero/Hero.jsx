@@ -4,6 +4,7 @@ import { FaInstagram, FaWhatsapp, FaGithub, FaLinkedinIn, FaArrowRight } from "r
 import { useNavigate } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import menuBar from '../../assets/menu.json';
+import { useAuth } from '../../context/AuthContext';
 
 function Hero() {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Hero() {
     const [isOpen, setIsOpen] = useState(false);
     const lottieRef = useRef(null);
     const [isAnimating, setIsAnimating] = useState(false);
+    const {user, loading} = useAuth();
 
     const STOP_FRAME = 35;
 
@@ -51,6 +53,14 @@ function Hero() {
         setIsAnimating(false);
     };
 
+    const handleLogin = () => {
+        if(user && !loading) {
+            navigate('/home');
+        } else {
+            navigate('/login');
+        }
+    }
+
     return (
         <div className='h-dvh overflow-y-auto custom-scroll scroll-smooth bg-linear-to-br from-[#fff7fb] via-[#f9d9e9] to-[#e8dcff] relative z-0 overflow-x-hidden'>
             <div className="absolute -top-20 -left-15 w-72 h-72 bg-[#f3a4c7]/30 rounded-full blur-3xl"></div>
@@ -80,7 +90,7 @@ function Hero() {
                     </div>
 
                     <div className='space-x-4 md:flex flex-row hidden'>
-                        <button className='text-gray-800 cursor-pointer font-bold font-[Nunito] hover:text-orange-400 transition-colors duration-200'>
+                        <button className='text-gray-800 cursor-pointer font-bold font-[Nunito] hover:text-orange-400 transition-colors duration-200' onClick={handleLogin}>
                             Sign in
                         </button>
                         <button

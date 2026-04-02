@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { formatINR } from "../utils/price";
-import {CartItem, Loader} from "../components";
+import { CartItem, Loader } from "../components";
 import { useCart } from "../context/CartContext";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { TiShoppingCart } from "react-icons/ti";
 import Lottie from "lottie-react";
 import emptyCart from "../assets/emptyCart.json"
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 export default function CartDetails() {
 
@@ -15,6 +16,8 @@ export default function CartDetails() {
     const { items, subtotal, loading, clearAll } = useCart();
     const { setActiveTab } = useOutletContext();
     const { isDark } = useTheme();
+    const [showIndicator, setShowIndicator] = useState(false);
+    const boxRef = useRef();
 
     useEffect(() => {
         setActiveTab("");
@@ -31,13 +34,38 @@ export default function CartDetails() {
     const deliveryCharge = subtotal > 0 && subtotal < 500 ? 99 : 0;
     const total = subtotal + deliveryCharge;
 
+    const checkScroll = () => {
+        const el = boxRef.current;
+        if (!el) return;
+
+        const hasScrollableContent = el.scrollHeight > el.clientHeight;
+        const isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+
+        setShowIndicator(hasScrollableContent && !isAtBottom);
+    };
+
+    useEffect(() => {
+        checkScroll();
+
+        const el = boxRef.current;
+        if (!el) return;
+
+        el.addEventListener("scroll", checkScroll);
+        window.addEventListener("resize", checkScroll);
+
+        return () => {
+            el.removeEventListener("scroll", checkScroll);
+            window.removeEventListener("resize", checkScroll);
+        };
+    }, [items]);
+
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] pb-15 relative`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] relative`}>
             {loading && <Loader />}
-            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont `}>
+            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont h-full`}>
 
                 {/* Cart Items */}
-                <div className="space-y-1 md:space-y-2 md:w-3/4 rounded-2xl">
+                <div className="space-y-1 md:space-y-2 md:w-3/4 rounded-2xl h-full">
                     <div className="flex w-full flex-row justify-between items-center">
                         <h1 className="sm:text-3xl text-lg flex flex-row gap-2 items-center">Your Cart <TiShoppingCart className="text-orange-500" /></h1>
                         {items.length > 0 && <button className="underline cursor-pointer hover:text-orange-500 active:text-orange-500" onClick={clearCart}>clear all</button>}
@@ -64,18 +92,26 @@ export default function CartDetails() {
                             </div>
                         </div>
                     ) : (
-                        <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} rounded-2xl`}>
-                            {items.map((item, idx) => (
-                                <div key={idx}>
-                                    <CartItem
-                                        item={item}
-                                    />
-                                    {idx !== items.length - 1 &&
-                                        <div className="min-w-full px-4">
-                                            <div className={`${isDark ? "bg-gray-800" : "bg-gray-300"} min-w-full h-px`}></div>
-                                        </div>}
-                                </div>
-                            ))}
+                        <div className="relative h-full">
+                            <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} lg:h-[72dvh] md:h-[76dvh] h-[78dvh] sm:h-[78dvh] overflow-y-auto no-scrollbar rounded-2xl`} ref={boxRef}>
+                                {items.map((item, idx) => (
+                                    <div key={idx}>
+                                        <CartItem
+                                            item={item}
+                                        />
+                                        {idx !== items.length - 1 &&
+                                            <div className="min-w-full px-4">
+                                                <div className={`${isDark ? "bg-gray-800" : "bg-gray-300"} min-w-full h-px`}></div>
+                                            </div>}
+                                    </div>
+                                ))}
+                            </div>
+                            <div
+                                className={`pointer-events-none absolute z-10 bottom-0 left-1/2 -translate-x-1/2 transition-all duration-300 ${showIndicator ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                                    }`}
+                            >
+                                <MdKeyboardArrowDown size={40} className={`animate-bounce ${isDark? "text-gray-300" : "text-gray-600"} `}/>
+                            </div>
                         </div>
                     )}
                 </div>

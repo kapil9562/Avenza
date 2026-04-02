@@ -274,7 +274,7 @@ const Orders = () => {
     }, [orders.length, totalOrders, loading]);
 
     const FilterContent = () => (
-        <div className={`w-full h-full border-2 rounded ${isDark ? "bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)]" : "bg-white text-gray-800 shadow-[0px_0px_6px_rgba(0,0,0,0.15)]  border-transparent"}`}>
+        <div className={`w-full h-full border-2 rounded ${isDark ? "bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)]" : "bg-[#FFFFFF] text-gray-800 shadow-[0px_0px_6px_rgba(0,0,0,0.15)]  border-transparent"}`}>
 
             <div className="flex flex-col justify-center w-full gap-2 px-4 py-2 font-semibold">
                 <div className="flex flex-row justify-between items-center w-full">
@@ -352,7 +352,7 @@ const Orders = () => {
     );
 
     return (
-        <div className={`w-full sm:px-5 px-1 sm:py-5 pb-10 lg:min-h-[calc(100dvh-124px)] md:min-h-[calc(100dvh-92px)] min-h-[calc(100dvh-124px)] ${isDark ? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
+        <div className={`w-full sm:px-5 px-1 sm:py-5 pb-10 lg:min-h-[calc(100dvh-124px)] md:min-h-[calc(100dvh-92px)] min-h-[calc(100dvh-124px)] ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-[#F1F3F6]"}`}>
             <div className="w-full flex flex-row justify-between items-center px-2 py-1 relative" ref={filterRef}>
                 <Breadcrumb />
                 <div className="lg:hidden">
@@ -397,7 +397,7 @@ const Orders = () => {
                             ) : (
                                 <>
                                     {orders.map((order) => (
-                                        <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"} animate-fadeIn`}>
+                                        <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"} animate-fadeIn`} onClick={() => navigate(`/my-account/my-orders/${order.orderId}`)}>
                                             <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
                                             <table className="w-full table-fixed">
                                                 <tbody>
@@ -406,7 +406,7 @@ const Orders = () => {
                                                         <td className="px-4 py-4 w-1 sm:w-1/2 lg:pl-10 pl-0">
                                                             <div className="flex items-center gap-4">
                                                                 <img
-                                                                    src={order?.orderItems[0]?.image}
+                                                                    src={order?.orderItems?.[0]?.image}
                                                                     alt="img"
                                                                     className={`h-20 w-20 object-cover rounded transition-all duration-500 animate-easeIn`} />
                                                                 <div className="flex flex-col">
