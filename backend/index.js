@@ -15,7 +15,23 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 8000
 
-app.use(cors());
+const allowedOrigins = [
+  "https://myavenza.onrender.com"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
 
 app.get('/', (req, res) => {
   res.send("Hello from Avenza server 👋")
@@ -36,11 +52,11 @@ app.get("/ping", (req, res) => {
 });
 
 connectDB()
-.then(() => {
+  .then(() => {
     app.listen(process.env.PORT || 8000, () => {
-        console.log(`server is running on port : ${process.env.PORT}`)
+      console.log(`server is running on port : ${process.env.PORT}`)
     })
-})
-.catch((err) => {
+  })
+  .catch((err) => {
     console.log("MONGO db connection failed !!!", env);
-})
+  })
