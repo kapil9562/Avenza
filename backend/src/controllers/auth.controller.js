@@ -67,14 +67,15 @@ const googleLogin = async (req, res) => {
                 email,
                 avatar: picture,
             })
-        }
-
-        if (user && !user.googleLogin) {
+        } else if (!user.googleLogin) {
             await User.updateOne(
                 { _id: user._id },
                 {
                     googleLogin: true,
                     avatar: picture
+                },
+                {
+                    returnDocument: "after"
                 }
             );
         }
@@ -97,8 +98,7 @@ const googleLogin = async (req, res) => {
         console.error(err.response?.data || err.message || err);
 
         res.status(500).json({
-            message: "Google login failed",
-            error: err?.message,
+            message: "Google login failed"
         });
     }
 };

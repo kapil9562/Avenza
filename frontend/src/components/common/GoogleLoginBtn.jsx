@@ -38,7 +38,8 @@ function GoogleLoginBtn({ setLoading, loading }) {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: responseGoogle,
         onError: (error) => {
-            console.error("Google OAuth error:", error);
+            const msg = error?.response?.data?.message || error?.message || "Something went wrong !";
+            toast.error(msg);
             setLoading(false);
         },
         flow: 'auth-code'

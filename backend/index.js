@@ -38,10 +38,6 @@ app.get('/', (req, res) => {
   res.send("Hello from Avenza server 👋")
 })
 
-app.listen(PORT, () => {
-  console.log(`app is listening on port ${PORT}`)
-})
-
 app.use('/api', authRouter)
 app.use('/api', productRouter)
 app.use('/api', cartRouter)
