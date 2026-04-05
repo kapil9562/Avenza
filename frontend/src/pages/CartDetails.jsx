@@ -24,11 +24,7 @@ export default function CartDetails() {
     }, []);
 
     const clearCart = async () => {
-        try {
-            await clearAll();
-        } catch (error) {
-            console.log("clear cart error ::", error);
-        }
+        await clearAll();
     }
 
     const deliveryCharge = subtotal > 0 && subtotal < 500 ? 99 : 0;
@@ -93,7 +89,7 @@ export default function CartDetails() {
                         </div>
                     ) : (
                         <div className="relative h-full">
-                            <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} lg:h-[72dvh] md:h-[76dvh] h-[78dvh] sm:h-[78dvh] overflow-y-auto no-scrollbar rounded-2xl`} ref={boxRef}>
+                            <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} lg:max-h-[72dvh] md:max-h-[76dvh] max-h-[78dvh] sm:max-h-[78dvh] overflow-y-auto no-scrollbar rounded-2xl h-fit`} ref={boxRef}>
                                 {items.map((item, idx) => (
                                     <div key={idx}>
                                         <CartItem

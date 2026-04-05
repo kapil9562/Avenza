@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { getCurrentUser, logoutUser } from "../api/api.js";
 
 const AuthContext = createContext(null);
 
@@ -8,30 +9,33 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* ===== LOAD USER FROM LOCALSTORAGE ===== */
   useEffect(() => {
-    const storedUser = localStorage.getItem("user-info");
-    if (storedUser) {
+    const initAuth = async () => {
       try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        localStorage.removeItem("user-info");
+        const res = await getCurrentUser();
+        setUser(res.data.user);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    initAuth();
   }, []);
 
-  /* ===== LOGIN ===== */
   const login = (userData) => {
-    localStorage.setItem("user-info", JSON.stringify(userData));
     setUser(userData);
   };
 
-  /* ===== LOGOUT ===== */
-  const logout = () => {
-    localStorage.removeItem("user-info");
-    window.location.reload();
-    setUser(null);
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
@@ -41,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
-        isAuthenticated: !!user
+        isAuthenticated: !!user,
       }}
     >
       {children}

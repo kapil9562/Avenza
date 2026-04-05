@@ -5,6 +5,28 @@ import { v4 as uuidv4 } from "uuid";
 import User from '../models/user.model.js'
 import Otp from '../models/otp.model.js'
 import { sendEmail } from "../utils/sendEmail.js";
+import jwt from "jsonwebtoken";
+
+const generateAccessAndRefreshToken = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        return { accessToken, refreshToken }
+    } catch (error) {
+        throw error;
+    }
+}
+
+const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict"
+}
 
 {/* google login */ }
 const googleLogin = async (req, res) => {
@@ -33,7 +55,7 @@ const googleLogin = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (user && !user.isActive) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account has been temporarily frozen",
             });
         }
@@ -57,18 +79,18 @@ const googleLogin = async (req, res) => {
             );
         }
 
-        // 4️⃣ Respond
-        res.status(200).json({
-            message: "Google login successful",
-            user: {
-                _id: user._id,
-                uid: user.uid,
-                name: user.name,
-                email: user.email,
-                photo: user.avatar
-            },
-            tokens
-        });
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+        const loggedInUser = await User.findById(user._id).select("-passwordHash -googleLogin -isActive -refreshToken");
+
+        res
+            .status(200)
+            .cookie('accessToken', accessToken, options)
+            .cookie('refreshToken', refreshToken, options)
+            .json({
+                message: "login successful",
+                user: loggedInUser,
+            });
 
     } catch (err) {
         console.error("❌ GOOGLE LOGIN ERROR:");
@@ -76,7 +98,7 @@ const googleLogin = async (req, res) => {
 
         res.status(500).json({
             message: "Google login failed",
-            error: err.message,
+            error: err?.message,
         });
     }
 };
@@ -98,33 +120,35 @@ const emailLogin = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: "User not found !",
             });
         } else if (user && !user.isActive) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account has been temporarily frozen.",
             });
         } else if (user && !user.passwordHash && user.googleLogin) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account uses Google login !",
             });
         } else {
             const isValid = await user.isPasswordCorrect(password);
 
             if (!isValid) {
-                return res.status(400).json({ message: "Invalid credentials !" });
+                return res.status(401).json({ message: "Invalid credentials !" });
             } else {
-                return res.json({
-                    message: "Login successful",
-                    user: {
-                        _id: user._id,
-                        uid: user.uid,
-                        name: user.name,
-                        email: user.email,
-                        photo: user.avatar
-                    }
-                });
+
+                const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+                const loggedInUser = await User.findById(user._id).select("-passwordHash -googleLogin -isActive -refreshToken");
+
+                return res
+                    .status(200)
+                    .cookie('accessToken', accessToken, options)
+                    .cookie('refreshToken', refreshToken, options)
+                    .json({
+                        message: "login successful",
+                        user: loggedInUser,
+                    });
             }
         }
 
@@ -152,7 +176,7 @@ const emailSendOTP = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (user && user.passwordHash) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "Email already registered !"
             });
         }
@@ -177,7 +201,7 @@ const emailSendOTP = async (req, res) => {
 
     } catch (err) {
         console.log("send otp error ::", err)
-        res.status(400).json({
+        res.status(500).json({
             message: "Failed to send OTP"
         });
     }
@@ -198,7 +222,7 @@ const verifyOTP = async (req, res) => {
         const otpRecord = await Otp.findOne({ email });
 
         if (!otpRecord) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "OTP expired or not found !"
             });
         }
@@ -206,7 +230,7 @@ const verifyOTP = async (req, res) => {
         const isMatch = await bcrypt.compare(otp, otpRecord.otpHash);
 
         if (!isMatch) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid OTP !"
             });
         }
@@ -216,7 +240,7 @@ const verifyOTP = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (user && !user.isActive) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account has been temporarily frozen.",
             });
         }
@@ -237,16 +261,18 @@ const verifyOTP = async (req, res) => {
 
         await Otp.deleteMany({ email });
 
-        res.status(201).json({
-            message: "Signup successful",
-            user: {
-                _id: user._id,
-                uid: user.uid,
-                name: user.name,
-                email: user.email,
-                photo: user.avatar
-            }
-        });
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+        const loggedInUser = await User.findById(user._id).select("-passwordHash -googleLogin -isActive -refreshToken");
+
+        res
+            .status(200)
+            .cookie('accessToken', accessToken, options)
+            .cookie('refreshToken', refreshToken, options)
+            .json({
+                message: "Signup successful",
+                user: loggedInUser,
+            });
 
     } catch (err) {
         console.log("verifyOTP error:", err);
@@ -269,13 +295,13 @@ const sendResetOTP = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: "User not found !"
             });
         }
 
         if (!user.passwordHash) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account uses Google login !"
             });
         }
@@ -374,15 +400,15 @@ const resetPassword = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: "User not found !",
             });
         } else if (user && !user.isActive) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account has been temporarily frozen.",
             });
         } else if (!user.passwordHash) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message: "This account uses Google login !"
             });
         }
@@ -392,23 +418,101 @@ const resetPassword = async (req, res) => {
 
         await Otp.deleteMany({ email });
 
-        res.status(200).json({
-            message: "Password Reset Successfully",
-            user: {
-                _id: user._id,
-                uid: user.uid,
-                name: user.name,
-                email: user.email,
-                photo: user.avatar
-            }
-        });
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+        const loggedInUser = await User.findById(user._id).select("-passwordHash -googleLogin -isActive -refreshToken");
+
+        res
+            .status(200)
+            .cookie('accessToken', accessToken, options)
+            .cookie('refreshToken', refreshToken, options)
+            .json({
+                message: "Password Reset Successfully",
+                user: loggedInUser,
+            });
+
     } catch (err) {
         console.log("Reset Password error:", err);
         res.status(500).json({
-            message: "Failed to reset Password !"
+            message: err?.message || "Failed to reset Password !"
         });
     }
 
 }
 
-export { googleLogin, emailLogin, emailSendOTP, verifyOTP, sendResetOTP, verifyResetOTP, resetPassword };
+const logout = async (req, res) => {
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                refreshToken: undefined
+            }
+        },
+        {
+            returnDocument: "after"
+        }
+    );
+
+    res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json({
+            message: "logout successfully"
+        })
+
+}
+
+const refreshAccessToken = async (req, res) => {
+    const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+
+    if (!incomingRefreshToken) {
+        return res.status(401).json({
+            message: "unauthorized request!"
+        });
+    }
+
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        );
+
+        const user = await User.findById(decodedToken?._id);
+
+        if (!user) {
+            return res.status(401).json({
+                message: "Invalid refresh token!"
+            })
+        }
+
+        if (incomingRefreshToken !== user?.refreshToken) {
+            return res.status(401).json({
+                message: "Refresh token is expired or used!"
+            });
+        }
+
+        const { refreshToken: newRefreshToken, accessToken } = await generateAccessAndRefreshToken(user._id);
+
+        res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", newRefreshToken, options)
+            .json({
+                message: "Access token refreshed."
+            });
+    } catch (error) {
+        return res.status(401).json({
+            message: "Invalid or expired refresh token!"
+        });
+    }
+
+}
+
+const getCurrentUser = async (req, res) => {
+    res.status(200).json({
+        user: req.user,
+    });
+};
+
+export { googleLogin, emailLogin, emailSendOTP, verifyOTP, sendResetOTP, verifyResetOTP, resetPassword, logout, refreshAccessToken, getCurrentUser };

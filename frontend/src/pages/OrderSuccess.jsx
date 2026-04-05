@@ -36,7 +36,6 @@ const OrderSuccess = () => {
                 }
             } catch (error) {
                 const msg = error?.response?.data?.message || error?.message || "Something went wrong!";
-                console.log(error)
                 setError(msg);
             } finally {
                 setTimeout(() => {

@@ -2,11 +2,13 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URI
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URI,
+  withCredentials: true,
 });
 
 // export const api = axios.create({
-//   baseURL: 'http://192.168.1.19:8000/api'
+//   baseURL: 'http://localhost:8000/api',
+//   withCredentials: true,
 // });
 
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
@@ -35,6 +37,12 @@ export const emailLogin = ({ email, password }) => api.post("/auth/emaillogin", 
   email,
   password
 });
+
+export const refreshAccessToken = () => api.post('/auth/refresh');
+
+export const getCurrentUser = () => api.get('/auth/get-current-user');
+
+export const logoutUser = () => api.post('/auth/logout');
 
 export const addCart = ({ uid, product_id, price, qty }) => api.post("/cart/add", {
   uid,
@@ -103,3 +111,54 @@ export const getOrders = ({ userId, time = [], status = [], skip=0 }) => {
 };
 
 export const getOrderDetail = ({userId, orderId}) => api.get(`/get-order-detail?userId=${userId}&orderId=${orderId}`);
+
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, response = null) => {
+  failedQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else {
+      promise.resolve(response);
+    }
+  });
+
+  failedQueue = [];
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/auth/refresh-token")
+    ) {
+      originalRequest._retry = true;
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(() => api(originalRequest));
+      }
+
+      isRefreshing = true;
+
+      try {
+        await refreshAccessToken();
+        processQueue(null);
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);

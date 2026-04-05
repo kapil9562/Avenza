@@ -101,8 +101,6 @@ const Layout = React.memo(function Layout({ category, pid }) {
         };
     }, [category, skip, cacheKey]);
 
-
-    console.log(error)
     const goToPage = (nextPage) => {
         const safePage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
         setSearchParams(safePage === 1 ? {} : { page: String(safePage) });

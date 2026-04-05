@@ -44,7 +44,6 @@ export default function ResetPass() {
             setLoading(true);
             setError('');
             const res = await resetPassword({ email, password });
-            console.log(res)
             const userData = res?.data?.user;
             await login(userData);
             setAlert(res?.data?.message);
@@ -54,7 +53,6 @@ export default function ResetPass() {
             }, 2000);
         } catch (error) {
             setLoading(false);
-            console.log(error)
             const message = error?.response?.data?.message;
             setError(message);
         }

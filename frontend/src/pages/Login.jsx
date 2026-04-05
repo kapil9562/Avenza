@@ -55,7 +55,6 @@ export default function Login() {
 
         } catch (err) {
             setLoading(false);
-            console.log("Email Login Error ::", err);
             const backendMessage = err?.response?.data?.message;
             const error =
                 typeof backendMessage === "string"

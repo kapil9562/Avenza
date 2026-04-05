@@ -30,7 +30,6 @@ function GoogleLoginBtn({ setLoading, loading }) {
             }
         } catch (error) {
             setLoading(false);
-            console.error("google login error:: ", error);
         }
     }
     const handleGoogleLogin = useGoogleLogin({

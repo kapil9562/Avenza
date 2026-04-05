@@ -7,21 +7,22 @@ import { productRouter } from './src/routes/productRouter.js';
 import { cartRouter } from './src/routes/cartRouter.js';
 import { FavItemsRouter } from './src/routes/FavItemsRouter.js';
 import { orderRouter } from './src/routes/orderRouter.js';
-
+import cookieParser from "cookie-parser";
 
 dotenv.config()
 const app = express();
 app.use(express.json())
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 8000
 
 const allowedOrigins = [
-  "https://myavenza.onrender.com"
+  "https://myavenza.onrender.com",
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-
+    
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {

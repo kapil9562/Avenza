@@ -1,13 +1,12 @@
 import express from "express";
 import { getAllCategory, getProducts, productReview } from "../controllers/product.controller.js";
+import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const productRouter = express.Router()
 
 //product routes
 productRouter.get('/products', getProducts);
 productRouter.get('/category-list', getAllCategory);
-// productRouter.get('/products?limit=${5}&search=${title}', searchProducts);
-// productRouter.get('/products?id=${productId}', getProductById);
-productRouter.post('/post-review', productReview);
+productRouter.post('/post-review', verifyJWT, productReview);
 
 export {productRouter}

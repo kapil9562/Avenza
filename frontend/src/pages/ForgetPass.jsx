@@ -28,7 +28,7 @@ export default function ForgetPass() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
     useEffect(() => {
-        const expiry = localStorage.getItem("otpExpiry");
+        const expiry = localStorage.getItem("resetOtpExpiry");
 
         if (expiry) {
             const remaining = Math.floor((expiry - Date.now()) / 1000);
@@ -37,7 +37,7 @@ export default function ForgetPass() {
                 setTimer(remaining);
                 setOtpSent(true);
             } else {
-                localStorage.removeItem("otpExpiry");
+                localStorage.removeItem("resetOtpExpiry");
             }
         }
     }, []);
@@ -49,7 +49,7 @@ export default function ForgetPass() {
             setTimer((prev) => {
                 if (prev <= 1) {
                     clearInterval(interval);
-                    localStorage.removeItem("otpExpiry");
+                    localStorage.removeItem("resetOtpExpiry");
                     return 0;
                 }
                 return prev - 1;
@@ -101,7 +101,7 @@ export default function ForgetPass() {
             const res = await sendResetOtp({ email: newEmail });
 
             const expiryTime = Date.now() + 60 * 1000;
-            localStorage.setItem("otpExpiry", expiryTime);
+            localStorage.setItem("resetOtpExpiry", expiryTime);
             setTimer(60);
             setOtpSent(true);
             setTimeout(() => inputsRef.current[0]?.focus(), 300);
@@ -148,7 +148,6 @@ export default function ForgetPass() {
 
         } catch (err) {
             setLoading(false);
-            console.log(err)
             setOtp(Array(OTP_LENGTH).fill(""));
             const message =
                 err.response?.data?.message ||
@@ -162,6 +161,27 @@ export default function ForgetPass() {
     const handleOtpKeyDown = (e, idx) => {
         if (e.key === "Backspace" && !otp[idx] && idx > 0)
             inputsRef.current[idx - 1]?.focus();
+    };
+
+    const handlePaste = (e) => {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData('text').slice(0, 6);
+
+        if (!/^\d+$/.test(pasteData)) return;
+
+        const newOtp = [...otp];
+        const pasteArray = pasteData.split('');
+
+        pasteArray.forEach((char, index) => {
+            if (index < newOtp.length) {
+                newOtp[index] = char;
+            }
+        });
+
+        setOtp(newOtp);
+
+        const nextActiveIndex = Math.min(pasteArray.length, newOtp.length - 1);
+        inputsRef.current[nextActiveIndex].focus();
     };
 
     const handleChangeEmail = () => {
@@ -239,6 +259,7 @@ export default function ForgetPass() {
                                             maxLength={1}
                                             onChange={(e) => handleOtpChange(e.target.value, idx)}
                                             onKeyDown={(e) => handleOtpKeyDown(e, idx)}
+                                            onPaste={(e) => handlePaste(e)}
                                             className={`w-[66%] h-15 min-h-10 m-w-10 text-center text-xl border-2 outline-none font-semibold mt-2 rounded-2xl  ${isDark ? "bg-[#0F172A] border-gray-700 shadow-lg shadow-[#0F172A] text-gray-200" : "bg-[#F9FAFB] shadow-lg shadow-gray-200 border-[#f8d4e0] text-black"}`}
                                         />
                                     ))}
