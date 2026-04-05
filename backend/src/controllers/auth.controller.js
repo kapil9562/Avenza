@@ -25,7 +25,8 @@ const generateAccessAndRefreshToken = async (userId) => {
 const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none"
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000
 }
 
 {/* google login */ }
