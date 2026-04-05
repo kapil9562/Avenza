@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
       try {
         setLoading(true);
         const res = await getCurrentUser();
-        setUser(res.data.user);
+        setUser(res?.data?.user || null);
       } catch (error) {
         setUser(null);
       } finally {
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await logoutUser();
     } catch (err) {
-      const msg = err?.response?.data?.message || err?.message || "Unable to load products!"
+      const msg = err?.response?.data?.message || err?.message || "Logout failed!"
       toast.error(msg);
     } finally {
       setUser(null);
