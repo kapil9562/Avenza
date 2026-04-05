@@ -9,10 +9,10 @@ import AddToCartBtn from '../product/AddToCartBtn.jsx';
 import { FaRegHeart } from "react-icons/fa6";
 import { useFavItem } from '../../context/FavItemsContext.jsx';
 import { FaHeart } from "react-icons/fa6";
-import { GoAlertFill } from 'react-icons/go';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { formatINR } from '../../utils/price.js';
 import { AiOutlineReload } from "react-icons/ai";
+import { useToast } from '../../context/ToastContext.jsx';
 
 const Layout = React.memo(function Layout({ category, pid }) {
 
@@ -31,10 +31,10 @@ const Layout = React.memo(function Layout({ category, pid }) {
     const { scrollRef } = useOutletContext();
     const showPagination = !pid && totalPages > 1;
     const { toggleFavItems, favorites } = useFavItem();
-    const [alert, setAlert] = useState("");
     const { isAuthenticated, loading: authloading } = useAuth();
     const [error, setError] = useState("");
     const prevCategoryRef = useRef(category);
+    const toast = useToast();
 
     const scrollToTop = () => {
         scrollRef.current?.scrollTo({ top: 0, behavior: "instant" });
@@ -48,16 +48,6 @@ const Layout = React.memo(function Layout({ category, pid }) {
             setSearchParams({}, { replace: true });
         }
     }, [category, setSearchParams]);
-
-    useEffect(() => {
-        if (!alert) return;
-
-        const timer = setTimeout(() => {
-            setAlert('');
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [alert]);
 
     useEffect(() => {
         let cancelled = false;
@@ -84,11 +74,9 @@ const Layout = React.memo(function Layout({ category, pid }) {
                 }
             } catch (err) {
                 if (cancelled) return;
-                setError(
-                    err?.response?.data?.message ||
-                    err?.message ||
-                    "Unable to load products!"
-                );
+                const msg = err?.response?.data?.message || err?.message || "Unable to load products!"
+                setError(msg);
+                toast.error(msg);
             } finally {
                 setLoading(false);
             }
@@ -169,15 +157,16 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
     const handleAddToFav = async (ProductId) => {
 
-        if (!authloading && !isAuthenticated) {
-            setAlert('Please login first !');
+        if (!isAuthenticated) {
+            toast.error("Please login first !")
             return;
         }
 
         try {
             await toggleFavItems(ProductId);
         } catch (error) {
-            setAlert(error);
+            const msg = error?.message || error?.response?.data?.message || "Something went wrong";
+            toast.error(msg);
         }
     }
 
@@ -321,17 +310,6 @@ const Layout = React.memo(function Layout({ category, pid }) {
                 </div>
 
             )}
-
-            {alert &&
-                <div className='sticky inset-0 bottom-8 flex justify-center items-center '>
-                    <div className={`bg-red-100 text-red-600 flex justify-center items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2 z-999 transition-all ease-out animate-fadeUp duration-300 will-change-transform shadow-lg w-fit`}>
-                        <div className='w-fit flex justify-center items-center flex-row gap-2'>
-                            <GoAlertFill />
-                            <p className='tracking-tight text-lg font-semibold nunitoFont'>{alert}</p>
-                        </div>
-                    </div>
-                </div>
-            }
         </>
     );
 })

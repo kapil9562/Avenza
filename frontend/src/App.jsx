@@ -13,7 +13,7 @@ function App() {
 
   const { category } = useParams();
 
-  const [activeTab, setActiveTab] = useState(category? category : "HOME");
+  const [activeTab, setActiveTab] = useState(category ? category : "HOME");
 
   useEffect(() => {
     scrollRef.current?.scrollTo({

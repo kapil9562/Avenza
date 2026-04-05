@@ -6,24 +6,24 @@ import { useEffect, useState } from "react";
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, loading } = useAuth();
-    const {isDark} = useTheme();
+    const { isDark } = useTheme();
     const [animationData, setAnimationData] = useState(null);
-    
-        useEffect(() => {
-            fetch("/assets/loader.json")
-                .then(res => res.json())
-                .then(data => setAnimationData(data));
-        }, []);
-    
+
+    useEffect(() => {
+        fetch("/assets/loader.json")
+            .then(res => res.json())
+            .then(data => setAnimationData(data));
+    }, []);
+
 
     if (loading) {
         return (
             <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} absolute top-0 left-0 min-h-screen w-full z-999 justify-center items-center flex`}>
                 <Lottie
-                        animationData={animationData}
-                        loop
-                        className="w-34 h-34 hue-rotate-40"
-                    />
+                    animationData={animationData}
+                    loop
+                    className="w-34 h-34 hue-rotate-40"
+                />
             </div>
         );
     }

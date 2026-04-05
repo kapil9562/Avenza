@@ -13,7 +13,7 @@ const addToCart = async (req, res) => {
       if (newQty > 5) {
         return res.status(409).json({
           success: false,
-          error: "limit exceeded!"
+          error: "Quantity limit exceeded!"
         });
       }
 
@@ -22,7 +22,7 @@ const addToCart = async (req, res) => {
 
       return res.status(200).json({
         success: true,
-        message: "Item quantity updated in cart"
+        message: "Item quantity updated in cart."
       });
     }
 
@@ -31,7 +31,7 @@ const addToCart = async (req, res) => {
     if (totalCart >= 10) {
       return res.status(409).json({
         success: false,
-        error: "limit exceeded!"
+        error: "Cart limit exceeded!"
       });
     }
 

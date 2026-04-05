@@ -11,6 +11,7 @@ import { useTheme } from "../context/ThemeContext";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 import GoogleLoginBtn from "../components/common/GoogleLoginBtn";
+import { toast } from "../context/ToastContext";
 
 const OTP_LENGTH = 6;
 
@@ -131,8 +132,8 @@ export default function Signup() {
     } catch (err) {
       setLoading(false);
       const message =
-        err.response?.data?.message ||
-        err.message ||
+        err?.response?.data?.message ||
+        err?.message ||
         "Failed to send OTP! Try again.";
       setError(message);
     }
@@ -168,6 +169,7 @@ export default function Signup() {
 
       if (userData) {
         await login(userData);
+        toast.success("Signup successful.")
         setTimeout(() => {
           navigate('/home');
           setLoading(false);
@@ -184,7 +186,6 @@ export default function Signup() {
       setError(message);
     }
   };
-
 
   const handleOtpKeyDown = (e, idx) => {
     if (e.key === "Backspace" && !otp[idx] && idx > 0)

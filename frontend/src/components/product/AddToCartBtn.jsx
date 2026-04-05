@@ -7,6 +7,7 @@ import Lottie from "lottie-react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { useTheme } from '../../context/ThemeContext';
 import successCheck from "../../assets/successCheck.json"
+import { toast } from '../../context/ToastContext';
 
 function AddToCartBtn({ product }) {
 
@@ -15,8 +16,7 @@ function AddToCartBtn({ product }) {
     const { user } = useAuth()
     const { addToCart } = useCart();
 
-    const [success, setSuccess] = useState(null)
-    const [error, setError] = useState("");
+    const [success, setSuccess] = useState(null);
 
     const { isDark } = useTheme();
 
@@ -36,22 +36,11 @@ function AddToCartBtn({ product }) {
             setSuccess(product.productId);
         } catch (err) {
             const error = err?.response?.data?.error || "Failed to add item"
-            setError(error);
+            toast.error(error);
         } finally {
             setLoadingId(null);
         }
     };
-
-    useEffect(() => {
-        if (!error && !success) return;
-
-        const timer = setTimeout(() => {
-            setError('');
-            setSuccess(null)
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [error, success]);
 
     const [animationData, setAnimationData] = useState(null);
 
@@ -89,12 +78,6 @@ function AddToCartBtn({ product }) {
                         </div> : "Add to Cart"
                 )}
             </button>
-            <div className={`absolute bottom-full left-0 mb-2 bg-red-100 text-red-600 flex justify-between items-center p-1 border-l-2 border-red-400 rounded-md gap-5 px-2 transition-opacity duration-300 ${error ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-                <div className='flex justify-center items-center flex-row gap-2'>
-                    <GoAlertFill size={22} />
-                    <p className='leading-tight font-semibold'>{error}</p>
-                </div>
-            </div>
         </div>
     )
 }

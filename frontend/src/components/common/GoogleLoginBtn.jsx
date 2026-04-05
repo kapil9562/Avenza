@@ -4,6 +4,7 @@ import { useGoogleLogin } from '@react-oauth/google'
 import { googleAuth } from '../../api/api';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from '../../context/ToastContext';
 
 function GoogleLoginBtn({ setLoading, loading }) {
 
@@ -18,9 +19,9 @@ function GoogleLoginBtn({ setLoading, loading }) {
 
                 const result = await googleAuth(authResult['code']);
                 const userData = result?.data?.user;
-                // const token = result?.data?.tokens?.access_token;
 
                 if (userData) {
+                    toast.success("Login successful.")
                     await login(userData);
                     setTimeout(() => {
                         navigate('/home');
@@ -29,12 +30,17 @@ function GoogleLoginBtn({ setLoading, loading }) {
                 }
             }
         } catch (error) {
+            const msg = error?.message || error?.response?.data?.message || "Login failed. Please try again."
+            toast.error(msg);
             setLoading(false);
         }
     }
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: responseGoogle,
-        onError: responseGoogle,
+        onError: (error) => {
+            console.error("Google OAuth error:", error);
+            setLoading(false);
+        },
         flow: 'auth-code'
     })
     return (

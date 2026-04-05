@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getCurrentUser, logoutUser } from "../api/api.js";
+import { toast } from "./ToastContext.jsx";
 
 const AuthContext = createContext(null);
 
@@ -31,8 +32,9 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await logoutUser();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message || "Unable to load products!"
+      toast.error(msg);
     } finally {
       setUser(null);
     }
