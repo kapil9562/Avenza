@@ -70,7 +70,7 @@ export const verifyPayment = async (req, res) => {
             });
         }
 
-        const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
+        const existingOrder = await Order.findOne({ stripeSessionId: sessionId }).select("-stripeSessionId");
 
         if (existingOrder) {
             return res.json({ success: true, order: existingOrder });
@@ -79,6 +79,13 @@ export const verifyPayment = async (req, res) => {
         const { productId, quantity, addressId } = session.metadata;
 
         const product = await Product.findOne({ _id: productId });
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
 
         const deliveryCharge = (product.price * quantity) < 100 ? 100 : 0;
 
@@ -108,15 +115,18 @@ export const verifyPayment = async (req, res) => {
             totalAmount,
             shippingAddress: addressId,
             stripeSessionId: sessionId
-        }).select("-stripeSessionId");
+        });
 
-        product.stock -= quantity;
+
+        product.stock -= Number(quantity);
         await product.save();
+
+        const createdOrder = await Order.findOne({ userId: order?.userId, orderId: order?.orderId }).select("-stripeSessionId");
 
         res.json({
             success: true,
             message: "Order created successfully",
-            order
+            order: createdOrder
         });
 
     } catch (error) {
@@ -330,7 +340,7 @@ export const getOrderDetail = async (req, res) => {
         return res.status(200).json({
             order
         });
-        
+
     } catch (error) {
         res.status(500).json({
             error: "Internal server error",

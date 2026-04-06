@@ -93,14 +93,14 @@ const OrderSuccess = () => {
 
                             <Link
                                 to="/my-account/my-orders"
-                                className={`bg-[#FF6F61] border-[#ff3e2d] hover:bg-[#fc8479] text-white py-2 rounded-lg transition border-2`}
+                                className={`bg-[#FF6F61] border-[#ff3e2d] hover:bg-[#fc8479] text-white py-2 rounded-lg transition border-2 nunitoFont font-semibold`}
                             >
                                 View Orders
                             </Link>
 
                             <Link
                                 to="/home"
-                                className={`border-2 py-2 rounded-lg transform-gpu ${isDark? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"}`}
+                                className={`border-2 py-2 rounded-lg transform-gpu ${isDark? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"} nunitoFont font-semibold`}
                             >
                                 Continue Shopping
                             </Link>

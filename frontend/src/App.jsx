@@ -34,7 +34,7 @@ function App() {
     <>
       <div
         ref={scrollRef}
-        className={`h-dvh overflow-y-scroll custom-scroll scroll-smooth will-change-transform transform-gpu overflow-x-hidden`}
+        className={`h-dvh overflow-y-scroll custom-scroll scroll-smooth will-change-scroll transform-gpu overflow-x-hidden`}
         style={{
           scrollbarColor: isDark
             ? "#c562b0d7 #0F172A"

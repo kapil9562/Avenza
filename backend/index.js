@@ -17,7 +17,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT || 8000
 
 const allowedOrigins = [
-  "https://myavenza.onrender.com",
+  "https://myavenza.onrender.com"
 ];
 
 app.use(cors({
