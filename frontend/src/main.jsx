@@ -91,15 +91,12 @@ createRoot(document.getElementById('root')).render(
 
                         <Route path="/about" element={<About />} />
                         <Route path="/search" element={<SearchResults />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/forgetpassword" element={<ForgetPass />} />
+                        <Route path="/reset-password/:email" element={<ResetPass />} />
                       </Route>
-
-
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/signup" element={<Signup />} />
-
-                      <Route path="/forgetpassword" element={<ForgetPass />} />
-                      <Route path="/reset-password/:email" element={<ResetPass />} />
-
+                      
                       <Route path="*" element={<PageNotFound />} />
                     </Routes>
                   </CartProvider>

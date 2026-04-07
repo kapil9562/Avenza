@@ -169,11 +169,9 @@ export default function Signup() {
 
       if (userData) {
         await login(userData);
-        toast.success("Signup successful.")
-        setTimeout(() => {
-          navigate('/home');
-          setLoading(false);
-        }, 2000);
+        toast.success("Signup successful.");
+        navigate('/home');
+        setLoading(false);
       }
       setError("");
     } catch (err) {
@@ -221,7 +219,7 @@ export default function Signup() {
   };
 
   return (
-    <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative h-dvh flex items-center justify-center p-4`}>
+    <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center p-4`}>
       <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 overflow-hidden`}>
 
         <div className={`flex flex-col w-full justify-center items-center`}>
@@ -307,7 +305,7 @@ export default function Signup() {
                       onChange={(e) => handleOtpChange(e.target.value, idx)}
                       onKeyDown={(e) => handleOtpKeyDown(e, idx)}
                       onPaste={(e) => handlePaste(e)}
-                      className={`w-[66%] h-15 min-h-10 m-w-10 text-center text-xl border-2 outline-none font-semibold mt-2 rounded-2xl  ${isDark ? "bg-[#0F172A] border-gray-700 shadow-lg shadow-[#0F172A] text-gray-200" : "bg-[#F9FAFB] shadow-lg shadow-gray-200 border-[#f8d4e0] text-black"}`}
+                      className={`w-[66%] h-15 min-h-10 m-w-10 text-center text-xl border-2 focus:border-[#f5719d] outline-none font-semibold mt-2 rounded-2xl  ${isDark ? "bg-[#0F172A] border-gray-700 shadow-lg shadow-[#0F172A] text-gray-200" : "bg-[#F9FAFB] shadow-lg shadow-gray-200 border-[#f8d4e0] text-black"}`}
                     />
                   ))}
                 </div>

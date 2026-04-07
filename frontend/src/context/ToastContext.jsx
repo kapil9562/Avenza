@@ -10,46 +10,41 @@ let externalToast = null;
 
 export const ToastProvider = ({ children }) => {
     const [currentToast, setCurrentToast] = useState(null);
-    const queueRef = useRef([]);
     const timerRef = useRef(null);
 
     const removeCurrentToast = useCallback(() => {
         setCurrentToast(null);
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
     }, []);
 
-    const processQueue = useCallback(() => {
-        if (currentToast || queueRef.current.length === 0) return;
+    const showToast = useCallback((type, message, duration = 3000) => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
 
-        const nextToast = queueRef.current.shift();
-        setCurrentToast(nextToast);
+        const id = Date.now();
+
+        setCurrentToast((prev) => {
+            if (prev?.type === type && prev?.message === message) {
+                return prev;
+            }
+
+            return {
+                id,
+                type,
+                message,
+                duration,
+            };
+        });
 
         timerRef.current = setTimeout(() => {
             setCurrentToast(null);
-        }, nextToast.duration || 3000);
-    }, [currentToast]);
-
-    useEffect(() => {
-        if (!currentToast) {
-            processQueue();
-        }
-
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-        };
-    }, [currentToast, processQueue]);
-
-    const showToast = useCallback((type, message, duration = 3000) => {
-        const id = Date.now() + Math.random();
-
-        queueRef.current.push({
-            id,
-            type,
-            message,
-            duration,
-        });
-
-        processQueue();
-    }, [processQueue]);
+            timerRef.current = null;
+        }, duration);
+    }, []);
 
     const toast = {
         success: (message, duration) => showToast("success", message, duration),
@@ -79,7 +74,7 @@ export const ToastProvider = ({ children }) => {
         <ToastContext.Provider value={toast}>
             {children}
 
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[999999] flex flex-col gap-3">
+            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-100 flex flex-col gap-3 w-fit">
                 {currentToast && (
                     <div
                         key={currentToast.id}
@@ -89,7 +84,7 @@ export const ToastProvider = ({ children }) => {
                                 ? "bg-red-100 border-red-400 text-red-600"
                                 : currentToast.type === "warn"
                                     ? "bg-yellow-100 border-yellow-400 text-yellow-700"
-                                    : "bg-blue-100 border-blue-400 text-blue-700"
+                                    : "bg-teal-100 border-teal-400 text-teal-700"
                             }`}
                     >
                         <div className="flex items-center justify-between gap-3">
@@ -106,7 +101,7 @@ export const ToastProvider = ({ children }) => {
                                     )}
                                 </span>
 
-                                <p className="text-lg font-semibold nunitoFont">{currentToast.message}</p>
+                                <p className="text-lg font-semibold nunitoFont whitespace-nowrap">{currentToast.message}</p>
                             </div>
 
                             <button

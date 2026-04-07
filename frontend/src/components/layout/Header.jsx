@@ -35,7 +35,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchType, setSearchType] = useState(null);
   const location = useLocation();
-  const { user, logout, loading } = useAuth();
+  const { user, logout } = useAuth();
   const { totalItems } = useCart();
   const [openIndex, setOpenIndex] = useState(null);
   const [isActive, setIsActive] = useState(false);
@@ -164,6 +164,9 @@ function Header({ activeTab, setActiveTab, setShow }) {
     fetchCategories();
   }, [categories]);
 
+  useEffect(() => {
+    setIsActive(false);
+  }, [user]);
 
   return (
     <div className={`w-full border-b-2 sticky top-0 z-50 min-h-20 flex flex-col will-change-transform ${isDark ? "bg-[#0F172A] border-b-gray-800" : "bg-[#ffffff]"} border-b-gray-200 sm:px-0 px-2`}>
@@ -277,9 +280,8 @@ function Header({ activeTab, setActiveTab, setShow }) {
             <span className="hidden sm:flex font-['Sour_Gummy']">Cart</span>
           </div>
           {user ? (
-            <div className="relative group min-h-full flex cursor-pointer"
-              onClick={() => handleDropDown()} onMouseLeave={() => setIsActive(false)}>
-              <div className='group-hover:shadow-[inset_0_-2px_0_0_#ff1774] min-h-full flex justify-center items-center p-2'>
+            <div className="relative group min-h-full flex cursor-pointer" onMouseLeave={() => setIsActive(false)}>
+              <div className={`${isActive && "shadow-[inset_0_-2px_0_0_#ff1774]"} group-hover:shadow-[inset_0_-2px_0_0_#ff1774] min-h-full flex justify-center items-center p-2`} onClick={() => handleDropDown()}>
                 {(user?.avatar) ? (
                   <img
                     src={normalizeGooglePhoto(user?.avatar)}
@@ -315,6 +317,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                   <div className={`${isDark ? "border-gray-700" : "border-gray-200"} w-full border-t-2`}></div>
                   <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f] active:bg-[#2e3d5f]" : "hover:bg-pink-100 active:bg-pink-100 text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`}
                     onClick={(e) => {
+                      e.stopPropagation();
                       setIsActive(false);
                       navigate('/my-account/my-orders');
                     }}>
@@ -324,7 +327,11 @@ function Header({ activeTab, setActiveTab, setShow }) {
                   <div className={`${isDark ? "border-gray-700" : "border-gray-200"} w-full border-t-2`}></div>
                   <button
                     className={`${isDark ? "hover:bg-[#2e3d5f]" : "hover:bg-pink-100"} flex flex-row items-center whitespace-nowrap gap-2 text-red-500 px-4 py-2 cursor-pointer`}
-                    onClick={() => logout()}>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsActive(false);
+                      logout()
+                    }}>
                     <FiLogOut />
                     <span>Logout</span>
                   </button>

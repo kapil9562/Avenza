@@ -16,9 +16,11 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT || 8000
 
-const allowedOrigins = [
-  "https://myavenza.onrender.com"
-];
+const allowedOrigins = ["https://myavenza.onrender.com"];
+
+if (process.env.NODE_ENV === "test") {
+  allowedOrigins.push("http://localhost:5173");
+}
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -50,8 +52,8 @@ app.get("/ping", (req, res) => {
 
 connectDB()
   .then(() => {
-    app.listen(process.env.PORT || 8000, () => {
-      console.log(`server is running on port : ${process.env.PORT}`)
+    app.listen(PORT || 8000, () => {
+      console.log(`server is running on port : ${PORT}`)
     })
   })
   .catch((err) => {

@@ -10,6 +10,7 @@ import { useTheme } from "../context/ThemeContext";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
+import { toast } from "../context/ToastContext";
 
 export default function ResetPass() {
     const { email } = useParams();
@@ -18,10 +19,8 @@ export default function ResetPass() {
     const [password, setPassword] = useState("");
     const [confirmPass, setConfirmPass] = useState("");
     const [error, setError] = useState("");
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$/;
     const { isDark } = useTheme();
-    const [alert, setAlert] = useState("");
 
     const { login } = useAuth();
 
@@ -46,11 +45,9 @@ export default function ResetPass() {
             const res = await resetPassword({ email, password });
             const userData = res?.data?.user;
             await login(userData);
-            setAlert(res?.data?.message);
-            setTimeout(() => {
-                navigate('/home');
-                setLoading(false);
-            }, 2000);
+            toast.success(res?.data?.message);
+            navigate('/home');
+            setLoading(false);
         } catch (error) {
             setLoading(false);
             const message = error?.response?.data?.message;
@@ -59,7 +56,7 @@ export default function ResetPass() {
     }
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative h-dvh flex flex-col items-center justify-center px-4 bg-cover`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex flex-col items-center justify-center px-4 bg-cover`}>
             <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 flex flex-col items-center`}>
 
                 {/* Header */}
@@ -134,16 +131,6 @@ export default function ResetPass() {
                     </span>
                 </p>
             </div>
-            {alert &&
-                <div className='absolute bottom-20 flex justify-center items-center '>
-                    <div className={`bg-green-100 text-green-600 flex justify-center items-center p-1 border-l-3 border-green-400 rounded-md gap-5 px-2 z-999 transition-all ease-out animate-fadeUp duration-300 will-change-transform shadow-lg w-fit`}>
-                        <div className='w-fit flex justify-center items-center flex-row gap-2'>
-                            <IoCheckmarkCircleSharp size={24} />
-                            <p className='tracking-tight text-lg font-semibold nunitoFont'>{alert}</p>
-                        </div>
-                    </div>
-                </div>
-            }
         </div>
     );
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { FaFacebook, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
+import { toast } from "../../context/ToastContext";
 
 function Footer({ setActiveTab, scrollRef }) {
   const navigate = useNavigate();
@@ -166,7 +167,8 @@ function Footer({ setActiveTab, scrollRef }) {
 
             <div className="flex gap-3 mt-5">
               {/* Play Store */}
-              <button className="transition-transform duration-200 active:scale-95 cursor-pointer will-change-transform">
+              <button className="transition-transform duration-200 active:scale-95 cursor-pointer will-change-transform"
+                onClick={() => toast.info("Coming soon.")}>
                 <img
                   src="/assets/playstore.png"
                   alt="Download on Play Store"
@@ -175,7 +177,8 @@ function Footer({ setActiveTab, scrollRef }) {
               </button>
 
               {/* App Store */}
-              <button className="transition-transform duration-300 active:scale-95 w-fit cursor-pointer will-change-transform">
+              <button className="transition-transform duration-300 active:scale-95 w-fit cursor-pointer will-change-transform"
+                onClick={() => toast.info("Coming soon.")}>
                 <img
                   src="/assets/appstore.png"
                   alt="Download on App Store"

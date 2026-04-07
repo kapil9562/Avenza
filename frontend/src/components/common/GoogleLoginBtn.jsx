@@ -23,10 +23,8 @@ function GoogleLoginBtn({ setLoading, loading }) {
                 if (userData) {
                     toast.success("Login successful.")
                     await login(userData);
-                    setTimeout(() => {
-                        navigate('/home');
-                        setLoading(false);
-                    }, 2000);
+                    navigate('/home');
+                    setLoading(false);
                 }
             }
         } catch (error) {

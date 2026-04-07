@@ -194,7 +194,7 @@ export default function ForgetPass() {
 
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative h-dvh flex items-center justify-center p-4`}>
+        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center p-4`}>
             <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 overflow-hidden`}>
 
                 <div className={`flex flex-col w-full justify-center items-center`}>
@@ -299,7 +299,11 @@ export default function ForgetPass() {
                         <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
                     </div>
 
-                    <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-4`}>
+                    <span className="text-[#6366F1] font-medium cursor-pointer mt-2 hover:underline" onClick={() => navigate(-1)}>
+                        Back to Login
+                    </span>
+
+                    <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-2`}>
                         By Login, you agree to our{" "}
                         <span className="text-[#6366F1] font-medium cursor-pointer">
                             Terms & Privacy Policy
