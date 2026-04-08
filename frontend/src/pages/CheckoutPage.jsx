@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 import { useTheme } from "../context/ThemeContext";
+import { toast } from "../context/ToastContext";
 
 const CheckoutPage = () => {
 
@@ -24,7 +25,7 @@ const CheckoutPage = () => {
     });
 
     const [loading, setLoading] = useState(false);
-    const {isDark} = useTheme();
+    const { isDark } = useTheme();
 
     const [originalAddress, setOriginalAddress] = useState(null);
 
@@ -68,22 +69,21 @@ const CheckoutPage = () => {
 
     const onSubmit = async (data) => {
         try {
-
             setLoading(true);
-            let addressId = formData.addressId;
+            let addressId = data?.addressId;
 
-            if (isAddressChanged() || !originalAddress?.addressId) {
+            if (isAddressChanged() || !addressId) {
 
                 const addRes = await saveAddress({
-                    userId: user._id,
-                    fullName: data.fullName,
-                    phone: data.phone,
-                    addressLine1: data.addressLine1,
-                    addressLine2: data.addressLine2,
-                    city: data.city,
-                    state: data.state,
-                    pinCode: data.pinCode,
-                    country: data.country
+                    userId: user?._id,
+                    fullName: data?.fullName?.trim(),
+                    phone: data?.phone?.trim(),
+                    addressLine1: data?.addressLine1?.trim(),
+                    addressLine2: data?.addressLine2?.trim(),
+                    city: data?.city?.trim(),
+                    state: data?.state?.trim(),
+                    pinCode: data?.pinCode?.trim(),
+                    country: data?.country?.trim()
                 });
 
                 addressId = addRes?.data?.address?._id;
@@ -106,7 +106,8 @@ const CheckoutPage = () => {
 
 
         } catch (error) {
-            console.log(error);
+            const msg = error?.response?.data?.message || error?.message || "Something went wrong !"
+            toast.error(msg);
         } finally {
             setTimeout(() => {
                 setLoading(false);
@@ -116,40 +117,44 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         const fetchAddress = async () => {
-            const res = await getAddress({ userId: user._id })
-            console.log(res)
-            const address = res?.data?.address
-            setFormData({
-                addressId: address._id || "",
-                fullName: address.fullName || "",
-                phone: address.phone || "",
-                addressLine1: address.addressLine1 || "",
-                addressLine2: address.addressLine2 || "",
-                city: address.city || "",
-                state: address.state || "",
-                pinCode: address.pinCode || "",
-                country: address.country || "India"
-            })
+            try {
+                const res = await getAddress({ userId: user?._id });
+                const address = res?.data?.address;
+                setFormData({
+                    addressId: address._id || "",
+                    fullName: address.fullName || "",
+                    phone: address.phone || "",
+                    addressLine1: address.addressLine1 || "",
+                    addressLine2: address.addressLine2 || "",
+                    city: address.city || "",
+                    state: address.state || "",
+                    pinCode: address.pinCode || "",
+                    country: address.country || "India"
+                })
 
-            setOriginalAddress({
-                addressId: address._id || "",
-                fullName: address.fullName || "",
-                phone: address.phone || "",
-                addressLine1: address.addressLine1 || "",
-                addressLine2: address.addressLine2 || "",
-                city: address.city || "",
-                state: address.state || "",
-                pinCode: address.pinCode || "",
-                country: address.country || "India"
-            })
+                setOriginalAddress({
+                    addressId: address._id || "",
+                    fullName: address.fullName || "",
+                    phone: address.phone || "",
+                    addressLine1: address.addressLine1 || "",
+                    addressLine2: address.addressLine2 || "",
+                    city: address.city || "",
+                    state: address.state || "",
+                    pinCode: address.pinCode || "",
+                    country: address.country || "India"
+                })
+            } catch (error) {
+                const msg = error?.response?.data?.message || error?.message || "Something went wrong !"
+                toast.error(msg);
+            }
         }
         fetchAddress();
-    }, []);
+    }, [user?._id]);
 
     return (
         <div className="w-full lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] md:p-5">
-            <div className={`max-w-2xl mx-auto p-6 rounded-xl ${isDark? "bg-gray-900 shadow-[0px_0px_20px_rgba(0,0,0,0.4)]" : "bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.2)]"}`}>
-                <h2 className={`text-2xl font-semibold mb-6 ${isDark? "text-white" : "text-gray-800"}`}>Shipping Address</h2>
+            <div className={`max-w-2xl mx-auto p-6 rounded-xl ${isDark ? "bg-gray-900 shadow-[0px_0px_20px_rgba(0,0,0,0.4)]" : "bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.2)]"}`}>
+                <h2 className={`text-2xl font-semibold mb-6 ${isDark ? "text-white" : "text-gray-800"}`}>Shipping Address</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
 

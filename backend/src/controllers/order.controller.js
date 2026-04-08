@@ -152,10 +152,28 @@ export const saveAddress = async (req, res) => {
     }
 
     try {
-        const address = await Address.create({
-            userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country
-        });
-
+        const existingAddress = await Address.findOne({ userId });
+        let address = {};
+        if (!existingAddress) {
+            address = await Address.create({
+                userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country
+            });
+        } else {
+            address = await Address.findOneAndUpdate(
+                { userId },
+                {
+                    fullName,
+                    phone,
+                    addressLine1,
+                    addressLine2,
+                    city,
+                    state,
+                    pinCode,
+                    country
+                },
+                { returnDocument: "after" }
+            )
+        }
         res.status(200).json({
             success: true,
             msg: "Address saved successfully.",
