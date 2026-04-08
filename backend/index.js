@@ -16,7 +16,10 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT || 8000
 
-const allowedOrigins = ["https://myavenza.onrender.com"];
+const allowedOrigins = [
+  "https://myavenza.onrender.com",
+  "https://uptimerobot.com"
+];
 
 if (process.env.NODE_ENV === "test") {
   allowedOrigins.push("http://localhost:5173");
@@ -24,7 +27,7 @@ if (process.env.NODE_ENV === "test") {
 
 app.use(cors({
   origin: function (origin, callback) {
-    
+
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {

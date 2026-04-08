@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    role: {
+        type: String,
+        enum: ["user", "admin"],
+        default: "user",
+    },
     refreshToken: {
         type: String
     }
@@ -61,7 +66,7 @@ userSchema.methods.generateAccessToken = function () {
             name: this.name,
             email: this.email
         },
-        process.env.ACCESS_TOKEN_SECRET, 
+        process.env.ACCESS_TOKEN_SECRET,
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
@@ -73,7 +78,7 @@ userSchema.methods.generateRefreshToken = function () {
         {
             _id: this._id
         },
-        process.env.REFRESH_TOKEN_SECRET, 
+        process.env.REFRESH_TOKEN_SECRET,
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }

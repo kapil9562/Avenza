@@ -122,7 +122,7 @@ const emailLogin = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: "User not found !",
+                message: "Invalid credentials !",
             });
         } else if (user && !user.isActive) {
             return res.status(403).json({
