@@ -147,7 +147,7 @@ function ProductDetails() {
                     <div className={`md:rounded-xl flex flex-col justify-center items-center lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] md:p-2 animate-easeIn ${!isDark ? "bg-[#FFFFFF95]" : "bg-[#0F172A95]"}`}>
                         {!product ? (
                             <div className="flex flex-col h-full justify-center items-center gap-4 px-4 text-center">
-                                <img src='/noResult.png' alt="not found" className="h-40 object-contain" />
+                                <img src='/noResult.webp' alt="not found" className="h-40 object-contain" />
                                 <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
                                     We couldn't find what you were looking for. Let's start over.
                                 </span>

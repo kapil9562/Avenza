@@ -187,7 +187,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                     error ?
                         (<div className={`w-full rounded px-10 flex justify-center items-center absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 ${isDark ? "text-gray-300" : "text-gray-800"}`}>
                             <div className="flex flex-col justify-center items-center text-center">
-                                <img src="/noResult.png" alt="img" className="sm:h-50 sm:w-50 h-40 w-40 object-contain" />
+                                <img src="/noResult.webp" alt="img" className="sm:h-50 sm:w-50 h-40 w-40 object-contain" />
                                 <p className="font-semibold text-lg mb-2">Unable to load products</p>
                                 <p className="font-normal text-gray-500 text-sm mb-4">Try changing the category or refresh the page</p>
                                 <button className="border-2 flex flex-row items-center justify-center gap-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => window.location.reload()}>

@@ -386,7 +386,7 @@ const Orders = () => {
                             error && orders?.length <= 0 ? (
                                 <div className={`easeIn lg:h-[75dvh] h-[78dvh] rounded flex justify-center items-center border-2 ${isDark ? " bg-gray-900 text-gray-300 border-gray-800 shadow-[0px_0px_12px_rgba(0,0,0,0.5)] " : " bg-white border-transparent text-gray-800 shadow-[0px_0px_8px_rgba(0,0,0,0.15)]"}`}>
                                     <div className="flex flex-col justify-center items-center">
-                                        <img src="/noResult.png" alt="img" className="h-50 w-50 object-contain" />
+                                        <img src="/noResult.webp" alt="img" className="h-50 w-50 object-contain" />
                                         <p className="font-semibold text-lg mb-2">Sorry, no results found</p>
                                         <p className="font-normal text-gray-500 text-sm mb-4">Edit filter or go back to My Orders Page</p>
                                         <button className="border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => navigate('/my-account/my-orders')}>

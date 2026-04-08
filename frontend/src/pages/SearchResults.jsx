@@ -82,7 +82,7 @@ function SearchResults() {
                     :
                     products.length === 0 ?
                         (<div className="fixed inset-0 top-1/2 text-center h-fit w-fit left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-4 col-span-full">
-                            <img src='/noResult.png' alt="not found" className="h-40 object-contain" />
+                            <img src='/noResult.webp' alt="not found" className="h-40 object-contain" />
                             <span className={`${isDark ? "text-gray-300" : "text-gray-700"} text-lg`}>
                                 We couldn't find what you were looking for. Let's start over.
                             </span>
