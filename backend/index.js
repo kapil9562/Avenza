@@ -49,7 +49,7 @@ app.use('/api', FavItemsRouter)
 app.use('/api', orderRouter)
 
 app.get("/ping", (req, res) => {
-  res.send("Server is awake");
+  res.status(200).send("Server is awake");
 });
 
 connectDB()
