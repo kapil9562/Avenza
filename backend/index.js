@@ -17,8 +17,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT || 8000
 
 const allowedOrigins = [
-  "https://myavenza.onrender.com",
-  "https://uptimerobot.com"
+  "https://myavenza.onrender.com"
 ];
 
 if (process.env.NODE_ENV === "test") {
