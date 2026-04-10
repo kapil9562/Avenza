@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
 import { BsCheckCircleFill } from "react-icons/bs";
@@ -16,6 +16,8 @@ function AddToCartBtn({ product }) {
     const { user } = useAuth()
     const { addToCart } = useCart();
 
+    const location = useLocation();
+
     const [success, setSuccess] = useState(null);
 
     const { isDark } = useTheme();
@@ -25,7 +27,7 @@ function AddToCartBtn({ product }) {
         if (loadingId === product.productId) return;
 
         if (!user) {
-            navigate('/signup');
+            navigate('/signup', {replace: true, state: {from: location}});
             return
         }
 

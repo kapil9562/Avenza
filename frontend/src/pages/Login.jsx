@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdEmail } from "react-icons/md";
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { emailLogin } from "../api/api";
 import { IoIosLock } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -23,6 +23,9 @@ export default function Login() {
     const { login } = useAuth();
 
     const navigate = useNavigate();
+
+    const location = useLocation();
+    const from = location.state?.from?.pathname;
 
     {/* Email login */ }
     const handleEmailLogin = async () => {
@@ -47,10 +50,8 @@ export default function Login() {
 
             if (userData) {
                 await login(userData);
-                setTimeout(() => {
-                    navigate('/home');
-                    setLoading(false);
-                }, 2000);
+                navigate(from, {replace: true});
+                setLoading(false);
             }
 
         } catch (err) {
@@ -132,7 +133,7 @@ export default function Login() {
                 </div>
 
                 {/* Google Button */}
-                <GoogleLoginBtn loading={loading} setLoading={setLoading} />
+                <GoogleLoginBtn loading={loading} setLoading={setLoading} from={from}/>
 
                 <button className={`text-[#6366F1] font-medium cursor-pointer active:underline hover:underline mt-4`}
                     onClick={() => navigate('/forgetpassword')}>Forget Password ?</button>
@@ -150,7 +151,7 @@ export default function Login() {
                 </p>
                 <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm tracking-tight text-center mt-1`}>
                     don't have an account?{" "}
-                    <NavLink className="text-[#6366F1] font-medium cursor-pointer active:underline hover:underline" to={"/signup"}>
+                    <NavLink className="text-[#6366F1] font-medium cursor-pointer active:underline hover:underline" to={"/signup"} replace state={{from: from}} >
                         Sign up
                     </NavLink>
                 </p>

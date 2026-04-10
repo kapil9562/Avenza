@@ -3,10 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google'
 import { googleAuth } from '../../api/api';
 import { useTheme } from '../../context/ThemeContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from '../../context/ToastContext';
 
-function GoogleLoginBtn({ setLoading, loading }) {
+function GoogleLoginBtn({ setLoading, loading, from }) {
 
     const { login } = useAuth();
     const { isDark } = useTheme();
@@ -23,7 +23,7 @@ function GoogleLoginBtn({ setLoading, loading }) {
                 if (userData) {
                     toast.success("Login successful.")
                     await login(userData);
-                    navigate('/home');
+                    navigate(from, {replace: true});
                     setLoading(false);
                 }
             }

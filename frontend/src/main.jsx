@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { FavItemsProvider } from './context/FavItemsContext.jsx';
 import { ToastProvider } from "./context/ToastContext.jsx";
+import PublicRoute from './components/common/PublicRoute.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -91,12 +92,28 @@ createRoot(document.getElementById('root')).render(
 
                         <Route path="/about" element={<About />} />
                         <Route path="/search" element={<SearchResults />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route path="/forgetpassword" element={<ForgetPass />} />
-                        <Route path="/reset-password/:email" element={<ResetPass />} />
+
+                        <Route path="/login" element={
+                          <PublicRoute>
+                            <Login />
+                          </PublicRoute>
+                        } />
+                        <Route path="/signup" element={
+                          <PublicRoute>
+                            <Signup />
+                          </PublicRoute>
+                        } />
+                        <Route path="/forgetpassword" element={
+                          <PublicRoute>
+                            <ForgetPass />
+                          </PublicRoute>
+                        } />
+                        <Route path="/reset-password/:email" element={
+                          <PublicRoute>
+                            <ResetPass />
+                          </PublicRoute>} />
                       </Route>
-                      
+
                       <Route path="*" element={<PageNotFound />} />
                     </Routes>
                   </CartProvider>

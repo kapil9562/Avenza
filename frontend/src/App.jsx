@@ -43,7 +43,7 @@ function App() {
         }}
       >
         <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
-        <main className="grow">
+        <main className="grow lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)]">
           <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
         </main>
         <Footer setActiveTab={setActiveTab} scrollRef={scrollRef} />

@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import {ProductDetailsSkeleton, Layout, AddToCartBtn} from "../components";
 import { formatINR } from "../utils/price.js";
@@ -35,11 +35,13 @@ function ProductDetails() {
 
     const navigate = useNavigate();
 
+    const location = useLocation();
+
     const { user } = useAuth();
 
     const submitReview = async () => {
         if (!user) {
-            navigate('/login');
+            navigate('/login', {replace: true, state: {from: location}});
             return;
         }
         try {
@@ -126,7 +128,7 @@ function ProductDetails() {
 
     const handleBuyNow = () => {
         if (!user) {
-            navigate('/login');
+            navigate('/login', {replace: true, state: {from: location}});
             return;
         }
 

@@ -341,11 +341,11 @@ function Header({ activeTab, setActiveTab, setShow }) {
           ) : (
             <>
               <div className='lg:flex text-[18px] tracking-wide font-[Sour_Gummy] font-medium text-white gap-2 hidden justify-center items-center whitespace-nowrap'>
-                <NavLink to="/signup" className={authBtnClass}>Sign up</NavLink>
-                <NavLink to="/login" className={authBtnClass}>Log in</NavLink>
+                <NavLink to="/signup" replace state={{from: location}} className={authBtnClass}>Sign up</NavLink>
+                <NavLink to="/login" replace state={{from: location}} className={authBtnClass}>Log in</NavLink>
               </div>
               <div className='whitespace-nowrap tracking-wide flex text-[14px] sm:text-[18px] font-[Sour_Gummy] font-medium text-white gap-2 justify-center lg:hidden items-center'>
-                <NavLink to="/login" className={authBtnClass}>Sign in</NavLink>
+                <NavLink to="/login" replace state={{from: location}} className={authBtnClass}>Sign in</NavLink>
               </div>
             </>
           )}

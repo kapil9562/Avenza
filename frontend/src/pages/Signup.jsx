@@ -3,7 +3,7 @@ import { FaPencil, FaUser } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { sendOtp, verifyOtp } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -65,6 +65,8 @@ export default function Signup() {
   const { isDark } = useTheme();
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/home";
 
   const { login } = useAuth();
 
@@ -170,7 +172,7 @@ export default function Signup() {
       if (userData) {
         await login(userData);
         toast.success("Signup successful.");
-        navigate('/home');
+        navigate(from , {replace: true});
         setLoading(false);
       }
       setError("");
@@ -357,7 +359,7 @@ export default function Signup() {
           </p>
           <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-2`}>
             Already have an account?{" "}
-            <NavLink className="text-[#6366F1] font-medium cursor-pointer" to={'/login'}>
+            <NavLink className="text-[#6366F1] font-medium cursor-pointer" to={'/login'} replace state={{from: from}}>
               Login
             </NavLink>
           </p>
