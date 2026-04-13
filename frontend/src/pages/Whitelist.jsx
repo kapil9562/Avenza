@@ -59,7 +59,7 @@ export default function Whitelist() {
                 </div>
             ) : (
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 animate-fadeUp will-change-transform pb-10">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 will-change-transform pb-10">
                     {loading ?
                         Array(10)
                             .fill(0).map((_, idx) => <ProductSkeleton key={idx} />)

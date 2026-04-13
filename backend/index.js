@@ -21,7 +21,7 @@ const allowedOrigins = [
   "https://myavenza-admin.onrender.com"
 ];
 
-if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV !== "production") {
   allowedOrigins.push("http://localhost:5173");
 }
 

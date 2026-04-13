@@ -200,7 +200,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                             products?.filter(p => p.productId !== pid).map((product, idx) => (
                                 <div
                                     key={product.productId}
-                                    className={`animate-fadeUp will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer shadow-lg hover:shadow-2xl ${isDark ? "bg-[#0F172A] shadow-[#0F172A] border-gray-700" : "bg-white shadow-gray-400"}`}
+                                    className={`will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer shadow-lg hover:shadow-2xl ${isDark ? "bg-[#0F172A] shadow-[#0F172A] border-gray-700" : "bg-white shadow-gray-400"}`}
                                     onClick={() => {
                                         navigate(`/${createSlug(product.title)}/p/${product._id}`);
                                     }}
