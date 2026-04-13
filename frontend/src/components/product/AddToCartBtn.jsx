@@ -52,6 +52,14 @@ function AddToCartBtn({ product }) {
             .then(data => setAnimationData(data));
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSuccess(null);
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [success])
+
     return (
         <div className='relative flex justify-center items-center w-full'>
             <button
