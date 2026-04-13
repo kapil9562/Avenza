@@ -15,6 +15,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { useProducts } from '../../context/ProductsContext';
+import { useModal } from '../../context/ModalContext';
 
 function Header({ activeTab, setActiveTab, setShow }) {
 
@@ -35,12 +36,13 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchType, setSearchType] = useState(null);
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { totalItems } = useCart();
   const [openIndex, setOpenIndex] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const searchTimeout = useRef(null);
   const { categories, setCategories, setCache } = useProducts();
+  const {setOpenModal} = useModal();
 
   useEffect(() => {
     const q = searchParams.get("q") || "";
@@ -330,7 +332,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsActive(false);
-                      logout()
+                      setOpenModal(true);
                     }}>
                     <FiLogOut />
                     <span>Logout</span>

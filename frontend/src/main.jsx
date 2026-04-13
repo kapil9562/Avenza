@@ -13,6 +13,7 @@ import { ThemeProvider } from './context/ThemeContext.jsx';
 import { FavItemsProvider } from './context/FavItemsContext.jsx';
 import { ToastProvider } from "./context/ToastContext.jsx";
 import PublicRoute from './components/common/PublicRoute.jsx';
+import { ModalProvider } from './context/ModalContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -24,98 +25,100 @@ createRoot(document.getElementById('root')).render(
               <ProductsProvider>
                 <FavItemsProvider>
                   <CartProvider>
-                    <Routes>
-                      <Route path='/' element={<ResponsiveLanding />} />
-                      <Route element={<App />}>
-                        <Route path='/home' element={<Container />} />
-                        <Route path="/:pCategory/:category" element={<Container />} />
-                        <Route path="/:slug/p/:productId" element={<ProductDetails />} />
-                        <Route
-                          path="/checkout/:productId"
-                          element={
-                            <ProtectedRoute>
-                              <CheckoutPage />
-                            </ProtectedRoute>
-                          } />
-                        <Route
-                          path="/success" element={
-                            <ProtectedRoute>
-                              <OrderSuccess />
-                            </ProtectedRoute>
-                          } />
-                        <Route
-                          path="/cancel"
-                          element={
-                            <ProtectedRoute>
-                              <PaymentFailed />
-                            </ProtectedRoute>
-                          } />
-                        <Route
-                          path="/my-account/my-orders"
-                          element={
-                            <ProtectedRoute>
-                              <Orders />
-                            </ProtectedRoute>
-                          } />
-                        <Route
-                          path="/my-account/my-orders/search-results"
-                          element={
-                            <ProtectedRoute>
-                              <Orders />
-                            </ProtectedRoute>
-                          } />
-                        <Route
-                          path="/my-account/my-orders/:id"
-                          element={
-                            <ProtectedRoute>
-                              <OrderDetail />
-                            </ProtectedRoute>
-                          } />
+                    <ModalProvider>
+                      <Routes>
+                        <Route path='/' element={<ResponsiveLanding />} />
+                        <Route element={<App />}>
+                          <Route path='/home' element={<Container />} />
+                          <Route path="/:pCategory/:category" element={<Container />} />
+                          <Route path="/:slug/p/:productId" element={<ProductDetails />} />
+                          <Route
+                            path="/checkout/:productId"
+                            element={
+                              <ProtectedRoute>
+                                <CheckoutPage />
+                              </ProtectedRoute>
+                            } />
+                          <Route
+                            path="/success" element={
+                              <ProtectedRoute>
+                                <OrderSuccess />
+                              </ProtectedRoute>
+                            } />
+                          <Route
+                            path="/cancel"
+                            element={
+                              <ProtectedRoute>
+                                <PaymentFailed />
+                              </ProtectedRoute>
+                            } />
+                          <Route
+                            path="/my-account/my-orders"
+                            element={
+                              <ProtectedRoute>
+                                <Orders />
+                              </ProtectedRoute>
+                            } />
+                          <Route
+                            path="/my-account/my-orders/search-results"
+                            element={
+                              <ProtectedRoute>
+                                <Orders />
+                              </ProtectedRoute>
+                            } />
+                          <Route
+                            path="/my-account/my-orders/:id"
+                            element={
+                              <ProtectedRoute>
+                                <OrderDetail />
+                              </ProtectedRoute>
+                            } />
 
-                        <Route
-                          path="/carts"
-                          element={
-                            <ProtectedRoute>
-                              <CartDetails />
-                            </ProtectedRoute>
-                          }
-                        />
+                          <Route
+                            path="/carts"
+                            element={
+                              <ProtectedRoute>
+                                <CartDetails />
+                              </ProtectedRoute>
+                            }
+                          />
 
-                        <Route
-                          path="/whitelist"
-                          element={
-                            <ProtectedRoute>
-                              <Whitelist />
-                            </ProtectedRoute>
-                          }
-                        />
+                          <Route
+                            path="/whitelist"
+                            element={
+                              <ProtectedRoute>
+                                <Whitelist />
+                              </ProtectedRoute>
+                            }
+                          />
 
-                        <Route path="/about" element={<About />} />
-                        <Route path="/search" element={<SearchResults />} />
+                          <Route path="/about" element={<About />} />
+                          <Route path="/search" element={<SearchResults />} />
 
-                        <Route path="/login" element={
-                          <PublicRoute>
-                            <Login />
-                          </PublicRoute>
-                        } />
-                        <Route path="/signup" element={
-                          <PublicRoute>
-                            <Signup />
-                          </PublicRoute>
-                        } />
-                        <Route path="/forgetpassword" element={
-                          <PublicRoute>
-                            <ForgetPass />
-                          </PublicRoute>
-                        } />
-                        <Route path="/reset-password/:email" element={
-                          <PublicRoute>
-                            <ResetPass />
-                          </PublicRoute>} />
-                      </Route>
+                          <Route path="/login" element={
+                            <PublicRoute>
+                              <Login />
+                            </PublicRoute>
+                          } />
+                          <Route path="/signup" element={
+                            <PublicRoute>
+                              <Signup />
+                            </PublicRoute>
+                          } />
+                          <Route path="/forgetpassword" element={
+                            <PublicRoute>
+                              <ForgetPass />
+                            </PublicRoute>
+                          } />
+                          <Route path="/reset-password/:email" element={
+                            <PublicRoute>
+                              <ResetPass />
+                            </PublicRoute>} />
+                        </Route>
 
-                      <Route path="*" element={<PageNotFound />} />
-                    </Routes>
+                        <Route path="*" element={<PageNotFound />} />
+                      </Routes>
+                    </ModalProvider>
                   </CartProvider>
                 </FavItemsProvider>
               </ProductsProvider>

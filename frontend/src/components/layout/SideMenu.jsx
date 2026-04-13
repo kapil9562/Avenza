@@ -114,7 +114,7 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                     }`}
             />
 
-            <div className={` ${show ? "block translate-x-0" : " -translate-x-full"} absolute  top-0 z-99 w-70 transition-all duration-500 overflow-y-auto h-screen no-scrollbar will-change-transform transform-gpu cursor-default ${isDark ? "sideMenuDarkBg" : "sideMenuBg"} pb-15`} ref={backdropRef}>
+            <div className={` ${show ? "block translate-x-0" : " -translate-x-full"} absolute top-0 z-99 w-70 transition-all duration-500 overflow-y-auto h-screen no-scrollbar will-change-transform transform-gpu cursor-default ${isDark ? "sideMenuDarkBg" : "sideMenuBg"} pb-15`} ref={backdropRef}>
                 <div className={`flex flex-row pt-3 pl-1 items-center gap-3 sticky top-0 z-50 pb-2 border-b-2 justify-between px-4 ${isDark ? "border-gray-800 sideMenuDarkBg" : "border-gray-200 sideMenuBg"}`}>
                     {/* LOGO */}
                     <div className='cursor-pointer flex justify-center items-center' onClick={() => handleTabClick("HOME")}>
