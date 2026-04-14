@@ -124,7 +124,7 @@ const Orders = () => {
                 setOrders((prev) => [...prev, ...res.data.orders]);
             } else {
                 setOrders(res?.data?.orders);
-                if(res?.data?.orders?.length <= 0) {
+                if (res?.data?.orders?.length <= 0) {
                     setError("No orders found!");
                 }
             }
@@ -351,6 +351,9 @@ const Orders = () => {
         </div>
     );
 
+
+    console.log(orders)
+
     return (
         <div className={`w-full sm:px-5 px-1 sm:py-5 pb-10 lg:min-h-[calc(100dvh-124px)] md:min-h-[calc(100dvh-92px)] min-h-[calc(100dvh-124px)] ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-[#F1F3F6]"}`}>
             <div className="w-full flex flex-row justify-between items-center px-2 py-1 relative" ref={filterRef}>
@@ -397,54 +400,57 @@ const Orders = () => {
                             ) : (
                                 <>
                                     {orders.map((order) => (
-                                        <div key={order._id} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"}`} onClick={() => navigate(`/my-account/my-orders/${order.orderId}`)}>
-                                            <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
-                                            <table className="w-full table-fixed">
-                                                <tbody>
-                                                    <tr>
-                                                        {/* Product */}
-                                                        <td className="px-4 py-4 w-1 sm:w-1/2 lg:pl-10 pl-0">
-                                                            <div className="flex items-center gap-4">
-                                                                <img
-                                                                    src={order?.orderItems?.[0]?.image}
-                                                                    alt="img"
-                                                                    className={`h-20 w-20 object-cover rounded transition-all duration-500 animate-easeIn`} />
-                                                                <div className="flex flex-col">
-                                                                    <span>{order?.orderItems[0]?.name}</span>
-                                                                    <span className="text-sm text-gray-500 hidden sm:table-cell">Qty: {order?.orderItems[0]?.quantity}</span>
-                                                                    <span className="text-sm text-gray-500 flex flex-row items-center gap-1 sm:hidden"><IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
-                                                                        {formatName(order?.orderStatus)}</span>
+                                        order.orderItems.map((item, idx) => (
+                                            <div key={idx} className={`animate-easeIn px-5 rounded-lg border-2 transition-shadow duration-200 cursor-pointer ${isDark ? "bg-gray-900 border-gray-800 text-gray-100 hover:bg-[#171e2f] transition-colors duration-500" : "bg-white border-[#87878730] hover:shadow-[0px_0px_15px_rgba(0,0,0,0.15)]"}`} onClick={() => navigate(`/my-account/my-orders/${idx}/${order.orderId}`)}>
+                                                <span className="absolute w-0 h-0 bg-[#171e2f] rounded-full group-hover:w-[300%] group-hover:h-[300%] transition-all duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
+                                                <table className="w-full table-fixed">
+                                                    <tbody>
+                                                        <tr>
+                                                            {/* Product */}
+                                                            <td className="px-4 py-4 w-1 sm:w-1/2 lg:pl-10 pl-0">
+                                                                <div className="flex items-center gap-4">
+                                                                    <img
+                                                                        src={item?.image}
+                                                                        alt="img"
+                                                                        className={`h-20 w-20 object-cover rounded transition-all duration-500 animate-easeIn`} />
+                                                                    <div className="flex flex-col">
+                                                                        <span>{item?.name}</span>
+                                                                        <span className="text-sm text-gray-500 hidden sm:table-cell">Qty: {item?.quantity}</span>
+                                                                        <span className="text-sm text-gray-500 flex flex-row items-center gap-1 sm:hidden"><IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
+                                                                            {formatName(order?.orderStatus)}</span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        {/* Amount */}
-                                                        <td className="px-4 py-4 w-1/6 sm:table-cell hidden">₹{formatINR(order?.totalAmount)}</td>
-                                                        {/* Status */}
-                                                        <td className="px-4 py-4 w-1/3 hidden md:table-cell">
-                                                            <div>
-                                                                <span className="flex items-center gap-2 font-semibold">
-                                                                    <IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
-                                                                    {formatName(order?.orderStatus)}
-                                                                </span>
-                                                                <p className="text-sm">{statusMessages[order?.orderStatus]}</p>
-                                                            </div>
-                                                        </td>
-                                                        {/* Payment */}
-                                                        <td className="px-4 py-4 w-1/6 hidden sm:table-cell">
-                                                            <div className="flex flex-col gap-2 justify-center items-center">
-                                                                <span className="text-sm xl:text-[16px]">{formatDate(order?.createdAt)}</span>
-                                                                <span className={`${paymentBadge[order?.paymentStatus]} text-sm px-4 py-1 rounded-full flex w-fit items-center justify-center`}>
-                                                                    {formatName(order?.paymentStatus)}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-4 py-4 w-1/10 sm:hidden">
-                                                            <MdArrowForwardIos className="text-lg text-gray-700" />
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                            </td>
+                                                            {/* Amount */}
+                                                            <td className="px-4 py-4 w-1/6 sm:table-cell hidden">₹{formatINR(item?.price)}</td>
+                                                            {/* Status */}
+                                                            <td className="px-4 py-4 w-1/3 hidden md:table-cell">
+                                                                <div>
+                                                                    <span className="flex items-center gap-2 font-semibold">
+                                                                        <IoMdRadioButtonOn className={statusColors[order?.orderStatus]} />
+                                                                        {formatName(order?.orderStatus)}
+                                                                    </span>
+                                                                    <p className="text-sm">{statusMessages[order?.orderStatus]}</p>
+                                                                </div>
+                                                            </td>
+                                                            {/* Payment */}
+                                                            <td className="px-4 py-4 w-1/6 hidden sm:table-cell">
+                                                                <div className="flex flex-col gap-2 justify-center items-center">
+                                                                    <span className="text-sm xl:text-[16px]">{formatDate(order?.createdAt)}</span>
+                                                                    <span className={`${paymentBadge[order?.paymentStatus]} text-sm px-4 py-1 rounded-full flex w-fit items-center justify-center`}>
+                                                                        {formatName(order?.paymentStatus)}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-4 py-4 w-1/10 sm:hidden">
+                                                                <MdArrowForwardIos className="text-lg text-gray-700" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        ))
+
                                     ))}
 
                                     {showLoading &&

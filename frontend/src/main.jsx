@@ -74,7 +74,7 @@ createRoot(document.getElementById('root')).render(
                               </ProtectedRoute>
                             } />
                           <Route
-                            path="/my-account/my-orders/:id"
+                            path="/my-account/my-orders/:item/:id"
                             element={
                               <ProtectedRoute>
                                 <OrderDetail />

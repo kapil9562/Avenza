@@ -14,7 +14,7 @@ import { SlEarphonesAlt } from "react-icons/sl";
 
 function OrderDetail() {
 
-  const { id } = useParams();
+  const { id, item } = useParams();
   const { user } = useAuth();
   const { isDark } = useTheme();
 
@@ -120,17 +120,17 @@ function OrderDetail() {
             </div>
             <div className={`flex flex-row w-full gap-4 border-2 rounded-lg px-4 py-4 ${isDark ? "border-gray-800" : "border-gray-100"}`}>
               <div className='h-full flex items-center'>
-                <img src={order?.orderItems?.[0]?.image} alt="Thumbnail" className='md:h-40 md:w-50 sm:h-30 sm:w-30 h-20 w-20 object-contain' />
+                <img src={order?.orderItems?.[item]?.image} alt="Thumbnail" className='md:h-40 md:w-50 sm:h-30 sm:w-30 h-20 w-20 object-contain' />
               </div>
               <div className='w-full flex flex-col justify-between'>
                 <div className='flex flex-row gap-4 justify-between w-full'>
                   <div>
-                    <h1 className='sm:text-lg md:text-xl font-medium font-[Roboto_Serif]'>{order?.orderItems?.[0]?.name}</h1>
-                    <span className='font-normal text-sm md:text-lg text-[#878787]'>Qty:{order?.orderItems?.[0]?.quantity}</span>
+                    <h1 className='sm:text-lg md:text-xl font-medium font-[Roboto_Serif]'>{order?.orderItems?.[item]?.name}</h1>
+                    <span className='font-normal text-sm md:text-lg text-[#878787]'>Qty:{order?.orderItems?.[item]?.quantity}</span>
                   </div>
                   <div className='flex flex-col'>
                     <h2 className='sm:text-lg md:text-xl font-[Cormorant_Garamond] font-bold'>Price</h2>
-                    <span className='md:text-lg text-[#878787]'>₹{formatINR(order?.orderItems?.[0]?.price)}</span>
+                    <span className='md:text-lg text-[#878787]'>₹{formatINR(order?.orderItems?.[item]?.price)}</span>
                   </div>
                 </div>
                 <div>
@@ -211,7 +211,7 @@ function OrderDetail() {
               <div className={`space-y-2 border-b border-dashed pb-4 ${isDark? "border-gray-600" : "border-gray-900"}`}>
                 <div className='flex flex-row justify-between'>
                   <span className={`text-sm ${isDark? "text-gray-200" : "text-gray-800"}`}>Subtotal</span>
-                  <span>₹{formatINR(order?.orderItems?.[0]?.price)}</span>
+                  <span>₹{formatINR(order?.orderItems?.[item]?.price)}</span>
                 </div>
                 <div className='flex flex-row justify-between'>
                   <span className={`text-sm ${isDark? "text-gray-200" : "text-gray-800"}`}>Shipping Fee</span>
@@ -224,7 +224,7 @@ function OrderDetail() {
               </div>
               <div className='flex flex-row justify-between'>
                 <span className={`text-sm font-semibold ${isDark? "text-gray-200" : "text-gray-800"}`}>Total Amount</span>
-                <span className='font-semibold text-green-500'>₹{formatINR(order?.orderItems?.[0]?.price + order?.deliveryCharge + order?.shippingAmount)}</span>
+                <span className='font-semibold text-green-500'>₹{formatINR(order?.orderItems?.[item]?.price + order?.deliveryCharge + order?.shippingAmount)}</span>
               </div>
             </div>
             <div className={`flex flex-row justify-between p-4 rounded-2xl ${isDark? "bg-[#151e30]" : "bg-[#F9F9F9]"}`}>
