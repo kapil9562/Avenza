@@ -1,11 +1,12 @@
 import express from "express";
-import { buyNow, getAddress, getOrderDetail, getOrders, saveAddress, verifyPayment } from "../controllers/order.controller.js";
+import { buyCartItems, buyNow, getAddress, getOrderDetail, getOrders, saveAddress, verifyPayment } from "../controllers/order.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const orderRouter = express.Router()
 
 
 orderRouter.post("/buy-now",verifyJWT, buyNow);
+orderRouter.post("/checkout/cart", verifyJWT, buyCartItems);
 orderRouter.post("/verify-payment",verifyJWT, verifyPayment);
 
 orderRouter.get("/get-orders",verifyJWT, getOrders);

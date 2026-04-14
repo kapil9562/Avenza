@@ -37,10 +37,10 @@ const googleLogin = async (req, res) => {
             return res.status(400).json({ message: "Authorization code missing" });
         }
 
-        // 1️⃣ Exchange code for tokens
+        // Exchange code for tokens
         const { tokens } = await oauth2client.getToken(code);
         oauth2client.setCredentials(tokens);
-        // 2️⃣ Get user info (CORRECT endpoint)
+        // Get user info (CORRECT endpoint)
         const { data } = await axios.get(
             "https://www.googleapis.com/oauth2/v2/userinfo",
             {
@@ -52,7 +52,7 @@ const googleLogin = async (req, res) => {
 
         const { id, email, name, picture } = data;
 
-        // 3️⃣ Call Stored Procedure
+        // Call Stored Procedure
         let user = await User.findOne({ email });
 
         if (user && !user.isActive) {
@@ -95,7 +95,7 @@ const googleLogin = async (req, res) => {
             });
 
     } catch (err) {
-        console.error("❌ GOOGLE LOGIN ERROR:");
+        console.error("GOOGLE LOGIN ERROR::");
         console.error(err.response?.data || err.message || err);
 
         res.status(500).json({
@@ -267,7 +267,7 @@ const verifyOTP = async (req, res) => {
         const loggedInUser = await User.findById(user._id).select("-passwordHash -googleLogin -isActive -refreshToken");
 
         res
-            .status(200)
+            .status(201)
             .cookie('accessToken', accessToken, options)
             .cookie('refreshToken', refreshToken, options)
             .json({
@@ -424,7 +424,7 @@ const resetPassword = async (req, res) => {
         const loggedInUser = await User.findById(user._id).select("-passwordHash -googleLogin -isActive -refreshToken");
 
         res
-            .status(200)
+            .status(201)
             .cookie('accessToken', accessToken, options)
             .cookie('refreshToken', refreshToken, options)
             .json({

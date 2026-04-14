@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { buyNow, getAddress, saveAddress } from "../api/api";
+import { buyCartItems, buyNow, getAddress, saveAddress } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -7,10 +7,12 @@ import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 import { useTheme } from "../context/ThemeContext";
 import { toast } from "../context/ToastContext";
+import { useCart } from "../context/CartContext";
 
 const CheckoutPage = () => {
 
     const { productId } = useParams();
+    const { items:cartItems } = useCart();
 
     const [formData, setFormData] = useState({
         addressId: "",
@@ -94,11 +96,20 @@ const CheckoutPage = () => {
                 }));
             }
 
-            const res = await buyNow({
-                productId,
-                quantity: 1,
-                addressId
-            });
+            let res;
+
+            if (productId) {
+                res = await buyNow({
+                    productId,
+                    quantity: 1,
+                    addressId
+                });
+            } else {
+                res = await buyCartItems({
+                    items: cartItems,
+                    addressId
+                });
+            }
 
             if (res?.data?.url) {
                 window.location.href = res.data.url;

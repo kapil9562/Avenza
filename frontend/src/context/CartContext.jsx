@@ -195,7 +195,8 @@ export const CartProvider = ({ children }) => {
       loading,
       addToCart,
       updateCartQty,
-      clearAll
+      clearAll,
+      fetchCart
     }),
     [items, totalItems, subtotal, loading, addToCart, updateCartQty, clearAll]
   );

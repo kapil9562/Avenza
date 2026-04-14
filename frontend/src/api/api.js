@@ -102,6 +102,9 @@ export const saveAddress = ({userId, fullName, phone, addressLine1, addressLine2
 export const getAddress = ({userId}) => api.get(`/get-address?userId=${userId}`);
 
 export const buyNow = ({productId, quantity, addressId}) => api.post("buy-now", {productId, quantity, addressId});
+
+export const buyCartItems = ({items, addressId}) => api.post("/checkout/cart", {items, addressId});
+
 export const verifyPayment = ({ sessionId, userId }) => api.post("verify-payment", { sessionId, userId });
 
 export const getOrders = ({ userId, time = [], status = [], skip=0 }) => {

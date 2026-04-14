@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import Lottie from 'lottie-react';
 import Loader from '../assets/paymentLoader.json'
 import { useTheme } from "../context/ThemeContext.jsx";
+import { useCart } from "../context/CartContext.jsx";
 
 const OrderSuccess = () => {
     const [searchParams] = useSearchParams();
@@ -16,6 +17,7 @@ const OrderSuccess = () => {
     const [loading, setLoading] = useState(true);
     const [orderId, setOrderId] = useState("");
     const { setActiveTab } = useOutletContext();
+    const {fetchCart} = useCart();
 
     const { user, isAuthenticated } = useAuth();
     const {isDark} = useTheme();
@@ -33,6 +35,7 @@ const OrderSuccess = () => {
 
                 if (res?.data?.success) {
                     setOrderId(res?.data?.order?._id);
+                    fetchCart();
                 }
             } catch (error) {
                 const msg = error?.response?.data?.message || error?.message || "Something went wrong!";

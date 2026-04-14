@@ -40,6 +40,13 @@ createRoot(document.getElementById('root')).render(
                               </ProtectedRoute>
                             } />
                           <Route
+                            path="/checkout/cart"
+                            element={
+                              <ProtectedRoute>
+                                <CheckoutPage />
+                              </ProtectedRoute>
+                            } />
+                          <Route
                             path="/success" element={
                               <ProtectedRoute>
                                 <OrderSuccess />

@@ -205,12 +205,13 @@ function Header({ activeTab, setActiveTab, setShow }) {
           <IoIosSearch className='absolute left-3 text-2xl font-semibold text-[#8b90c7] z-20' />
           {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-300" : "bg-[#FFEDF3]"} absolute top-10 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 overflow-hidden z-5`} >
             <div className={`${showDropdown ? "block" : "hidden"} w-full overflow-auto pt-1`}>
-              {suggestions.length > 0 ? (
-                suggestions.map((product, idx) => (
+              {suggestions?.length > 0 ? (
+                suggestions?.map((product, idx) => (
                   <div
                     key={idx}
-                    onClick={() => {
-                      const title = product.title;
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const title = product?.title;
                       setInput(title);
                       setSearchType("autosuggest");
 
