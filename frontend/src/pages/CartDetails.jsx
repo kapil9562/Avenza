@@ -147,7 +147,7 @@ export default function CartDetails() {
                                 </span>
                             </div>
 
-                            <button className="w-full mt-4 rounded-xl bg-pink-500 text-white py-2 hover:bg-pink-400 transition"
+                            <button className="w-full h-12 py-3 rounded-xl transition border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] font-semibold text-white cursor-pointer mt-2 relative flex justify-center items-center"
                             onClick={() => navigate("/checkout/cart")}>
                                 Proceed to Checkout
                             </button>
