@@ -180,7 +180,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 lg:gap-5 sm:px-5 px-1 lg:px-10 sm:py-6 pb-10 will-change-transform w-full h-full relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)]">
 
                 {loading
-                    ? Array(10)
+                    ? Array(PAGE_SIZE)
                         .fill(0)
                         .map((_, idx) => <ProductSkeleton key={idx} />)
                     :

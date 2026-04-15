@@ -587,7 +587,7 @@ const Orders = () => {
                             isDark ? "hover:bg-[#171e2f]" : "hover:bg-gray-50"
                           }`}
                           onClick={() =>
-                            navigate(`/my-account/my-orders/${idx}/${order.orderId}`)
+                            navigate(`/my-account/my-orders/${order.orderId}`, {state: {idx}})
                           }
                         >
                           <div className="flex items-center justify-between gap-4">

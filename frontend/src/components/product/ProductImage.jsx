@@ -25,6 +25,8 @@ export default function ProductImage({ src, alt, className, idx }) {
         src={src}
         alt={alt}
         loading="lazy"
+        decoding="async"
+        fetchPriority='low'
         className={`${className} animate-easeIn"
           }`}
       />

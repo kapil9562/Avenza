@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext';
 import { Breadcrumb } from '../components';
 import { useTheme } from '../context/ThemeContext';
@@ -14,7 +14,9 @@ import { SlEarphonesAlt } from "react-icons/sl";
 
 function OrderDetail() {
 
-  const { id, item } = useParams();
+  const { id } = useParams();
+  const location = useLocation();
+  const item = location.state?.idx;
   const { user } = useAuth();
   const { isDark } = useTheme();
 
