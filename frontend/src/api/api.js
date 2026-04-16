@@ -115,6 +115,11 @@ export const getOrders = ({ userId, time = [], status = [], skip=0 }) => {
 
 export const getOrderDetail = ({userId, orderId}) => api.get(`/get-order-detail?userId=${userId}&orderId=${orderId}`);
 
+export const deleteReview = ({userId, productId}) => api.post("/delete-otp", userId, productId);
+
+
+
+
 let isRefreshing = false;
 let failedQueue = [];
 
