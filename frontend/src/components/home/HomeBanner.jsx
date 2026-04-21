@@ -32,7 +32,7 @@ function HomeBanner() {
                 modules={[Autoplay, Pagination]}
                 speed={960}
                 autoplay={{ delay: 4000 }}
-                pagination={{ clickable: true }}
+                pagination={{ clickable: true}}
                 loop
                 className="overflow-hidden"
             >
@@ -42,7 +42,7 @@ function HomeBanner() {
                             className={`flex justify-center items-center pb-10 lg:px-10 px-1 sm:px-5 cursor-grab active:cursor-grabbing`}
                         >
                             <div className="h-full w-full bg-center bg-cover flex justify-center items-center">
-                                <img src={banner.link} alt='banner' className={`h-full w-full object-cover rounded-lg shadow-lg`}></img>
+                                <img src={banner.link} alt='banner' className={`h-full w-full object-cover rounded-lg shadow-lg`}/>
                             </div>
                         </div>
                     </SwiperSlide>

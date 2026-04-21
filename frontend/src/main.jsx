@@ -14,6 +14,7 @@ import { FavItemsProvider } from './context/FavItemsContext.jsx';
 import { ToastProvider } from "./context/ToastContext.jsx";
 import PublicRoute from './components/common/PublicRoute.jsx';
 import { ModalProvider } from './context/ModalContext.jsx';
+import AccountDetail from './pages/AccountDetail.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -65,6 +66,13 @@ createRoot(document.getElementById('root')).render(
                               <ProtectedRoute>
                                 <Orders />
                               </ProtectedRoute>
+                            } />
+                          <Route
+                            path="/my-account"
+                            element={
+                              // <ProtectedRoute>
+                                <AccountDetail />
+                              // </ProtectedRoute>
                             } />
                           <Route
                             path="/my-account/my-orders/search-results"
