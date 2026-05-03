@@ -1,4 +1,5 @@
 import Cart from "../models/cart.model.js";
+import Product from "../models/products.model.js"
 
 // Add to Cart
 const addToCart = async (req, res) => {
@@ -35,10 +36,12 @@ const addToCart = async (req, res) => {
       });
     }
 
+    const product = await Product.findById(product_id).select("price");
+
     await Cart.create({
       uid,
       productId: product_id,
-      price,
+      price: product.price,
       qty
     });
 

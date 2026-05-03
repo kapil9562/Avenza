@@ -33,8 +33,7 @@ function AddToCartBtn({ product }) {
 
         try {
             setLoadingId(product.productId);
-            await new Promise(resolve => setTimeout(resolve, 1500))
-            const res = await addToCart({ product_id: product._id, price: Number(product.price) });
+            await addToCart({ product_id: product._id });
             setSuccess(product.productId);
         } catch (err) {
             const error = err?.response?.data?.error || "Failed to add item"

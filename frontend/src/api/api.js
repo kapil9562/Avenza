@@ -47,7 +47,6 @@ export const logoutUser = () => api.post('/auth/logout');
 export const addCart = ({ uid, product_id, price, qty }) => api.post("/cart/add", {
   uid,
   product_id,
-  price,
   qty,
 });
 

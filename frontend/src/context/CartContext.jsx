@@ -79,7 +79,6 @@ export const CartProvider = ({ children }) => {
         const addCartRes = await addCart({
           uid: user.uid,
           product_id: fullProduct._id,
-          price: fullProduct.price,
           qty,
         });
 
