@@ -8,20 +8,11 @@ import { cartRouter } from './src/routes/cartRouter.js';
 import { FavItemsRouter } from './src/routes/FavItemsRouter.js';
 import { orderRouter } from './src/routes/orderRouter.js';
 import cookieParser from "cookie-parser";
-import rateLimit from "express-rate-limit"
 
 dotenv.config()
 const app = express();
 app.use(express.json())
 app.use(cookieParser());
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "Too many requests, please try again later."
-});
-
-app.use(limiter);
 
 const PORT = process.env.PORT || 8000
 
