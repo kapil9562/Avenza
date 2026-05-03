@@ -26,17 +26,18 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use(cors({
-  origin: function (origin, callback) {
-
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    const allowed = allowedOrigins.some(o =>
+      origin.includes(o)
+    );
+
+    if (allowed) return callback(null, true);
 
     return callback(new Error("Not allowed by CORS"));
   },
-  credentials: true,
+  credentials: true
 }));
 
 app.get('/', (req, res) => {
