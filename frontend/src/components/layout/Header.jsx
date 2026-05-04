@@ -42,7 +42,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   const [isActive, setIsActive] = useState(false);
   const searchTimeout = useRef(null);
   const { categories, setCategories, setCache } = useProducts();
-  const {setOpenModal} = useModal();
+  const { setOpenModal } = useModal();
 
   useEffect(() => {
     const q = searchParams.get("q") || "";
@@ -298,25 +298,27 @@ function Header({ activeTab, setActiveTab, setShow }) {
                     <span className="font-['Sour_Gummy'] hidden sm:block">Profile</span>
                   </div>
                 )}
-                <div className={`transition-all duration-300 origin-top-right will-change-transform transform-gpu ${isActive ? "opacity-100 scale-100" : "opacity-0 scale-50 pointer-events-none"} ${isDark ? "bg-[#0F172A] shadow-[#0F172A90] shadow-md border-gray-700" : "bg-white border-gray-200 shadow-md"} absolute top-full flex flex-col justify-center text-lg font-semibold border-2 lg:group-hover:opacity-100 lg:group-hover:scale-100 scale-50 lg:pointer-events-none lg:group-hover:pointer-events-auto rounded-lg overflow-hidden z-90 right-0`}>
-                  <button className={`${isDark ? "hover:bg-[#2e3d5f]" : "hover:bg-pink-100"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer`}>
+                <div className={`transition-all duration-300 origin-top-right will-change-transform transform-gpu ${isActive ? "opacity-100 scale-100" : "opacity-0 scale-50 pointer-events-none"} ${isDark ? "bg-[#0F172A] shadow-[#0F172A90] shadow-md border-gray-700" : "bg-white border-gray-200 shadow-md"} absolute top-full flex flex-col justify-center text-lg font-semibold border-2 lg:group-hover:opacity-100 lg:group-hover:scale-100 scale-50 lg:pointer-events-none lg:group-hover:pointer-events-auto rounded-lg overflow-hidden z-90 right-0 min-w-fit`}>
+                  <div className={`${isDark ? "hover:bg-[#2e3d5f]" : "hover:bg-pink-100"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer w-fit`}>
                     {(user?.avatar) ? (
-                      <img
-                        src={normalizeGooglePhoto(user?.avatar)}
-                        alt="pfp"
-                        referrerPolicy="no-referrer"
-                        loading="lazy"
-                        className='md:max-h-12 md:max-w-12 max-h-10 max-w-10 rounded-full object-cover' />
+                      <div className='flex w-fit h-fit'>
+                        <img
+                          src={normalizeGooglePhoto(user?.avatar)}
+                          alt="pfp"
+                          referrerPolicy="no-referrer"
+                          loading="lazy"
+                          className='min-h-8 min-w-8 rounded-full object-cover' />
+                      </div>
                     ) : (
-                      <div className={`flex flex-col justify-center items-center text-sm md:text-lg group-hover:text-pink-500 relative group cursor-pointer ${isDark ? "text-gray-300" : "text-[#373951]"}`}>
-                        <img src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`} alt="pfp" className='h-8 w-8 rounded-full' />
+                      <div className='flex w-fit h-fit'>
+                        <img src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`} alt="pfp" className='min-h-8 min-w-8 rounded-full object-cover' />
                       </div>
                     )}
-                    <span className={`text-start ${isDark ? "text-gray-200" : "text-gray-700"}`}>
+                    <div className={`text-start ${isDark ? "text-gray-200" : "text-gray-700"}`}>
                       <p className=''>Hi, {(user?.name) ? user?.name.split(" ")[0] : "User"}</p>
                       <p className='text-sm font-medium'>{user?.email}</p>
-                    </span>
-                  </button>
+                    </div>
+                  </div>
                   <div className={`${isDark ? "border-gray-700" : "border-gray-200"} w-full border-t-2`}></div>
                   <button className={`${isDark ? "text-gray-200 hover:bg-[#2e3d5f] active:bg-[#2e3d5f]" : "hover:bg-pink-100 active:bg-pink-100 text-gray-700"} flex flex-row items-center whitespace-nowrap gap-2 px-4 py-2 cursor-pointer text-green-500`}
                     onClick={(e) => {
@@ -344,11 +346,11 @@ function Header({ activeTab, setActiveTab, setShow }) {
           ) : (
             <>
               <div className='lg:flex text-[18px] tracking-wide font-[Sour_Gummy] font-medium text-white gap-2 hidden justify-center items-center whitespace-nowrap'>
-                <NavLink to="/signup" replace state={{from: location}} className={authBtnClass}>Sign up</NavLink>
-                <NavLink to="/login" replace state={{from: location}} className={authBtnClass}>Log in</NavLink>
+                <NavLink to="/signup" replace state={{ from: location }} className={authBtnClass}>Sign up</NavLink>
+                <NavLink to="/login" replace state={{ from: location }} className={authBtnClass}>Log in</NavLink>
               </div>
               <div className='whitespace-nowrap tracking-wide flex text-[14px] sm:text-[18px] font-[Sour_Gummy] font-medium text-white gap-2 justify-center lg:hidden items-center'>
-                <NavLink to="/login" replace state={{from: location}} className={authBtnClass}>Sign in</NavLink>
+                <NavLink to="/login" replace state={{ from: location }} className={authBtnClass}>Sign in</NavLink>
               </div>
             </>
           )}

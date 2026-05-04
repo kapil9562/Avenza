@@ -136,7 +136,7 @@ const emailLogin = async (req, res) => {
             const isValid = await user.isPasswordCorrect(password);
 
             if (!isValid) {
-                return res.status(401).json({ message: "Invalid credentials !" });
+                return res.status(400).json({ message: "Invalid credentials !" });
             } else {
 
                 const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
@@ -223,7 +223,7 @@ const verifyOTP = async (req, res) => {
         const otpRecord = await Otp.findOne({ email });
 
         if (!otpRecord) {
-            return res.status(401).json({
+            return res.status(400).json({
                 message: "OTP expired or not found !"
             });
         }
@@ -231,7 +231,7 @@ const verifyOTP = async (req, res) => {
         const isMatch = await bcrypt.compare(otp, otpRecord.otpHash);
 
         if (!isMatch) {
-            return res.status(401).json({
+            return res.status(400).json({
                 message: "Invalid OTP !"
             });
         }

@@ -12,6 +12,7 @@ import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 import GoogleLoginBtn from "../components/common/GoogleLoginBtn";
 import { toast } from "../context/ToastContext";
+import { IoWarning } from "react-icons/io5";
 
 const OTP_LENGTH = 6;
 
@@ -21,8 +22,16 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    other: ""
+  });
   const [timer, setTimer] = useState(0);
+  const passwordRef = useRef()
+  const nameRef = useRef()
+  const emailRef = useRef()
 
   useEffect(() => {
     const expiry = localStorage.getItem("otpExpiry");
@@ -32,7 +41,6 @@ export default function Signup() {
 
       if (remaining > 0) {
         setTimer(remaining);
-        setOtpSent(true);
       } else {
         localStorage.removeItem("otpExpiry");
       }
@@ -102,42 +110,66 @@ export default function Signup() {
 
   {/* Send OTP */ }
   const handleSendOTP = async () => {
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address !");
-      return
+    let newErrors = { name: "", email: "", password: "", other: "" };
+
+    // Required field validation
+    if (!name && !email && !password) {
+      newErrors.name = "Name cannot be blank";
+      newErrors.email = "Email cannot be blank";
+      newErrors.password = "Password cannot be blank";
+      nameRef.current.focus();
+    } else if (!name) {
+      newErrors.name = "Name cannot be blank";
+      nameRef.current.focus();
+    } else if (!email) {
+      newErrors.email = "Email cannot be blank";
+      emailRef.current.focus();
+    } else if (!password) {
+      newErrors.password = "Password cannot be blank";
+      passwordRef.current.focus();
+    } else if (email && !emailRegex.test(email)) {
+      newErrors.email = "Please enter a valid email address!";
+      emailRef.current.focus();
+    } else if (password && !passwordRegex.test(password)) {
+      newErrors.password =
+        "Password must be at least 8 characters and include uppercase, lowercase, number and special character.";
+      passwordRef.current.focus();
     }
-    if (!passwordRegex.test(password)) {
-      setError(
-        "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
-      );
+
+    if (newErrors.name || newErrors.email || newErrors.password) {
+      setErrors(newErrors);
       return;
     }
-    if (!email || !name || !password) {
-      setError("All fields are required !")
-      return
-    }
+
     try {
-      setError('')
+      setErrors({
+        name: "",
+        email: "",
+        password: "",
+        other: ""
+      });
       setLoading(true);
-      const newEmail = normalizeEmail(email)
-      const res = await sendOtp({ email: newEmail });
+      const newEmail = normalizeEmail(email);
+      await sendOtp({ email: newEmail });
+      toast.success("OTP sent successfully.");
 
       const expiryTime = Date.now() + 60 * 1000;
       localStorage.setItem("otpExpiry", expiryTime);
       setTimer(60);
 
       setOtpSent(true);
-      setOtpSent(true);
       setTimeout(() => inputsRef.current[0]?.focus(), 300);
-      setLoading(false);
-      setError("");
     } catch (err) {
-      setLoading(false);
       const message =
         err?.response?.data?.message ||
         err?.message ||
         "Failed to send OTP! Try again.";
-      setError(message);
+      setErrors((prev) => ({
+        ...prev,
+        other: message
+      }));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -152,12 +184,20 @@ export default function Signup() {
 
   const handleVerifyOTP = async () => {
     if (!isOtpComplete) {
-      setError("Please enter complete OTP !");
+      setErrors((prev) => ({
+        ...prev,
+        other: "Please enter complete OTP !"
+      }));
+      const firstEmptyIndex = otp.findIndex((digit) => !digit);
+      inputsRef.current[firstEmptyIndex]?.focus();
       return;
     }
     try {
+      setErrors({
+        other: ""
+      });
       setLoading(true);
-      setError("");
+      setErrors({});
       const otpCode = otp.join("");
       const newEmail = normalizeEmail(email);
       const res = await verifyOtp({
@@ -172,18 +212,21 @@ export default function Signup() {
       if (userData) {
         await login(userData);
         toast.success("Signup successful.");
-        navigate(from , {replace: true});
+        navigate(from, { replace: true });
         setLoading(false);
       }
-      setError("");
+      setErrors({});
     } catch (err) {
       setLoading(false);
       setOtp(Array(OTP_LENGTH).fill(""));
+      inputsRef.current[0].focus();
       const message =
         err.response?.data?.message ||
         err.message ||
         "Failed to verify OTP! Try again.";
-      setError(message);
+      setErrors({
+        other: message
+      });
     }
   };
 
@@ -216,9 +259,28 @@ export default function Signup() {
   const handleChangeEmail = () => {
     setOtpSent(false);
     setOtp(Array(OTP_LENGTH).fill(""));
-    setError("");
     setTimeout(() => emailInputRef.current?.focus(), 100);
   };
+
+  useEffect(() => {
+    if (!errors.email && !errors.password && !errors.name) return;
+
+    setErrors((prev) => ({
+      ...prev,
+      name: name ? "" : prev.name,
+      email: email ? "" : prev.email,
+      password: password ? "" : prev.password,
+    }));
+  }, [email, password, name]);
+
+  useEffect(() => {
+    if (otp.includes("")) return;
+
+    setErrors((prev) => ({
+      ...prev,
+      other: "",
+    }));
+  }, [otp]);
 
   return (
     <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center p-4`}>
@@ -238,46 +300,76 @@ export default function Signup() {
           {/* Email Signup */}
           <div className="flex flex-col gap-2 sm:gap-4 w-full mt-2">
             <div className={`${otpSent ? "hidden" : "flex"} transition-all duration-500 w-full flex-col gap-2 sm:gap-4 mt-2`}>
-              <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2 w-full`}>
-                <FaUser className="text-[#8b90c7] text-xl" />
-                <input
-                  value={name}
-                  onChange={(e) => { setName(e.target.value) }}
-                  type="text"
-                  placeholder="Full Name"
-                  className={`${isDark ? "text-gray-100" : "text-gray-700"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                />
+              <div>
+                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2 w-full ${errors.name && "border border-red-600"}`}>
+                  <FaUser className="text-[#8b90c7] text-xl" />
+                  <input
+                    ref={nameRef}
+                    value={name}
+                    onChange={(e) => { setName(e.target.value) }}
+                    type="text"
+                    placeholder="Full Name"
+                    className={`${isDark ? "text-gray-100" : "text-gray-700"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
+                  />
+                </div>
+                {errors.name && (
+                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                    <IoWarning />
+                    <p>{errors.name}</p>
+                  </div>
+                )}
               </div>
-              <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row  shadow-sm rounded-xl p-3 items-center gap-2  w-full`}>
-                <MdEmail className="text-[#8b90c7] text-xl" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value.trim().toLowerCase()) }}
-                  placeholder="Email Address"
-                  className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                />
+              <div>
+                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row  shadow-sm rounded-xl p-3 items-center gap-2  w-full ${errors.email && "border border-red-600"}`}>
+                  <MdEmail className="text-[#8b90c7] text-xl" />
+                  <input
+                    ref={emailRef}
+                    type="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value.trim().toLowerCase()) }}
+                    placeholder="Email Address"
+                    className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
+                  />
+                </div>
+                {errors.email && (
+                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                    <IoWarning />
+                    <p>{errors.email}</p>
+                  </div>
+                )}
               </div>
 
-              <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2  w-full`}>
-                <IoIosLock className="text-[#8b90c7] text-xl" />
-                <input
-                  value={password}
-                  maxLength={20}
-                  onChange={(e) => { setPassword(e.target.value) }}
-                  type={showPass ? "text" : "password"}
-                  placeholder="Password"
-                  className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                />
-                <button
-                  onClick={() => setShowPass(!showPass)}
-                  className="cursor-pointer">
-                  {showPass ? <FaEye className="text-[#8b90c7] text-xl" /> : <FaEyeSlash className="text-[#8b90c7] text-xl" />}
-                </button>
+              <div>
+                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2  w-full ${errors.password && "border border-red-600"}`}>
+                  <IoIosLock className="text-[#8b90c7] text-xl" />
+                  <input
+                    ref={passwordRef}
+                    value={password}
+                    maxLength={20}
+                    onChange={(e) => { setPassword(e.target.value) }}
+                    type={showPass ? "text" : "password"}
+                    placeholder="Password"
+                    className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
+                  />
+                  <button
+                    onClick={() => setShowPass(!showPass)}
+                    className="cursor-pointer">
+                    {showPass ? <FaEye className="text-[#8b90c7] text-xl" /> : <FaEyeSlash className="text-[#8b90c7] text-xl" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                    <IoWarning />
+                    <p>{errors.password}</p>
+                  </div>
+                )}
               </div>
 
-              {error && (
-                <p className="text-red-500 font-semibold">{error}</p>
+              {errors.other && (
+                <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                  <IoWarning />
+                  <p>{errors.other}</p>
+                </div>
               )}
             </div>
 
@@ -291,7 +383,6 @@ export default function Signup() {
                       className="flex justify-center items-center text-[#6B6F9C] text-sm cursor-pointer"
                       onClick={() => {
                         handleChangeEmail();
-                        setOtpSent(false);
                       }}><FaPencil />
                     </button>
                   </div>
@@ -311,7 +402,12 @@ export default function Signup() {
                     />
                   ))}
                 </div>
-                {error && <p className="text-red-500 font-semibold mt-1">{error}</p>}
+                {errors.other && (
+                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm mt-1">
+                    <IoWarning />
+                    <p>{errors.other}</p>
+                  </div>
+                )}
                 <button
                   onClick={handleSendOTP}
                   disabled={timer > 0}
@@ -359,7 +455,7 @@ export default function Signup() {
           </p>
           <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-2`}>
             Already have an account?{" "}
-            <NavLink className="text-[#6366F1] font-medium cursor-pointer" to={'/login'} replace state={{from: from}}>
+            <NavLink className="text-[#6366F1] font-medium cursor-pointer" to={'/login'} replace state={{ from: from }}>
               Login
             </NavLink>
           </p>

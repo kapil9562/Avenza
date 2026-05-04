@@ -7,6 +7,7 @@ import { GoAlertFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
+import { IoWarning } from "react-icons/io5";
 
 const OTP_LENGTH = 6;
 
@@ -35,7 +36,6 @@ export default function ForgetPass() {
 
             if (remaining > 0) {
                 setTimer(remaining);
-                setOtpSent(true);
             } else {
                 localStorage.removeItem("resetOtpExpiry");
             }
@@ -211,27 +211,26 @@ export default function ForgetPass() {
                     {/* Email Signup */}
                     <div className="flex flex-col gap-2 sm:gap-4 w-full mt-2">
                         <div className={`${otpSent ? "hidden" : "flex"} transition-all duration-500 w-full flex-col gap-2 sm:gap-4 mt-2`}>
-                            <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row  shadow-sm rounded-xl p-3 items-center gap-2  w-full`}>
-                                <MdEmail className="text-[#8b90c7] text-xl" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => { setEmail(e.target.value.trim().toLowerCase()) }}
-                                    placeholder="Email Address"
-                                    disabled={loading}
-                                    className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                                />
-                            </div>
+                            <div className="space-y-1">
+                                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row  shadow-sm rounded-xl p-3 items-center gap-2  w-full ${error && "border border-red-600"}`}>
+                                    <MdEmail className="text-[#8b90c7] text-xl" />
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => { setEmail(e.target.value.trim().toLowerCase()) }}
+                                        placeholder="Email Address"
+                                        disabled={loading}
+                                        className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
+                                    />
+                                </div>
 
-                            {error &&
-                                <div className=' bg-red-200 text-red-600 flex justify-between items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2'>
-                                    <div className='flex justify-center items-center flex-row gap-2'>
-                                        <GoAlertFill size={24} />
+                                {error && (
+                                    <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                                        <IoWarning />
                                         <p>{error}</p>
                                     </div>
-                                    <span className='text-red-400 pr-1 cursor-pointer' onClick={() => setError("")}>x</span>
-                                </div>
-                            }
+                                )}
+                            </div>
                         </div>
 
                         <div className={`${otpSent ? "flex" : "hidden"} transition-all duration-500 w-full flex-col items-center`}>
@@ -244,7 +243,6 @@ export default function ForgetPass() {
                                             className="flex justify-center items-center text-[#6B6F9C] text-sm cursor-pointer"
                                             onClick={() => {
                                                 handleChangeEmail();
-                                                setOtpSent(false);
                                             }}><FaPencil />
                                         </button>
                                     </div>
