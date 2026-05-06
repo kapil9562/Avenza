@@ -18,7 +18,8 @@ const PORT = process.env.PORT || 8000
 
 const allowedOrigins = [
   "https://myavenza.onrender.com",
-  "https://myavenza-admin.onrender.com"
+  "https://myavenza-admin.onrender.com",
+  "https://myavenza.dpdns.org/"
 ];
 
 if (process.env.NODE_ENV !== "production") {
