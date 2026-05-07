@@ -111,10 +111,6 @@ orderSchema.pre("save", async function (next) {
         return next(new Error("Address not found"));
     }
 
-    this.shippingAddress.fullName = selectedAddress.fullName;
-
-    this.shippingAddress.phone = selectedAddress.phone;
-
     this.shippingAddress.address =
         `${selectedAddress.addressLine1}, ` +
         `${selectedAddress.addressLine2 || ""}, ` +
