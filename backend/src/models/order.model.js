@@ -99,16 +99,16 @@ const orderSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-orderSchema.pre("save", async function (next) {
+orderSchema.pre("save", async function () {
 
-    if (!this.isNew) return next();
+    if (!this.isNew) return;
 
     const selectedAddress = await Address.findById(
         this.shippingAddress.addressId
     );
 
     if (!selectedAddress) {
-        return next(new Error("Address not found"));
+        throw new Error("Address not found");
     }
 
     this.shippingAddress.address =
@@ -117,8 +117,6 @@ orderSchema.pre("save", async function (next) {
         `${selectedAddress.city}, ` +
         `${selectedAddress.state} - ${selectedAddress.pinCode}, ` +
         `${selectedAddress.country}`;
-
-    next();
 });
 
 const Order = mongoose.model("Order", orderSchema);

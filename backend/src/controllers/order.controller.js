@@ -100,6 +100,8 @@ export const verifyPayment = async (req, res) => {
             const deliveryCharge = (product.price * Number(quantity)) < 100 ? 100 : 0;
             const totalAmount = (product.price * Number(quantity)) + deliveryCharge;
 
+            console.log(addressId)
+
             const order = await Order.create({
                 userId,
                 orderId,
@@ -115,7 +117,9 @@ export const verifyPayment = async (req, res) => {
                 paymentStatus: "paid",
                 isPaid: true,
                 totalAmount,
-                shippingAddress: addressId,
+                shippingAddress: {
+                    addressId: addressId
+                },
                 stripeSessionId: sessionId
             });
 
@@ -182,13 +186,15 @@ export const verifyPayment = async (req, res) => {
                 paymentStatus: "paid",
                 isPaid: true,
                 totalAmount,
-                shippingAddress: addressId,
+                shippingAddress: {
+                    addressId
+                },
                 stripeSessionId: sessionId
             });
 
-            const user = await User.findById({_id:userId})
+            const user = await User.findById({ _id: userId })
 
-            await Cart.deleteMany({ uid:user.uid });
+            await Cart.deleteMany({ uid: user.uid });
 
             return res.json({
                 success: true,
