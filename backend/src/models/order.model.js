@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Address from "./address.model.js";
 
 const orderItemSchema = new mongoose.Schema({
     product: {
@@ -25,7 +26,7 @@ const orderSchema = new mongoose.Schema({
         required: true,
     },
 
-    orderId : {
+    orderId: {
         type: String,
         required: true,
         unique: true,
@@ -35,9 +36,13 @@ const orderSchema = new mongoose.Schema({
     orderItems: [orderItemSchema],
 
     shippingAddress: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Address",
-        required: true
+        addressId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Address",
+            required: true
+        },
+
+        address: String
     },
 
     paymentMethod: {
@@ -63,7 +68,7 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
 
-    deliveryCharge:{
+    deliveryCharge: {
         type: Number,
         default: 0
     },
@@ -93,6 +98,32 @@ const orderSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true });
+
+orderSchema.pre("save", async function (next) {
+
+    if (!this.isNew) return next();
+
+    const selectedAddress = await Address.findById(
+        this.shippingAddress.addressId
+    );
+
+    if (!selectedAddress) {
+        return next(new Error("Address not found"));
+    }
+
+    this.shippingAddress.fullName = selectedAddress.fullName;
+
+    this.shippingAddress.phone = selectedAddress.phone;
+
+    this.shippingAddress.address =
+        `${selectedAddress.addressLine1}, ` +
+        `${selectedAddress.addressLine2 || ""}, ` +
+        `${selectedAddress.city}, ` +
+        `${selectedAddress.state} - ${selectedAddress.pinCode}, ` +
+        `${selectedAddress.country}`;
+
+    next();
+});
 
 const Order = mongoose.model("Order", orderSchema);
 
