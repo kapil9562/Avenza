@@ -207,7 +207,7 @@ function Hero() {
                             <span className='font-bold lg:text-4xl md:text-3xl text-4xl'>FOR</span>
                             <h1 className='font-bold lg:text-6xl md:text-5xl text-6xl'>ONLINE</h1>
                             <span className='font-bold lg:text-4xl md:text-3xl text-4xl'>ORDER</span>
-                            <div className='w-[250px] h-[250px] absolute bg-[#FF6F6180] rounded-full -z-10 -right-50 -top-15'></div>
+                            <div className='w-62.5 h-62.5 absolute bg-[#FF6F6180] rounded-full -z-10 -right-50 -top-15'></div>
                         </div>
                         <div className='border-b-2 border-t-2 border-black text-[#FF6F61] font-[Montserrat] font-bold w-fit text-center lg:text-8xl md:text-6xl text-8xl'>
                             <h1>30%</h1>

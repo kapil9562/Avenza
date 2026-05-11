@@ -51,7 +51,6 @@ orderRouter.get(
 orderRouter.post(
   "/save-address",
   verifyJWT,
-  speedLimiter,
   addressLimiter,
   saveAddress
 );
@@ -59,7 +58,6 @@ orderRouter.post(
 orderRouter.get(
   "/get-address",
   verifyJWT,
-  speedLimiter,
   addressLimiter,
   getAddress
 );

@@ -30,22 +30,12 @@ function OrderDetail() {
       try {
         const res = await getOrderDetail({ userId: user._id, orderId: id });
         setOrder(res?.data?.order);
+        setAddress(res?.data?.order?.shippingAddress)
       } catch (error) {
         console.error(error);
       }
     }
-
-    const getUserAddress = async () => {
-      try {
-        const res = await getAddress({ userId: user._id });
-        setAddress(res?.data?.address);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     getOrderInfo();
-    getUserAddress();
   }, [id]);
 
   const formatDate = (isoDate) => {

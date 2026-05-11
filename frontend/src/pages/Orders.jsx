@@ -20,7 +20,7 @@ import { useAuth } from "../context/AuthContext";
 
 const createInitialFilter = () => ({
   orderStatus: [
-    { label: "On the way", value: "shipped", checked: false },
+    { label: "On the way", value: "onetheway", checked: false },
     { label: "Delivered", value: "delivered", checked: false },
     { label: "Cancelled", value: "cancelled", checked: false },
     { label: "Returned", value: "returned", checked: false },

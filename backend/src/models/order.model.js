@@ -7,8 +7,14 @@ const orderItemSchema = new mongoose.Schema({
         ref: "Product",
         required: true
     },
-    name: String,
-    image: String,
+    name: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    },
     price: {
         type: Number,
         required: true
@@ -19,8 +25,45 @@ const orderItemSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
+const shippingAddressSchema = new mongoose.Schema({
+    fullName: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+        match: [/^\d{10}$/, "Please enter valid 10 digit phone number"]
+    },
+    addressLine1: {
+        type: String,
+        required: true
+    },
+    addressLine2: {
+        type: String
+    },
+    city: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    country: {
+        type: String,
+        required: true,
+        default: "India"
+    },
+    pinCode: {
+        type: String,
+        required: true
+    }
+}, { _id: false });
+
 const orderSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
@@ -33,17 +76,12 @@ const orderSchema = new mongoose.Schema({
         index: true
     },
 
-    orderItems: [orderItemSchema],
-
-    shippingAddress: {
-        addressId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Address",
-            required: true
-        },
-
-        address: String
+    orderItems: {
+        type: [orderItemSchema],
+        required: true,
     },
+
+    shippingAddress: shippingAddressSchema,
 
     paymentMethod: {
         type: String,
@@ -59,7 +97,7 @@ const orderSchema = new mongoose.Schema({
 
     orderStatus: {
         type: String,
-        enum: ["processing", "packed", "shipped", "out_for_delivery", "delivered", "cancelled"],
+        enum: ["processing", "shipped", "out_for_delivery", "delivered", "cancelled"],
         default: "processing"
     },
 
@@ -93,30 +131,35 @@ const orderSchema = new mongoose.Schema({
     paymentId: String,
 
     stripeSessionId: {
-        type: String,
-        required: true
+        type: String
     }
 
 }, { timestamps: true });
+
+orderSchema.index({ orderStatus: 1, paymentMethod: 1, createdAt: -1 });
 
 orderSchema.pre("save", async function () {
 
     if (!this.isNew) return;
 
-    const selectedAddress = await Address.findById(
-        this.shippingAddress.addressId
-    );
+    const selectedAddress = await Address.findOne({
+        userId: this.user
+    });
 
     if (!selectedAddress) {
         throw new Error("Address not found");
     }
 
-    this.shippingAddress.address =
-        `${selectedAddress.addressLine1}, ` +
-        `${selectedAddress.addressLine2 || ""}, ` +
-        `${selectedAddress.city}, ` +
-        `${selectedAddress.state} - ${selectedAddress.pinCode}, ` +
-        `${selectedAddress.country}`;
+    this.shippingAddress = {
+        fullName: selectedAddress.fullName,
+        phone: selectedAddress.phone,
+        addressLine1: selectedAddress.addressLine1,
+        addressLine2: selectedAddress.addressLine2,
+        city: selectedAddress.city,
+        state: selectedAddress.state,
+        country: selectedAddress.country,
+        pinCode: selectedAddress.pinCode,
+    };
 });
 
 const Order = mongoose.model("Order", orderSchema);

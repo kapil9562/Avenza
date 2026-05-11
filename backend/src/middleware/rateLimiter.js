@@ -64,11 +64,11 @@ export const checkoutLimiter = rateLimit({
 // Orders read
 export const orderReadLimiter = rateLimit({
     windowMs: 5 * 60 * 1000,
-    max: 50,
+    max: 100,
 });
 
 // Address limiter
 export const addressLimiter = rateLimit({
     windowMs: 10 * 60 * 1000,
-    max: 20,
+    max: 50,
 });

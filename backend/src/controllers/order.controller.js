@@ -80,7 +80,7 @@ export const verifyPayment = async (req, res) => {
             });
         }
 
-        const { checkoutType, addressId } = session.metadata;
+        const { checkoutType } = session.metadata;
 
         const now = new Date();
         const orderId = `OD${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}${Math.floor(100000 + Math.random() * 900000)}`;
@@ -100,10 +100,8 @@ export const verifyPayment = async (req, res) => {
             const deliveryCharge = (product.price * Number(quantity)) < 100 ? 100 : 0;
             const totalAmount = (product.price * Number(quantity)) + deliveryCharge;
 
-            console.log(addressId)
-
             const order = await Order.create({
-                userId,
+                user: userId,
                 orderId,
                 orderItems: [{
                     product: product._id,
@@ -117,9 +115,6 @@ export const verifyPayment = async (req, res) => {
                 paymentStatus: "paid",
                 isPaid: true,
                 totalAmount,
-                shippingAddress: {
-                    addressId: addressId
-                },
                 stripeSessionId: sessionId
             });
 
@@ -179,16 +174,13 @@ export const verifyPayment = async (req, res) => {
             }
 
             const order = await Order.create({
-                userId,
+                user: userId,
                 orderId,
                 orderItems,
                 paymentMethod: "Stripe",
                 paymentStatus: "paid",
                 isPaid: true,
                 totalAmount,
-                shippingAddress: {
-                    addressId
-                },
                 stripeSessionId: sessionId
             });
 
@@ -306,15 +298,19 @@ export const getOrders = async (req, res) => {
     }
 
     try {
-        const filter = { userId };
+        const filter = { user: userId };
 
         // STATUS FILTER
         if (status.length) {
 
             const statusFilters = status.map((s) => {
 
-                if (s === "On the way") {
-                    return { orderStatus: "processing" };
+                if (s === "onetheway") {
+                    return {
+                        orderStatus: {
+                            $in: ["processing", "shipped", "out_for_delivery"]
+                        }
+                    };
                 }
 
                 return { orderStatus: s.toLowerCase() };
@@ -421,7 +417,7 @@ export const getOrderDetail = async (req, res) => {
 
     try {
         const order = await Order.findOne({
-            userId,
+            user: userId,
             orderId
         }).select("-stripeSessionId");
 

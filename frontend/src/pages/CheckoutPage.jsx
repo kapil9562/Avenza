@@ -190,6 +190,7 @@ const CheckoutPage = () => {
                             type="tel"
                             name="phone"
                             placeholder="Phone Number"
+                            maxLength={10}
                             value={formData.phone}
                             onChange={handleChange}
                             className={`border-2 p-3 w-full rounded-xl  outline-none ${isDark ? "border-gray-700 text-gray-200 placeholder:text-gray-500" : "bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"}`}
