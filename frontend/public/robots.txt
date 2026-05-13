@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://myavenza.onrender.com/sitemap.xml
