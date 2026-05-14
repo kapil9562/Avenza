@@ -67,14 +67,30 @@ const getAllCategory = async (req, res) => {
         const data = await Product.aggregate([
             {
                 $group: {
-                    _id: "$parentCategory",
-                    categories: { $addToSet: "$category" }
+                    _id: {
+                        parentCategory: "$parentCategory",
+                        category: "$category"
+                    },
+                    totalItems: { $sum: 1 }
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id.parentCategory",
+                    categories: {
+                        $push: {
+                            name: "$_id.category",
+                            totalItems: "$totalItems"
+                        }
+                    },
+                    totalParentItems: { $sum: "$totalItems" }
                 }
             },
             {
                 $project: {
                     _id: 0,
                     parentCategory: "$_id",
+                    totalParentItems: 1,
                     categories: 1
                 }
             },
@@ -120,14 +136,14 @@ const productReview = async (req, res) => {
 
         product.reviews.push(newReview);
 
-        // 🔥 Recalculate Average Rating
+        //  Recalculate Average Rating
         const totalRating = product.reviews.reduce((acc, item) => acc + item.rating, 0);
         product.rating = (totalRating / product.reviews.length).toFixed(1);
 
         await product.save();
 
         res.status(200).json({
-            msg: "Thank you for sharing your experience ❤️",
+            msg: "Thank you for sharing your experience .",
             rating: product.rating
         });
 

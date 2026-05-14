@@ -6,11 +6,6 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// export const api = axios.create({
-//   baseURL: 'http://localhost:8000/api',
-//   withCredentials: true,
-// });
-
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
 
 export const signup = ({ email, password, name }) => api.post(`/auth/signup`, {

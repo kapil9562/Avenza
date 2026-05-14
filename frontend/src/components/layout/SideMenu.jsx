@@ -154,10 +154,10 @@ function SideMenu({ setShow, show, setActiveTab, activeTab }) {
                                             <div className='min-h-0 overflow-hidden'>
                                                 {item.categories.map((sub, i) => (
                                                     <div className='font-semibold text-gray-700 w-full pl-20 hover:text-orange-500' key={i}>
-                                                        <li className={`${activeTab === sub ? "text-orange-500" : isDark ? "text-gray-300" : "text-gray-700"} hover:text-orange-500 w-fit cursor-pointer`}
-                                                            onClick={() => handleTabClick(sub, item.parentCategory)}
+                                                        <li className={`${activeTab === sub?.name ? "text-orange-500" : isDark ? "text-gray-300" : "text-gray-700"} hover:text-orange-500 w-fit cursor-pointer`}
+                                                            onClick={() => handleTabClick(sub?.name, item.parentCategory)}
                                                         >
-                                                            {sub}
+                                                            {sub?.name}
                                                         </li>
                                                     </div>
                                                 ))}

@@ -66,7 +66,7 @@ function AddToCartBtn({ product }) {
                     e.stopPropagation();
                     handleAddToCart();
                 }}
-                className={`w-full px-6 py-5 border border-[#FF6F61] text-[#FF6F61] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden ${isDark ? "hover:bg-red-900/20" : "hover:bg-red-50"}`}
+                className={`w-full px-6 py-5 border border-[#FF6F61] text-[#FF6F61] rounded-xl cursor-pointer active:scale-95 transition-transform duration-300 will-change-transform whitespace-nowrap flex justify-center items-center max-h-10 overflow-hidden ${isDark ? "hover:bg-red-900/20" : "hover:bg-red-50"}`}
                 disabled={loadingId === product.productId || success}
             >
                 {loadingId === product.productId ? (

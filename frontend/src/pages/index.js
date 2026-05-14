@@ -1,18 +1,18 @@
-import About from "./About";
-import CartDetails from "./CartDetails";
-import CheckoutPage from "./CheckoutPage";
-import FavItems from "./FavItems";
-import ForgetPass from "./ForgetPass";
-import Login from "./Login";
-import Orders from "./Orders";
-import OrderSuccess from "./OrderSuccess";
-import PageNotFound from "./PageNotFound";
-import PaymentFailed from "./PaymentFailed";
-import ProductDetails from "./ProductDetails";
-import ResetPass from "./ResetPass";
-import SearchResults from "./SearchResults";
-import Signup from "./Signup";
-import Whitelist from "./Whitelist";
-import OrderDetail from "./OrderDetail";
+import { lazy } from 'react';
 
-export {About, CartDetails, CheckoutPage, FavItems, ForgetPass, Login, Orders, OrderSuccess, PageNotFound, PaymentFailed, ProductDetails, ResetPass, SearchResults, Signup, Whitelist, OrderDetail}
+export const Login = lazy(() => import('./Login'));
+export const Signup = lazy(() => import('./Signup'));
+export const ProductDetails = lazy(() => import('./ProductDetails'));
+export const CartDetails = lazy(() => import('./CartDetails'));
+export const SearchResults = lazy(() => import('./SearchResults'));
+export const About = lazy(() => import('./About'));
+export const Whitelist = lazy(() => import('./Whitelist'));
+export const Orders = lazy(() => import('./Orders'));
+export const CheckoutPage = lazy(() => import('./CheckoutPage'));
+export const OrderSuccess = lazy(() => import('./OrderSuccess'));
+export const PaymentFailed = lazy(() => import('./PaymentFailed'));
+export const OrderDetail = lazy(() => import('./OrderDetail'));
+export const ForgetPass = lazy(() => import('./ForgetPass'));
+export const ResetPass = lazy(() => import('./ResetPass'));
+export const PageNotFound = lazy(() => import('./PageNotFound'));
+export const FavItems = lazy(() => import('./FavItems'));

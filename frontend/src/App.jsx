@@ -34,18 +34,10 @@ function App() {
     <>
       <div
         ref={scrollRef}
-        className={`h-dvh overflow-y-scroll custom-scroll scroll-smooth will-change-scroll transform-gpu overflow-x-hidden`}
-        style={{
-          scrollbarColor: isDark
-            ? "#c562b0d7 #0F172A"
-            : "#c562b0d7 transparent",
-          scrollbarWidth: "thin",
-        }}
+        className={`h-dvh overflow-y-auto overflow-x-hidden overscroll-none transform-gpu`}
       >
         <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
-        <main className="grow lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)]">
-          <Outlet context={{ activeTab, setActiveTab, scrollRef }} />
-        </main>
+        <Outlet key={pathname} context={{ activeTab, setActiveTab, scrollRef }} />
         <Footer setActiveTab={setActiveTab} scrollRef={scrollRef} />
       </div>
       <SideMenu activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} show={show} />
