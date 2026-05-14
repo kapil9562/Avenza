@@ -131,9 +131,9 @@ function HomeBanner() {
                     {cards?.map((card, idx) => (
                         <div
                             key={idx}
-                            className='snap-start flex border border-gray-200 p-4 rounded-xl gap-2 min-w-full sm:min-w-[calc(50%-8px)] lg:min-w-[calc(33.33%-11px)] xl:min-w-[calc(25%-12px)]'
+                            className={`snap-start flex border p-4 rounded-xl gap-2 min-w-full sm:min-w-[calc(50%-8px)] lg:min-w-[calc(33.33%-11px)] xl:min-w-[calc(25%-12px)] ${isDark? "border-gray-700 bg-[#0F172A] " : "border-gray-200"}`}
                         >
-                            <div className='bg-[#EDEDED] border border-gray-300 rounded-md items-center flex min-h-13 min-w-13 justify-center'>
+                            <div className={`border  rounded-md items-center flex min-h-13 min-w-13 justify-center ${isDark? "bg-gray-800/20 border-gray-700" : "bg-[#EDEDED] border-gray-300"}`}>
                                 <img
                                     src={card?.image}
                                     alt="dress"
@@ -144,16 +144,16 @@ function HomeBanner() {
 
                             <div className='flex flex-col justify-between w-full'>
                                 <div className='flex justify-between gap-2'>
-                                    <span className='text-[#212121] font-semibold whitespace-nowrap'>
+                                    <span className={`font-semibold whitespace-nowrap ${isDark? "text-gray-200" : "text-[#212121]"}`}>
                                         {card?.title}
                                     </span>
 
-                                    <span className='text-sm text-[#787878]'>
-                                        {getChildItems(card?.category)}
+                                    <span className={`text-sm ${isDark? "text-gray-400" : "text-[#787878]"}`}>
+                                        ({getChildItems(card?.category)})
                                     </span>
                                 </div>
 
-                                <button className='text-sm text-orange-500 font-medium cursor-pointer text-start'
+                                <button className='text-sm text-[#FF6F61] font-medium cursor-pointer text-start'
                                 onClick={() => handleTabClick(card?.category, card?.title.replaceAll(" ", "").toLowerCase())}>
                                     Show All
                                 </button>

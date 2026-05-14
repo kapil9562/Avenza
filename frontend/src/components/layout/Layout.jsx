@@ -205,13 +205,13 @@ const Layout = React.memo(function Layout({ category, pid }) {
     return (
         <>
             <div className='flex lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] sm:px-5 px-1 lg:px-10 sm:py-2 gap-6 relative mb-6'>
-                <aside className={`sticky top-32 p-4 lg:block hidden min-w-1/4 max-w-1/4 border h-fit ${isDark ? "" : "border-gray-200"} rounded-xl`}>
+                <aside className={`sticky top-32 p-4 lg:block hidden min-w-1/4 max-w-1/4 border h-fit ${isDark ? "bg-[#0F172A] border-gray-700" : "border-gray-200"} rounded-xl`}>
                     <div className='relative'>
-                        <h1 className={`uppercase font-semibold text-lg tracking-wide mb-3 ${isDark ? "" : "text-[#454545]"}`}>Category</h1>
+                        <h1 className={`uppercase font-semibold text-lg tracking-wide mb-3 ${isDark ? "text-gray-100" : "text-[#454545]"}`}>Category</h1>
                         <div className='space-y-2'>
                             {categories?.map((item, idx) => (
                                 <div key={idx}>
-                                    <div className='flex justify-between font-medium text-lg text-[#787878] cursor-pointer' onClick={() => setDropDowm((prev) => (prev === item?.parentCategory) ? "" : item?.parentCategory)}>
+                                    <div className={`flex justify-between font-medium text-lg cursor-pointer ${isDark? "text-gray-300" : "text-[#787878]"}`} onClick={() => setDropDowm((prev) => (prev === item?.parentCategory) ? "" : item?.parentCategory)}>
                                         <div className='flex gap-2'>
                                             <img src={icons[idx]} alt="" className='h-5 w-5' />
                                             <h3>{item?.parentCategory}</h3>
@@ -221,10 +221,10 @@ const Layout = React.memo(function Layout({ category, pid }) {
 
                                     <div className={`grid ${openDropdown === item?.parentCategory ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-all duration-600`}>
                                         <div className='overflow-hidden min-h-0'>
-                                            <div className='pt-3 pb-2 border-t border-t-gray-200 '>
+                                            <div className={`pt-3 pb-2 border-t ${isDark? "border-t-gray-700" : "border-t-gray-200"} `}>
                                                 {item?.categories?.map((sub, i) => (
                                                     <div
-                                                        className={`flex justify-between py-0.5 cursor-pointer hover:text-gray-700 ${isDark ? "" : "text-[#787878]"}`}
+                                                        className={`flex justify-between py-0.5 cursor-pointer ${isDark ? "text-gray-400 hover:text-gray-200" : "text-[#787878] hover:text-gray-700"}`}
                                                         key={i}
                                                         onClick={() => { handleTabClick(sub?.name, item?.parentCategory) }}
                                                     >
@@ -391,6 +391,7 @@ const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorit
 const ProductSection = ({ products }) => {
 
     const navigate = useNavigate();
+    const {isDark} = useTheme();
     // Sort latest first
     const sortedProducts = products
         ? [...products].sort(
@@ -432,7 +433,7 @@ const ProductSection = ({ products }) => {
     ];
 
     return (
-        <div className="py-10 bg-white font-[Poppins]">
+        <div className="py-10 font-[Poppins]">
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -444,8 +445,8 @@ const ProductSection = ({ products }) => {
                         <div key={idx}>
 
                             {/* heading */}
-                            <div className="border-b border-gray-200 pb-4">
-                                <h2 className="text-lg font-semibold text-[#212121]">
+                            <div className={`border-b pb-4 ${isDark? "border-gray-700" : "border-gray-200"}`}>
+                                <h2 className={`text-lg font-semibold ${isDark? "text-gray-200" : "text-[#212121]"}`}>
                                     {section.title}
                                 </h2>
                             </div>
@@ -469,12 +470,12 @@ const ProductSection = ({ products }) => {
                                 {slides.map((group, i) => (
                                     <SwiperSlide key={i}>
 
-                                        <div className="flex flex-col gap-4 opacity-100 transition-opacity duration-700 py-6">
+                                        <div className="flex flex-col gap-4 opacity-100 transition-opacity duration-700 py-6 px-1">
 
                                             {group.map((product) => (
                                                 <div
                                                     key={product._id}
-                                                    className="border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:-translate-y-2 hover:border-[#ff8f9c] transition-all duration-300"
+                                                    className={`border relative z-9999 rounded-xl p-4 flex items-center gap-4 hover:-translate-y-2 hover:border-[#ff8f9c] transition-all duration-300 ${isDark? "border-gray-700 bg-[#0F172A]" : "border-gray-200"}`}
                                                     onClick={() => {
                                                         navigate(`/${createSlug(product.title)}/p/${product._id}`);
                                                     }}
@@ -491,21 +492,21 @@ const ProductSection = ({ products }) => {
                                                     {/* content */}
                                                     <div className="flex flex-col gap-1 w-full overflow-hidden">
 
-                                                        <h3 className="text-[15px] font-semibold text-[#212121] truncate">
+                                                        <h3 className={`text-[15px] font-semibold truncate ${isDark? "text-[#F564A9]" : "text-[#787878]"}`}>
                                                             {product.title}
                                                         </h3>
 
-                                                        <span className="text-[14px] text-[#787878]">
+                                                        <span className={`text-[14px] ${isDark? "text-gray-200" : "text-[#787878]"}`}>
                                                             {product.category}
                                                         </span>
 
                                                         <div className="flex items-center gap-3 mt-1">
 
-                                                            <span className="text-[15px] font-bold text-[#ff8f9c]">
+                                                            <span className={`text-[15px] font-bold ${isDark? "text-[#FF6F61]" : "text-[#ff8f9c]"}`}>
                                                                 ₹{formatINR(product.price)}
                                                             </span>
 
-                                                            <span className="text-[14px] text-gray-500 line-through">
+                                                            <span className={`text-[14px] line-through ${isDark? "text-gray-200" : "text-gray-500"}`}>
                                                                 ₹{formatINR(
                                                                     Math.round(
                                                                         (product.price * 100) /
