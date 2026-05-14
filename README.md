@@ -10,6 +10,8 @@ Avenza provides a smooth shopping experience with authentication, cart managemen
 - **Frontend:** https://myavenza.onrender.com
 ---
 
+![Avenza Preview](./assets/preview.png)
+
 ## Features
 
 ### User Side
