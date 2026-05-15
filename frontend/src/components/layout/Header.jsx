@@ -16,6 +16,7 @@ import { BsMoonStarsFill } from "react-icons/bs";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { useProducts } from '../../context/ProductsContext';
 import { useModal } from '../../context/ModalContext';
+import {HeaderCategorySkeleton} from '../skeletons/CategorySkeletons';
 
 function Header({ activeTab, setActiveTab, setShow }) {
 
@@ -270,7 +271,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
             navigate('/whitelist');
           }}>
             <IoHeartSharp className='text-3xl text-red-600' />
-            <span className="hidden sm:flex font-['Sour_Gummy'] font-medium">Favorite</span>
+            <span className="hidden sm:flex font-['Sour_Gummy, Poppins'] font-medium">Favorite</span>
           </div>
           <div onClick={() => {
             navigate('/carts');
@@ -282,7 +283,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                 </span>
               )}
             </div>
-            <span className="hidden sm:flex font-['Sour_Gummy']">Cart</span>
+            <span className="hidden sm:flex font-['Sour_Gummy, Poppins'] font-medium">Cart</span>
           </div>
           {user ? (
             <div className="relative group min-h-full flex cursor-pointer" onMouseLeave={() => setIsActive(false)}>
@@ -347,7 +348,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
             </div>
           ) : (
             <>
-              <div className='lg:flex text-[18px] tracking-wide font-[Sour_Gummy] font-medium text-white gap-2 hidden justify-center items-center whitespace-nowrap'>
+              <div className='lg:flex text-[18px] tracking-wide font-[Sour_Gummy, Poppins] font-medium text-white gap-2 hidden justify-center items-center whitespace-nowrap'>
                 <NavLink to="/signup" replace state={{ from: location }} className={authBtnClass}>Sign up</NavLink>
                 <NavLink to="/login" replace state={{ from: location }} className={authBtnClass}>Log in</NavLink>
               </div>
@@ -413,85 +414,94 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
         <div className={`flex justify-center items-center cursor-pointer py-1 gap-4 relative after:absolute after:left-0 after:bottom-0 after:border-b-2 after:w-full after:border-[#FF6F61] after:scale-x-0 after:origin-left group after:transition-all will-change-transform after:duration-300 hover:after:scale-x-100 ${isDark ? "text-gray-200" : "text-gray-700"} ${activeTab === "HOME" ? "pointer-events-none" : "pointer-events-auto"}`} onClick={() => handleTabClick("HOME")}>
           <span className={`${activeTab === "HOME" ? "border-[#FF6F61] bg-[#FF6F6120]" : "border-transparent"} px-2 w-full py-1 rounded-xl border group-hover:text-[#FF6F61] font-semibold ${isDark ? "text-gray-200" : "text-[#454545]"}`}>HOME</span>
-          <div className='h-full flex justify-center items-center' >
-            <div className={`bg-gray-700 h-6 border-r-2 ${isDark ? "border-r-gray-800 " : "border-r-gray-200"}`}></div>
-          </div>
         </div>
 
 
-        <div className='group group/main relative'>
-          <div className={`flex justify-center items-center cursor-pointer py-1 gap-4 relative after:absolute after:left-0 after:bottom-0 after:border-b-2 after:w-full after:border-[#FF6F61] after:scale-x-0 after:origin-left group after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100 ${isDark ? "text-gray-200" : "text-gray-700"} ${activeTab === "CATEGORIES" ? "pointer-events-none" : "pointer-events-auto"}`} onClick={() => handleTabClick("HOME")}>
-            <div className={`${activeTab === "CATEGORIES" ? "text-[#FF6F61]" : "border-transparent"} flex flex-row gap-2 items-center px-2 w-full py-1 rounded-xl group-hover:text-[#FF6F61] font-semibold ${isDark ? "text-gray-200" : "text-[#454545]"}`}>
-              <span className='uppercase'>CATEGORIES</span>
-              <IoIosArrowUp className={`group-hover:rotate-180 text-sm transition-all duration-300 ${isDark ? "text-gray-200" : "text-gray-800"}`} />
-            </div>
-          </div>
-          <div className={`fixed group/sub left-0 right-0 flex justify-center top-full w-full pointer-events-none`}>
-            <div className={`${isDark ? "bg-[#0F172A] border-gray-700 shadow-[0_5px_8px_hsla(0,0%,0%,0.4)]" : "bg-white border-gray-200 shadow-[0_4px_6px_hsla(0,0%,0%,0.2)]"} flex flex-row border-2 p-6 rounded-lg gap-6 translate-y-10 opacity-0 invisible group-hover/main:opacity-100 group-hover/main:visible group-hover/main:translate-y-0 transition-all duration-300 pointer-events-auto`}>
-              {categories?.filter((item) =>
-                ["beauty", "electronics", "men", "women", "fashion"]
-                  .includes(item.parentCategory.toLowerCase())
-              ).map((cat, i) => (
-                <div className='flex flex-col justify-between gap-4' key={i}>
-                  <div>
-                    <div className={`${isDark ? "border-gray-700" : "border-gray-200"} border-b`}>
-                      <h1 className={`${isDark ? "text-gray-100" : "text-[#454545]"} pb-2 font-semibold`}>{cat?.parentCategory}</h1>
-                    </div>
-                    {cat?.categories?.length > 0 && (
-                      <div className={`flex flex-col mt-1`}>
-                        {cat.categories?.map((subCat, index) => (
-                          <span key={index} className={`py-1 ${activeTab === subCat?.name ? "text-[#FF6F61]" : isDark ? "text-gray-400" : "text-[#787878]"} font-normal cursor-pointer hover:text-[#FF6F61] whitespace-nowrap`}
-                            onClick={() => { handleTabClick(subCat?.name, cat?.parentCategory) }}
-                          >
-                            {subCat?.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <img src={banner[i]} alt="" width="250"
-                      height="119" className='object-cover h-auto w-100% rounded-lg' />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {categories.filter((cat) => !["beauty", "electronics", "men", "women", "fashion"]
-          .includes(cat.parentCategory.toLowerCase())).map((item, idx) => {
-            const isParentActive = item.categories.includes(activeTab);
-            return (
-              <div className='group flex flex-row gap-1 relative' key={idx}>
-                <div className='h-full flex justify-center items-center' >
-                  <div className={`bg-gray-700 h-6 border-r-2 ${isDark ? "border-r-gray-800 " : "border-r-gray-200"}`}></div>
-                </div>
-                <div className="flex flex-row gap-2 rounded-xl" >
-                  <div className='flex flex-row gap-4 h-full relative after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform after:duration-300 group-hover:after:scale-x-100 py-2 px-2 will-change-transform'>
-                    <div className={`cursor-pointer flex justify-center items-center whitespace-nowrap group-hover:text-[#FF6F61] gap-1 ${isParentActive ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-[#454545]"}`}
-                    >
-                      <span className='uppercase font-semibold'>{item.parentCategory}</span>
-                      <IoIosArrowUp className={`group-hover:rotate-180 text-sm transition-all duration-300 ${isDark ? "text-gray-200" : "text-gray-800"}`} />
-                    </div>
-                  </div>
-                </div>
-                {item?.categories?.length > 0 &&
-                  (<div className={`${isDark ? "border-gray-800 bg-[#0F172A] shadow-[0_5px_8px_hsla(0,0%,0%,0.4)]" : "bg-white border-gray-200 shadow-[0_3px_5px_hsla(0,0%,0%,0.2)]"} border-2 absolute w-fit top-full left-0 flex flex-col opacity-0 transition-all duration-300 group-hover:opacity-100 invisible translate-y-10 group-hover:translate-y-0 group-hover:visible py-2 rounded-lg`} ref={categoryRef}>
-                    <div className={`w-full px-2`}>
-                      {item?.categories?.map((sub, i) => (
-                        <div key={i} className={`cursor-pointer hover:text-[#FF6F61] px-2 whitespace-nowrap capitalize font-normal py-1  $ ${activeTab === sub?.name ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-[#787878]"}`}
-                          onClick={() => { handleTabClick(sub?.name, item?.parentCategory) }}>
-                          {sub?.name}
-                        </div>
-                      ))}
-                    </div>
-                  </div>)
-                }
+        {categories?.length <= 0 ? (
+          Array(5).fill(0).map((_, idx) => (
+            <HeaderCategorySkeleton />
+          ))
+        ) : (
+          <div className='flex'>
+            <div className='group group/main relative flex items-center gap-1'>
+              <div className='h-full flex justify-center items-center' >
+                <div className={`bg-gray-700 h-6 border-r-2 ${isDark ? "border-r-gray-800 " : "border-r-gray-200"}`}></div>
               </div>
-            )
-          }
-          )}
+              <div className={`flex justify-center items-center cursor-pointer py-1 gap-4 relative after:absolute after:left-0 after:bottom-0 after:border-b-2 after:w-full after:border-[#FF6F61] after:scale-x-0 after:origin-left group after:transition-transform will-change-transform after:duration-300 hover:after:scale-x-100 ${isDark ? "text-gray-200" : "text-gray-700"} ${activeTab === "CATEGORIES" ? "pointer-events-none" : "pointer-events-auto"}`} onClick={() => handleTabClick("HOME")}>
+                <div className={`${activeTab === "CATEGORIES" ? "text-[#FF6F61]" : "border-transparent"} flex flex-row gap-2 items-center px-2 w-full py-1 rounded-xl group-hover:text-[#FF6F61] font-semibold ${isDark ? "text-gray-200" : "text-[#454545]"}`}>
+                  <span className='uppercase'>CATEGORIES</span>
+                  <IoIosArrowUp className={`group-hover:rotate-180 text-sm transition-all duration-300 ${isDark ? "text-gray-200" : "text-gray-800"}`} />
+                </div>
+              </div>
+              <div className={`fixed group/sub left-0 right-0 flex justify-center top-full w-full pointer-events-none`}>
+                <div className={`${isDark ? "bg-[#0F172A] border-gray-700 shadow-[0_5px_8px_hsla(0,0%,0%,0.4)]" : "bg-white border-gray-200 shadow-[0_4px_6px_hsla(0,0%,0%,0.2)]"} flex flex-row border-2 p-6 rounded-lg gap-6 translate-y-10 opacity-0 invisible group-hover/main:opacity-100 group-hover/main:visible group-hover/main:translate-y-0 transition-all duration-300 pointer-events-auto`}>
+                  {categories?.filter((item) =>
+                    ["beauty", "electronics", "men", "women", "fashion"]
+                      .includes(item.parentCategory.toLowerCase())
+                  ).map((cat, i) => (
+                    <div className='flex flex-col justify-between gap-4' key={i}>
+                      <div>
+                        <div className={`${isDark ? "border-gray-700" : "border-gray-200"} border-b`}>
+                          <h1 className={`${isDark ? "text-gray-100" : "text-[#454545]"} pb-2 font-semibold`}>{cat?.parentCategory}</h1>
+                        </div>
+                        {cat?.categories?.length > 0 && (
+                          <div className={`flex flex-col mt-1`}>
+                            {cat.categories?.map((subCat, index) => (
+                              <span key={index} className={`py-1 ${activeTab === subCat?.name ? "text-[#FF6F61]" : isDark ? "text-gray-400" : "text-[#787878]"} font-normal cursor-pointer hover:text-[#FF6F61] whitespace-nowrap`}
+                                onClick={() => { handleTabClick(subCat?.name, cat?.parentCategory) }}
+                              >
+                                {subCat?.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <img src={banner[i]} alt="" width="250"
+                          height="119" className='object-cover h-auto w-100% rounded-lg' />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {categories.filter((cat) => !["beauty", "electronics", "men", "women", "fashion"]
+              .includes(cat.parentCategory.toLowerCase())).map((item, idx) => {
+                const isParentActive = item.categories.includes(activeTab);
+                return (
+                  <div className='group flex flex-row gap-1 relative' key={idx}>
+                    <div className='h-full flex justify-center items-center' >
+                      <div className={`bg-gray-700 h-6 border-r-2 ${isDark ? "border-r-gray-800 " : "border-r-gray-200"}`}></div>
+                    </div>
+                    <div className="flex flex-row gap-2 rounded-xl" >
+                      <div className='flex flex-row gap-4 h-full relative after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-[#FF6F61] after:scale-x-0 after:origin-left after:transition-transform after:duration-300 group-hover:after:scale-x-100 py-2 px-2 will-change-transform'>
+                        <div className={`cursor-pointer flex justify-center items-center whitespace-nowrap group-hover:text-[#FF6F61] gap-1 ${isParentActive ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-[#454545]"}`}
+                        >
+                          <span className='uppercase font-semibold'>{item.parentCategory}</span>
+                          <IoIosArrowUp className={`group-hover:rotate-180 text-sm transition-all duration-300 ${isDark ? "text-gray-200" : "text-gray-800"}`} />
+                        </div>
+                      </div>
+                    </div>
+                    {item?.categories?.length > 0 &&
+                      (<div className={`${isDark ? "border-gray-800 bg-[#0F172A] shadow-[0_5px_8px_hsla(0,0%,0%,0.4)]" : "bg-white border-gray-200 shadow-[0_3px_5px_hsla(0,0%,0%,0.2)]"} border-2 absolute w-fit top-full left-0 flex flex-col opacity-0 transition-all duration-300 group-hover:opacity-100 invisible translate-y-10 group-hover:translate-y-0 group-hover:visible py-2 rounded-lg`} ref={categoryRef}>
+                        <div className={`w-full px-2`}>
+                          {item?.categories?.map((sub, i) => (
+                            <div key={i} className={`cursor-pointer hover:text-[#FF6F61] px-2 whitespace-nowrap capitalize font-normal py-1  $ ${activeTab === sub?.name ? "text-[#FF6F61]" : isDark ? "text-gray-200" : "text-[#787878]"}`}
+                              onClick={() => { handleTabClick(sub?.name, item?.parentCategory) }}>
+                              {sub?.name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>)
+                    }
+                  </div>
+                )
+              }
+              )}
+          </div>
+        )
+        }
 
       </div>
     </div>

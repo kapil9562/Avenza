@@ -21,6 +21,8 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
+import { BodyCategorySkeleton } from '../skeletons/CategorySkeletons.jsx';
+import ShowCaseSkeleton from '../skeletons/ShowCaseSkeleton.jsx';
 
 const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -209,40 +211,45 @@ const Layout = React.memo(function Layout({ category, pid }) {
                     <div className='relative'>
                         <h1 className={`uppercase font-semibold text-lg tracking-wide mb-3 ${isDark ? "text-gray-100" : "text-[#454545]"}`}>Category</h1>
                         <div className='space-y-2'>
-                            {categories?.map((item, idx) => (
-                                <div key={idx}>
-                                    <div className={`flex justify-between font-medium text-lg cursor-pointer ${isDark? "text-gray-300" : "text-[#787878]"}`} onClick={() => setDropDowm((prev) => (prev === item?.parentCategory) ? "" : item?.parentCategory)}>
-                                        <div className='flex gap-2'>
-                                            <img src={icons[idx]} alt="" className='h-5 w-5' />
-                                            <h3>{item?.parentCategory}</h3>
+                            {categories.length <= 0 ? (
+                                Array(9).fill(0).map((_, idx) => (
+                                    <BodyCategorySkeleton key={idx} />
+                                ))
+                            ) :
+                                categories?.map((item, idx) => (
+                                    <div key={idx}>
+                                        <div className={`flex justify-between font-medium text-lg cursor-pointer ${isDark ? "text-gray-300" : "text-[#787878]"}`} onClick={() => setDropDowm((prev) => (prev === item?.parentCategory) ? "" : item?.parentCategory)}>
+                                            <div className='flex gap-2'>
+                                                <img src={icons[idx]} alt="" className='h-5 w-5' />
+                                                <h3>{item?.parentCategory}</h3>
+                                            </div>
+                                            <span>{openDropdown === item?.parentCategory ? "-" : "+"}</span>
                                         </div>
-                                        <span>{openDropdown === item?.parentCategory ? "-" : "+"}</span>
-                                    </div>
 
-                                    <div className={`grid ${openDropdown === item?.parentCategory ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-all duration-600`}>
-                                        <div className='overflow-hidden min-h-0'>
-                                            <div className={`pt-3 pb-2 border-t ${isDark? "border-t-gray-700" : "border-t-gray-200"} `}>
-                                                {item?.categories?.map((sub, i) => (
-                                                    <div
-                                                        className={`flex justify-between py-0.5 cursor-pointer ${isDark ? "text-gray-400 hover:text-gray-200" : "text-[#787878] hover:text-gray-700"}`}
-                                                        key={i}
-                                                        onClick={() => { handleTabClick(sub?.name, item?.parentCategory) }}
-                                                    >
-                                                        <h3>{sub?.name}</h3>
-                                                        <span>{sub?.totalItems}</span>
-                                                    </div>
-                                                ))}
+                                        <div className={`grid ${openDropdown === item?.parentCategory ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-all duration-600`}>
+                                            <div className='overflow-hidden min-h-0'>
+                                                <div className={`pt-3 pb-2 border-t ${isDark ? "border-t-gray-700" : "border-t-gray-200"} `}>
+                                                    {item?.categories?.map((sub, i) => (
+                                                        <div
+                                                            className={`flex justify-between py-0.5 cursor-pointer ${isDark ? "text-gray-400 hover:text-gray-200" : "text-[#787878] hover:text-gray-700"}`}
+                                                            key={i}
+                                                            onClick={() => { handleTabClick(sub?.name, item?.parentCategory) }}
+                                                        >
+                                                            <h3>{sub?.name}</h3>
+                                                            <span>{sub?.totalItems}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     </div>
                 </aside>
                 <div className='w-full h-fit'>
                     {activeTab === "HOME" && <ProductSection products={products} />}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-1 lg:gap-5 will-change-transform w-full h-full relative ">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-1 lg:gap-5 will-change-transform w-full h-full relative ">
 
                         {loading
                             ? Array(PAGE_SIZE)
@@ -250,17 +257,20 @@ const Layout = React.memo(function Layout({ category, pid }) {
                                 .map((_, idx) => <ProductSkeleton key={idx} />)
                             :
                             error ?
-                                (<div className={`w-full rounded px-10 flex justify-center items-center absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 ${isDark ? "text-gray-300" : "text-gray-800"}`}>
-                                    <div className="flex flex-col justify-center items-center text-center">
-                                        <img src="/noResult.webp" alt="img" className="sm:h-50 sm:w-50 h-40 w-40 object-contain" />
-                                        <p className="font-semibold text-lg mb-2">Unable to load products</p>
-                                        <p className="font-normal text-gray-500 text-sm mb-4">Try changing the category or refresh the page</p>
-                                        <button className="border-2 flex flex-row items-center justify-center gap-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => window.location.reload()}>
-                                            <AiOutlineReload size={20} />
-                                            <span>Reload</span>
-                                        </button>
+                                (
+                                    <div className='w-full h-full flex items-center justify-center xl:col-span-4 sm:col-span-3 col-span-2'>
+                                        <div className={`w-full rounded px-10 flex justify-center items-center ${isDark ? "text-gray-300" : "text-gray-800"}`}>
+                                            <div className="flex flex-col justify-center items-center text-center">
+                                                <img src="/noResult.webp" alt="img" className="sm:h-50 sm:w-50 h-40 w-40 object-contain" />
+                                                <p className="font-semibold text-lg mb-2">Unable to load products</p>
+                                                <p className="font-normal text-gray-500 text-sm mb-4">Try changing the category or refresh the page</p>
+                                                <button className="border-2 flex flex-row items-center justify-center gap-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d] text-white font-semibold px-3 py-2 rounded text-sm shadow-md cursor-pointer" onClick={() => window.location.reload()}>
+                                                    <AiOutlineReload size={20} />
+                                                    <span>Reload</span>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
                                 ) : (
                                     products?.filter(p => p.productId !== pid).map((product, idx) => (
                                         <ProductCard key={product.productId} idx={idx} product={product} isDark={isDark} isFavorite={isFavorite} onFavClick={handleAddToFav} navigate={navigate} />
@@ -391,7 +401,7 @@ const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorit
 const ProductSection = ({ products }) => {
 
     const navigate = useNavigate();
-    const {isDark} = useTheme();
+    const { isDark } = useTheme();
     // Sort latest first
     const sortedProducts = products
         ? [...products].sort(
@@ -433,108 +443,116 @@ const ProductSection = ({ products }) => {
     ];
 
     return (
-        <div className="py-10 font-[Poppins]">
+        <>
+            {
+                !products ? (
+                    <ShowCaseSkeleton />
+                ) : (
+                    <div className="py-10 font-[Poppins]">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                {sections.map((section, idx) => {
+                            {sections.map((section, idx) => {
 
-                    const slides = chunkArray(section.products, 4);
+                                const slides = chunkArray(section.products, 4);
 
-                    return (
-                        <div key={idx}>
+                                return (
+                                    <div key={idx}>
 
-                            {/* heading */}
-                            <div className={`border-b pb-4 ${isDark? "border-gray-700" : "border-gray-200"}`}>
-                                <h2 className={`text-lg font-semibold ${isDark? "text-gray-200" : "text-[#212121]"}`}>
-                                    {section.title}
-                                </h2>
-                            </div>
-
-                            {/* swiper */}
-                            <Swiper
-                                key={slides.length}
-                                modules={[Autoplay, Pagination, EffectFade]}
-                                effect="fade"
-                                fadeEffect={{ crossFade: true }}
-                                autoplay={{
-                                    delay: 4000,
-                                    disableOnInteraction: false,
-                                    pauseOnMouseEnter: true,
-                                }}
-                                speed={990}
-                                loop={false}
-                                watchSlidesProgress={true}
-                                className="overflow-hidden"
-                            >
-                                {slides.map((group, i) => (
-                                    <SwiperSlide key={i}>
-
-                                        <div className="flex flex-col gap-4 opacity-100 transition-opacity duration-700 py-6 px-1">
-
-                                            {group.map((product) => (
-                                                <div
-                                                    key={product._id}
-                                                    className={`border relative z-9999 rounded-xl p-4 flex items-center gap-4 hover:-translate-y-2 hover:border-[#ff8f9c] transition-all duration-300 ${isDark? "border-gray-700 bg-[#0F172A]" : "border-gray-200"}`}
-                                                    onClick={() => {
-                                                        navigate(`/${createSlug(product.title)}/p/${product._id}`);
-                                                    }}
-                                                >
-
-                                                    {/* image */}
-                                                    <img
-                                                        src={product.thumbnail}
-                                                        alt={product.title}
-                                                        className="object-contain"
-                                                        width={70}
-                                                    />
-
-                                                    {/* content */}
-                                                    <div className="flex flex-col gap-1 w-full overflow-hidden">
-
-                                                        <h3 className={`text-[15px] font-semibold truncate ${isDark? "text-[#F564A9]" : "text-[#787878]"}`}>
-                                                            {product.title}
-                                                        </h3>
-
-                                                        <span className={`text-[14px] ${isDark? "text-gray-200" : "text-[#787878]"}`}>
-                                                            {product.category}
-                                                        </span>
-
-                                                        <div className="flex items-center gap-3 mt-1">
-
-                                                            <span className={`text-[15px] font-bold ${isDark? "text-[#FF6F61]" : "text-[#ff8f9c]"}`}>
-                                                                ₹{formatINR(product.price)}
-                                                            </span>
-
-                                                            <span className={`text-[14px] line-through ${isDark? "text-gray-200" : "text-gray-500"}`}>
-                                                                ₹{formatINR(
-                                                                    Math.round(
-                                                                        (product.price * 100) /
-                                                                        (100 - product.discountPercentage)
-                                                                    )
-                                                                )}
-                                                            </span>
-
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            ))}
-
+                                        {/* heading */}
+                                        <div className={`border-b pb-4 ${isDark ? "border-gray-700" : "border-gray-200"}`}>
+                                            <h2 className={`text-lg font-semibold ${isDark ? "text-gray-200" : "text-[#212121]"}`}>
+                                                {section.title}
+                                            </h2>
                                         </div>
 
-                                    </SwiperSlide>
-                                ))}
+                                        {/* swiper */}
+                                        <Swiper
+                                            key={slides.length}
+                                            modules={[Autoplay, Pagination, EffectFade]}
+                                            effect="fade"
+                                            fadeEffect={{ crossFade: true }}
+                                            autoplay={{
+                                                delay: 4000,
+                                                disableOnInteraction: false,
+                                                pauseOnMouseEnter: true,
+                                            }}
+                                            speed={990}
+                                            loop={false}
+                                            watchSlidesProgress={true}
+                                            className="overflow-hidden"
+                                        >
+                                            {slides.map((group, i) => (
+                                                <SwiperSlide key={i}>
 
-                            </Swiper>
+                                                    <div className="flex flex-col gap-4 opacity-100 transition-opacity duration-700 py-6 px-1">
+
+                                                        {group.map((product) => (
+                                                            <div
+                                                                key={product._id}
+                                                                className={`border relative z-9999 rounded-xl p-4 flex items-center gap-4 hover:-translate-y-2 hover:border-[#ff8f9c] transition-all duration-300 ${isDark ? "border-gray-700 bg-[#0F172A]" : "border-gray-200"}`}
+                                                                onClick={() => {
+                                                                    navigate(`/${createSlug(product.title)}/p/${product._id}`);
+                                                                }}
+                                                            >
+
+                                                                {/* image */}
+                                                                <img
+                                                                    src={product.thumbnail}
+                                                                    alt={product.title}
+                                                                    className="object-contain"
+                                                                    width={70}
+                                                                />
+
+                                                                {/* content */}
+                                                                <div className="flex flex-col gap-1 w-full overflow-hidden">
+
+                                                                    <h3 className={`text-[15px] font-semibold truncate ${isDark ? "text-[#F564A9]" : "text-[#787878]"}`}>
+                                                                        {product.title}
+                                                                    </h3>
+
+                                                                    <span className={`text-[14px] ${isDark ? "text-gray-200" : "text-[#787878]"}`}>
+                                                                        {product.category}
+                                                                    </span>
+
+                                                                    <div className="flex items-center gap-3 mt-1">
+
+                                                                        <span className={`text-[15px] font-bold ${isDark ? "text-[#FF6F61]" : "text-[#ff8f9c]"}`}>
+                                                                            ₹{formatINR(product.price)}
+                                                                        </span>
+
+                                                                        <span className={`text-[14px] line-through ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                                                                            ₹{formatINR(
+                                                                                Math.round(
+                                                                                    (product.price * 100) /
+                                                                                    (100 - product.discountPercentage)
+                                                                                )
+                                                                            )}
+                                                                        </span>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        ))}
+
+                                                    </div>
+
+                                                </SwiperSlide>
+                                            ))}
+
+                                        </Swiper>
+
+                                    </div>
+                                );
+                            })}
 
                         </div>
-                    );
-                })}
 
-            </div>
-
-        </div>
+                    </div>
+                )
+            }
+        </>
     );
 };
 
