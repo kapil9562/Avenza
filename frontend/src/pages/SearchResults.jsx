@@ -99,46 +99,46 @@ function SearchResults() {
                                     className={`will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer h-fit ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
                                     onClick={() => {
                                         setActiveTab("");
-                                        navigate(`/${createSlug(product.title)}/p/${product._id}`);
+                                        navigate(`/${createSlug(product?.title)}/p/${product?._id}`);
                                     }}
                                 >
                                     <ProductImage
-                                        src={product.thumbnail}
-                                        alt={product.title}
+                                        src={product?.thumbnail}
+                                        alt={product?.title}
                                         className="max-w-[80%] max-h-40 object-contain transition-all duration-400 group-hover:scale-120 relative z-5 will-change-transform"
                                         idx={idx}
                                     />
 
                                     <div className="p-2">
                                         <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
-                                            {product.title}
+                                            {product?.title}
                                         </h2>
 
                                         <p className={`text-sm line-clamp-1 md:line-clamp-2 md:min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
-                                            {product.description}
+                                            {product?.description}
                                         </p>
                                         <div className=" text-sm flex flex-row text-amber-400 items-center gap-2">
-                                            {renderStars(product.rating)} ({product.rating})
+                                            {renderStars(product?.rating)} ({product?.rating})
                                         </div>
 
                                         <div className="flex flex-col justify-between">
                                             <div className="flex flex-row flex-wrap items-center w-fit">
                                                 <p className="text-lg font-semibold text-[#FF6F61]">
-                                                    ₹{formatINR(product.price)}
+                                                    ₹{formatINR(product?.price)}
                                                 </p>
                                             </div>
                                             <div className='flex flex-row gap-2 mb-2'>
                                                 <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
                                                     ₹
                                                     {(formatINR(Math.round(
-                                                        (product.price * 100) /
-                                                        (100 - product.discountPercentage)
+                                                        (product?.price * 100) /
+                                                        (100 - product?.discountPercentage)
                                                     )))}
                                                     <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
                                                 </p>
 
                                                 <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
-                                                    {product.discountPercentage.toFixed(0)}% off
+                                                    {product.discountPercentage?.toFixed(0)}% off
                                                 </p>
                                             </div>
                                             <AddToCartBtn product={product} />

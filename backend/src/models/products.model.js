@@ -66,7 +66,7 @@ productSchema.pre("save", function () {
         );
 
         this.rating = Number(
-            (totalRating / this.reviews.length).toFixed(1)
+            (totalRating / this.reviews.length)?.toFixed(1)
         );
 
     } else {

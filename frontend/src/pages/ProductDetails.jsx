@@ -247,7 +247,7 @@ function ProductDetails() {
                                                 </p>
                                             </div>
                                             <div className="text-white font-semibold bg-green-700 w-fit rounded-full px-2 py-1 mt-2">
-                                                {product.rating.toFixed(1)} ★
+                                                {(product.rating) ? product?.rating?.toFixed(1) : 0} ★
                                             </div>
 
                                             <div className="flex flex-col md:flex-row gap-4 mt-6">

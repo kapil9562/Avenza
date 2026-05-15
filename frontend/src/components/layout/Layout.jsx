@@ -367,7 +367,7 @@ const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorit
                         {product.description}
                     </p>
                     <div className=" text-sm flex flex-row text-amber-400 items-center gap-2">
-                        {renderStars(product.rating)} ({product.rating.toFixed(1)})
+                        {renderStars(product?.rating)} ({(product?.rating)? product?.rating?.toFixed(1) : 0})
                     </div>
 
                     <div className="flex flex-col justify-between">
@@ -387,7 +387,7 @@ const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorit
                             </p>
 
                             <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
-                                {product.discountPercentage.toFixed(0)}% off
+                                {product.discountPercentage?.toFixed(0)}% off
                             </p>
                         </div>
                     </div>

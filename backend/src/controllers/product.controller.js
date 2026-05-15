@@ -138,7 +138,7 @@ const productReview = async (req, res) => {
 
         //  Recalculate Average Rating
         const totalRating = product.reviews.reduce((acc, item) => acc + item.rating, 0);
-        product.rating = (totalRating / product.reviews.length).toFixed(1);
+        product.rating = (totalRating / product.reviews.length)?.toFixed(1);
 
         await product.save();
 
