@@ -271,7 +271,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
             navigate('/whitelist');
           }}>
             <IoHeartSharp className='text-3xl text-red-600' />
-            <span className="hidden sm:flex font-['Sour_Gummy, Poppins'] font-medium">Favorite</span>
+            <span className="hidden sm:flex font-['Sour_Gummy','Poppins'] font-medium">Favorite</span>
           </div>
           <div onClick={() => {
             navigate('/carts');
@@ -283,7 +283,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                 </span>
               )}
             </div>
-            <span className="hidden sm:flex font-['Sour_Gummy, Poppins'] font-medium">Cart</span>
+            <span className="hidden sm:flex font-['Sour_Gummy','Poppins'] font-medium">Cart</span>
           </div>
           {user ? (
             <div className="relative group min-h-full flex cursor-pointer" onMouseLeave={() => setIsActive(false)}>
@@ -298,7 +298,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
                 ) : (
                   <div className={`flex flex-col justify-center items-center text-sm md:text-lg group-hover:text-pink-500 relative group cursor-pointer ${isDark ? "text-gray-300" : "text-[#373951]"}`}>
                     <img src={`${isDark ? '/assets/user.png' : '/assets/userLight.png'}`} alt="pfp" className='h-8 w-8 rounded-full' />
-                    <span className="font-['Sour_Gummy'] hidden sm:block">Profile</span>
+                    <span className="font-['Sour_Gummy','Poppins'] hidden sm:block">Profile</span>
                   </div>
                 )}
                 <div className={`transition-all duration-300 origin-top-right will-change-transform transform-gpu ${isActive ? "opacity-100 scale-100" : "opacity-0 scale-50 pointer-events-none"} ${isDark ? "bg-[#0F172A] shadow-[#0F172A90] shadow-md border-gray-700" : "bg-white border-gray-200 shadow-md"} absolute top-full flex flex-col justify-center text-lg font-semibold border-2 lg:group-hover:opacity-100 lg:group-hover:scale-100 scale-50 lg:pointer-events-none lg:group-hover:pointer-events-auto rounded-lg overflow-hidden z-90 right-0 min-w-fit`}>
@@ -348,11 +348,11 @@ function Header({ activeTab, setActiveTab, setShow }) {
             </div>
           ) : (
             <>
-              <div className='lg:flex text-[18px] tracking-wide font-[Sour_Gummy, Poppins] font-medium text-white gap-2 hidden justify-center items-center whitespace-nowrap'>
+              <div className="lg:flex text-[18px] tracking-wide font-['Sour_Gummy','Poppins'] font-medium text-white gap-2 hidden justify-center items-center whitespace-nowrap">
                 <NavLink to="/signup" replace state={{ from: location }} className={authBtnClass}>Sign up</NavLink>
                 <NavLink to="/login" replace state={{ from: location }} className={authBtnClass}>Log in</NavLink>
               </div>
-              <div className='whitespace-nowrap tracking-wide flex text-[14px] sm:text-[18px] font-[Sour_Gummy] font-medium text-white gap-2 justify-center lg:hidden items-center'>
+              <div className="whitespace-nowrap tracking-wide flex text-[14px] sm:text-[18px] font-['Sour_Gummy','Poppins'] font-medium text-white gap-2 justify-center lg:hidden items-center">
                 <NavLink to="/login" replace state={{ from: location }} className={authBtnClass}>Sign in</NavLink>
               </div>
             </>
