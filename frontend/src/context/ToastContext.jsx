@@ -101,7 +101,7 @@ export const ToastProvider = ({ children }) => {
                                     )}
                                 </span>
 
-                                <p className="text-lg font-semibold nunitoFont whitespace-nowrap">{currentToast.message}</p>
+                                <p className="text-lg font-medium whitespace-nowrap">{currentToast.message}</p>
                             </div>
 
                             <button

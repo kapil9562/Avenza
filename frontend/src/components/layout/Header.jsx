@@ -264,7 +264,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
               >
                 {isDark ? (<BsMoonStarsFill className='text-yellow-500' />) : (<img src="https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/2600.svg" alt="" className='h-5 w-5' />)}
               </span>
-              {isDark ? (<span className='absolute left-1 text-gray-500 font-semibold'>Light</span>) : (<span className='absolute right-1'>Dark</span>)}
+              {isDark ? (<span className='absolute left-2 text-gray-500 font-medium text-sm'>Light</span>) : (<span className='absolute right-2 text-sm font-medium text-gray-700'>Dark</span>)}
             </button>
           </div>
           <div className={`${isDark ? "text-gray-200" : "text-gray-700"} flex flex-col justify-center items-center text-sm md:text-lg hover:text-[#FF6F61] cursor-pointer`} onClick={() => {

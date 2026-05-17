@@ -12,9 +12,9 @@ export default function ProductImage({ src, alt, className, idx }) {
     : darkBgImages[idx % darkBgImages.length];
 
   return (
-    <div className="relative w-full h-50 justify-center items-center flex">
+    <div className="relative w-full h-50 justify-center items-center flex overflow-hidden rounded-xl">
 
-      <div className="absolute inset-0 rounded-xl h-full"
+      <div className={`absolute inset-0 h-full`}
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "cover",

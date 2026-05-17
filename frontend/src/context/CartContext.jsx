@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { addCart, clearCart, getCart, getProducts, updateQty } from "../api/api";
 import { useAuth } from "./AuthContext";
+import { toast } from "./ToastContext";
 
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
@@ -57,8 +58,13 @@ export const CartProvider = ({ children }) => {
       });
 
       setItems(mergedItems);
-    } catch (e) {
-      console.error("fetchCart error", e);
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to add item!";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -132,7 +138,8 @@ export const CartProvider = ({ children }) => {
       );
 
       if (blocked) {
-        throw "quantity limit exceeded"
+        toast.error("Quantity limit exceeded!");
+        return;
       }
 
       try {
@@ -149,8 +156,12 @@ export const CartProvider = ({ children }) => {
               : item
           )
         );
-        return err;
+        const message =
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to add item!";
 
+        toast.error(message);
       }
     },
     [user?.uid]

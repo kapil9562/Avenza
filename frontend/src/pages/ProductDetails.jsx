@@ -220,7 +220,7 @@ function ProductDetails() {
                                     {/* DETAILS */}
                                     <div className="flex flex-col">
                                         <div className="p-2">
-                                            <h1 className={`${!isDark ? "text-black" : "text-[#F564A9]"} text-3xl font-['Playfair_Display']`}>
+                                            <h1 className={`${!isDark ? "text-gray-800" : "text-[#F564A9]"} font-medium text-3xl`}>
                                                 {product.title}
                                             </h1>
 
@@ -258,7 +258,7 @@ function ProductDetails() {
 
                                                 <button
                                                     onClick={() => { handleBuyNow() }}
-                                                    className="min-w-35 px-6 py-2 bg-[#FF6F61] text-[#FFFFFF] rounded-2xl cursor-pointer active:scale-95 transition-transform duration-300"
+                                                    className="min-w-35 px-6 py-2 bg-[#FF6F61] text-[#FFFFFF] rounded-xl cursor-pointer active:scale-95 transition-transform duration-300"
                                                 >
                                                     Buy Now
                                                 </button>
@@ -270,7 +270,7 @@ function ProductDetails() {
                                         </div>
 
                                         <div className="flex flex-col rounded-lg px-4 gap-1">
-                                            <h1 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                            <h1 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
                                                 Return Policy
                                             </h1>
                                             <p className="bg-[#FF6F6120] w-fit p-2 rounded-4xl border-2 border-[#FF6F61] text-[#FF6F61] font-semibold">
@@ -283,7 +283,7 @@ function ProductDetails() {
                                         </div>
 
                                         <div className="rounded-lg px-4">
-                                            <h1 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                            <h1 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
                                                 Product Highlights
                                             </h1>
 
@@ -292,28 +292,28 @@ function ProductDetails() {
                                                     <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
                                                         stock
                                                     </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-black"}`}>{product.stock}</span>
+                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.stock}</span>
                                                 </div>
 
                                                 <div>
                                                     <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
                                                         brand
                                                     </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-black"}`}>{product.brand}</span>
+                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.brand}</span>
                                                 </div>
 
                                                 <div>
                                                     <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
                                                         weight
                                                     </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-black"}`}>{product.weight} gm</span>
+                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.weight} gm</span>
                                                 </div>
 
                                                 <div>
                                                     <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
                                                         warranty
                                                     </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-black"}`}>{product.warrantyInformation}</span>
+                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.warrantyInformation}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -323,7 +323,7 @@ function ProductDetails() {
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
                                 </div>
                                 <div className="pb-4 flex flex-col gap-4 px-6 w-full">
-                                    <h1 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                    <h1 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
                                         Customer Reviews
                                     </h1>
                                     {product?.reviews?.length > 0 ?
@@ -337,7 +337,7 @@ function ProductDetails() {
                                                             className="w-10 h-10 rounded-full"
                                                         />
                                                         <div className="flex flex-col gap-2">
-                                                            <div className={`${isDark ? "text-[#FFFFFF]" : "text-black"} font-semibold flex flex-row items-center gap-2`}>
+                                                            <div className={`${isDark ? "text-[#FFFFFF]" : "text-gray-800"} font-semibold flex flex-row items-center gap-2`}>
                                                                 <span>{review.reviewerName}</span>
                                                                 <span>
                                                                     {renderStars(review.rating)}
@@ -389,7 +389,7 @@ function ProductDetails() {
                                 {/* Give Review */}
                                 {user && !hasUserReviewed &&
                                     (<div className={`w-full pb-4 flex flex-col gap-2 px-6`}>
-                                        <h2 className={`text-2xl mb-2 font-serif ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                        <h2 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
                                             Give a Review
                                         </h2>
 
@@ -440,7 +440,7 @@ function ProductDetails() {
                                 </div>
                                 {/* Related Products */}
                                 <div className="pb-4 flex flex-col w-full">
-                                    <h1 className={`text-2xl mb-2 font-serif sm:pl-6 pl-4 ${!isDark ? "text-black" : "text-gray-200"}`}>
+                                    <h1 className={`text-2xl mb-2 font-medium sm:pl-6 pl-4 ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
                                         Related Products
                                     </h1>
                                     <Layout category={product?.category} pid={product?.productId} />

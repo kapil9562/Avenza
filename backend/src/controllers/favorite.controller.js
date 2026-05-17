@@ -17,7 +17,7 @@ const toggleFav = async (req, res) => {
 
             if (count == 10) {
                 return res.status(400).json({
-                    res: "LIMIT REACHED !"
+                    message: "LIMIT REACHED !"
                 });
             }
             await Favorite.create({ uid, productId });
@@ -25,7 +25,7 @@ const toggleFav = async (req, res) => {
         }
     } catch (error) {
         console.log("toggleFav error :: ", error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Failed to add item!"  });
     }
 };
 
@@ -38,7 +38,7 @@ const getFavItems = async (req, res) => {
         res.status(200).json({ data: favorites });
     } catch (error) {
         console.log("getFavItems error :: ", error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Internal server error! Please try again later." });
     }
 };
 
@@ -52,7 +52,7 @@ const clearFav = async (req, res) => {
         return res.status(200).json({ message: "favItems cleared successfully" });
     } catch (error) {
         console.log("getFavItems error :: ", error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Internal server error! Please try again later." });
     }
 };
 

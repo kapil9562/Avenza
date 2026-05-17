@@ -30,9 +30,15 @@ export const cartLimiter = rateLimit({
     }
 });
 
+export const speedLimiter2 =  slowDown({
+    windowMs: 15 * 60 * 1000,
+    delayAfter: 20,
+    delayMs: (hits) => (hits - 20) * 100,
+});
+
 export const favWriteLimiter = rateLimit({
     windowMs: 5 * 60 * 1000,
-    max: 40,
+    max: 50,
     message: {
         success: false,
         message: "Too many favorite actions. Slow down."

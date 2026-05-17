@@ -57,7 +57,7 @@ const getProducts = async (req, res) => {
 
     } catch (err) {
         console.log("error :: ", err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ message: "Internal server error! Please try again later." });
     }
 };
 
@@ -102,7 +102,7 @@ const getAllCategory = async (req, res) => {
         return res.status(200).json(data);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Internal server error! Please try again later." });
     }
 };
 
@@ -149,7 +149,7 @@ const productReview = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Internal server error! Please try again later." });
     }
 };
 

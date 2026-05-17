@@ -108,7 +108,7 @@ function OrderDetail() {
         <div className='lg:w-[70%] w-full flex flex-col gap-4'>
           <div className={`min-h-[70dvh] border-2 rounded-lg ${isDark ? "bg-gray-900 text-gray-200 border-gray-800" : "bg-[#FFFFFF] text-gray-800 border-[#eeecec]"} sm:space-y-4 space-y-2 px-5 py-4`}>
             <div className={`sm:border-b-2 ${isDark ? "border-gray-800" : "border-[#b3b3b320]"}`}>
-              <h1 className='text-xl font-semibold sm:pb-4 font-[Roboto_Serif]'>Ordered Item</h1>
+              <h1 className='text-xl font-semibold sm:pb-4'>Ordered Item</h1>
             </div>
             <div className={`flex flex-row w-full gap-4 border-2 rounded-lg px-4 py-4 ${isDark ? "border-gray-800" : "border-gray-100"}`}>
               <div className='h-full flex items-center'>
@@ -117,11 +117,11 @@ function OrderDetail() {
               <div className='w-full flex flex-col justify-between'>
                 <div className='flex flex-row gap-4 justify-between w-full'>
                   <div>
-                    <h1 className='sm:text-lg md:text-xl font-medium font-[Roboto_Serif]'>{order?.orderItems?.[item]?.name}</h1>
+                    <h1 className='sm:text-lg md:text-xl font-medium'>{order?.orderItems?.[item]?.name}</h1>
                     <span className='font-normal text-sm md:text-lg text-[#878787]'>Qty:{order?.orderItems?.[item]?.quantity}</span>
                   </div>
                   <div className='flex flex-col'>
-                    <h2 className='sm:text-lg md:text-xl font-[Cormorant_Garamond] font-bold'>Price</h2>
+                    <h2 className='sm:text-lg md:text-xl  font-bold'>Price</h2>
                     <span className='md:text-lg text-[#878787]'>₹{formatINR(order?.orderItems?.[item]?.price)}</span>
                   </div>
                 </div>
@@ -139,7 +139,7 @@ function OrderDetail() {
               </div>
             </div>
             <div className={`sm:border-b-2 ${isDark ? "border-gray-800" : "border-[#b3b3b320]"}`}>
-              <h1 className='text-xl font-semibold sm:pb-4 font-[Roboto_Serif]'>Ordered Information</h1>
+              <h1 className='text-xl font-semibold sm:pb-4'>Ordered Information</h1>
             </div>
             <OrderStatusTracker currentStatus={order?.orderStatus} estimatedDelivery={formatDate(deliveryDate(order?.createdAt))} />
           </div>
@@ -170,16 +170,16 @@ function OrderDetail() {
             </div>
             {order?.orderStatus !== "cancelled" ?
               <div className='flex flex-row h-fit gap-2 whitespace-nowrap'>
-                <button className={`py-2 px-3 border-2 rounded text-sm font-medium font-[Nunito] tracking-wide cursor-pointer hover:shadow-md transition-[box-shadow,border-color, transform] will-change-transform duration-300 active:scale-95 ${isDark? "border-gray-800 bg-[#151e30] text-gray-400 hover:border-gray-600" : "border-slate-300 bg-slate-200 text-gray-700"}`}>Cancel Order</button>
-                <button className='py-2 px-3 border-2 border-[#4e80b3] bg-[#568FC8] rounded text-sm font-medium text-gray-100 font-[Nunito] tracking-wide cursor-pointer hover:shadow-md transition-[box-shadow,border-color, transform] will-change-transform duration-300 active:scale-95'>Track Order</button>
-              </div> : <button className='py-2 px-3 border-2 border-[#4e80b3] bg-[#568FC8] rounded text-sm font-medium text-gray-100 font-[Nunito] tracking-wide cursor-pointer hover:shadow-md transition-[box-shadow,border-color, transform] will-change-transform duration-300'>Order Again</button>
+                <button className={`py-2 px-3 border-2 rounded text-sm font-medium tracking-wide cursor-pointer hover:shadow-md transition-[box-shadow,border-color, transform] will-change-transform duration-300 active:scale-95 ${isDark? "border-gray-800 bg-[#151e30] text-gray-400 hover:border-gray-600" : "border-slate-300 bg-slate-200 text-gray-700"}`}>Cancel Order</button>
+                <button className='py-2 px-3 border-2 border-[#4e80b3] bg-[#568FC8] rounded text-sm font-medium text-gray-100 tracking-wide cursor-pointer hover:shadow-md transition-[box-shadow,border-color, transform] will-change-transform duration-300 active:scale-95'>Track Order</button>
+              </div> : <button className='py-2 px-3 border-2 border-[#4e80b3] bg-[#568FC8] rounded text-sm font-medium text-gray-100 tracking-wide cursor-pointer hover:shadow-md transition-[box-shadow,border-color, transform] will-change-transform duration-300'>Order Again</button>
             }
           </div>
         </div>
         <div className='h-fit lg:w-[30%] w-full flex flex-col gap-5'>
           <div className={`border-2 rounded-lg ${isDark ? "bg-gray-900 text-gray-200 border-gray-800" : "bg-[#FFFFFF] text-gray-800 border-[#eeecec]"} p-5 space-y-4`}>
             <div className={`border-b-2 ${isDark ? "border-gray-800" : "border-[#b3b3b320]"}`}>
-              <h1 className='text-xl font-medium pb-4 font-[Roboto_Serif]'>Delivery details</h1>
+              <h1 className='text-xl font-medium pb-4'>Delivery details</h1>
             </div>
             <div className={`p-4 rounded-2xl space-y-4 ${isDark ? "bg-[#151e30] text-gray-200" : "bg-[#F9F9F9] text-gray-700"}`}>
               <div className='flex flex-row gap-2 items-center text-sm font-medium'>
@@ -197,7 +197,7 @@ function OrderDetail() {
           </div>
           <div className={`border-2 rounded-lg ${isDark ? "bg-gray-900 text-gray-200 border-gray-800" : "bg-[#FFFFFF] text-gray-800 border-[#eeecec]"} p-5 space-y-4`}>
             <div className={`border-b-2 ${isDark ? "border-gray-800" : "border-[#b3b3b320]"}`}>
-              <h1 className='text-xl font-medium pb-4 font-[Roboto_Serif]'>Price details</h1>
+              <h1 className='text-xl font-medium pb-4'>Price details</h1>
             </div>
             <div className={`p-4 rounded-2xl space-y-4 ${isDark? "bg-[#151e30]" : "bg-[#F9F9F9]"}`}>
               <div className={`space-y-2 border-b border-dashed pb-4 ${isDark? "border-gray-600" : "border-gray-900"}`}>

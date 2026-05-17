@@ -4,8 +4,9 @@ import { useTheme } from '../context/ThemeContext';
 import { useFavItem } from '../context/FavItemsContext';
 import { ProductImage, AddToCartBtn } from "../components";
 import { RxCross2 } from "react-icons/rx";
+import { formatINR } from '../utils/price';
 
-function FavItems({ item, idx }) {
+function FavItems({ product, idx }) {
 
     const { removeFavItem } = useFavItem();
     const { isDark } = useTheme();
@@ -28,7 +29,7 @@ function FavItems({ item, idx }) {
             .replace(/(^-|-$)/g, "");
     }
 
-    const removeItem = async(pid) => {
+    const removeItem = async (pid) => {
         try {
             await removeFavItem(pid);
         } catch (error) {
@@ -38,45 +39,62 @@ function FavItems({ item, idx }) {
 
     return (
         <div
-            className={`will-change-transform max-w-sm rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer ${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] hover:shadow-xl border-gray-700" : "bg-white shadow-gray-400 shadow-lg hover:shadow-2xl"}`}
+            className={`will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer shadow-md hover:shadow-xl ${isDark ? "bg-[#0F172A] shadow-[#0F172A] border-gray-700" : "bg-white shadow-gray-300"}`}
             onClick={() => {
-                setActiveTab("");
-                navigate(`/${createSlug(item.title)}/p/${item._id}`);
+                navigate(`/${createSlug(product.title)}/p/${product._id}`);
             }}
         >
             <div
                 className={`absolute right-1 top-1 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl active:text-red-500 ${isDark ? "text-gray-500" : "text-gray-400"}`}
                 onClick={(e) => {
                     e.stopPropagation();
-                    removeItem(item._id);
+                    removeItem(product._id);
                 }}>  <RxCross2 />
             </div>
 
             <ProductImage
-                src={item?.thumbnail}
-                alt={item?.title}
-                className="w-full h-40 object-contain transition-all duration-400 group-hover:scale-120 relative z-5 will-change-transform"
+                src={product.thumbnail}
+                alt={product.title}
+                className="max-w-[80%] max-h-40 object-contain transition-all duration-500 sm:group-hover:scale-120 relative z-5 will-change-transform"
                 idx={idx}
             />
 
-            <div className="p-2">
-                <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
-                    {item?.title}
-                </h2>
+            <div className="py-2">
+                <div className='px-2'>
+                    <h2 className="text-md mb-1 text-[#F564A9] line-clamp-1">
+                        {product.title}
+                    </h2>
 
-                <p className={`text-sm mb-2 line-clamp-2 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
-                    {item?.description}
-                </p>
-                <div className=" text-sm mb-2 flex flex-row text-amber-400 items-center gap-2">
-                    {renderStars(item?.rating)} ({item?.rating})
-                </div>
+                    <p className={`text-sm line-clamp-1 md:line-clamp-2 md:min-h-10 ${isDark ? "text-gray-200" : "text-gray-500"}`}>
+                        {product.description}
+                    </p>
+                    <div className=" text-sm flex flex-row text-amber-400 items-center gap-2">
+                        {renderStars(product?.rating)} ({(product?.rating) ? product?.rating?.toFixed(1) : 0})
+                    </div>
 
-                <div className="flex flex-col gap-2 justify-between">
-                    <span className="text-[#FF6F61] font-bold text-lg">
-                        ₹{(item?.price).toLocaleString("en-IN")}
-                    </span>
-                    <AddToCartBtn product={item} />
+                    <div className="flex flex-col justify-between">
+                        <div className="flex flex-row flex-wrap items-center w-fit">
+                            <p className="text-lg font-semibold text-[#FF6F61]">
+                                ₹{formatINR(product.price)}
+                            </p>
+                        </div>
+                        <div className='flex flex-row gap-2 mb-2'>
+                            <p className={`text-sm font-semibold relative ${!isDark ? "text-gray-400" : "text-gray-200"}`}>
+                                ₹
+                                {(formatINR(Math.round(
+                                    (product.price * 100) /
+                                    (100 - product.discountPercentage)
+                                )))}
+                                <span className={`absolute w-full h-px left-0 top-1/2 ${!isDark ? "bg-gray-400" : "bg-gray-200"}`} />
+                            </p>
+
+                            <p className={`${!isDark ? "text-green-600" : "text-green-400"} text-sm font-semibold`}>
+                                {product.discountPercentage?.toFixed(0)}% off
+                            </p>
+                        </div>
+                    </div>
                 </div>
+                <AddToCartBtn product={product} />
             </div>
         </div>
     )

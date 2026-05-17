@@ -26,14 +26,14 @@ const PaymentFailed = () => {
 
                     <Link
                         to="/my-account/my-orders"
-                        className={`bg-[#FF6F61] border-[#ff3e2d] hover:bg-[#fc8479] text-white py-2 rounded-lg transition border-2 nunitoFont font-semibold`}
+                        className={`bg-[#FF6F61] border-[#ff3e2d] hover:bg-[#fc8479] text-white py-2 rounded-lg transition border-2 font-semibold`}
                     >
                         View Orders
                     </Link>
 
                     <Link
                         to="/home"
-                        className={`border-2 py-2 rounded-lg transform-gpu font-semibold ${isDark ? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"} nunitoFont`}
+                        className={`border-2 py-2 rounded-lg transform-gpu font-semibold ${isDark ? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"}`}
                     >
                         Go Back
                     </Link>

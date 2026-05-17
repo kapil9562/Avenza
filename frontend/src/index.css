@@ -144,11 +144,6 @@ body {
   animation: easeIn 0.8s ease forwards;
 }
 
-
-.nunitoFont {
-  font-family: 'Nunito', sans-serif;
-}
-
 .float-img {
   animation: float 3s ease-in-out infinite;
 }

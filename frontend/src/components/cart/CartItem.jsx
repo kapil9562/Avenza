@@ -9,52 +9,42 @@ import { useTheme } from "../../context/ThemeContext";
 const CartItem = React.memo(function CartItem({ item }) {
 
     const { updateCartQty } = useCart();
-    const [error, setError] = useState("");
 
     const { isDark } = useTheme();
     const getbg = !isDark ? '/assets/1.png' : '/assets/d1.png'
 
     const updateCart = async (product_id, qtyChange) => {
-        try {
-            await updateCartQty(
-                product_id,
-                qtyChange
-            );
-        } catch (err) {
-            setError(err?.response?.data?.error || err)
-        }
+        await updateCartQty(
+            product_id,
+            qtyChange
+        );
     }
-
-    useEffect(() => {
-        if (!error) return;
-
-        const timer = setTimeout(() => {
-            setError('');
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [error]);
-
 
     return (
         <div>
             <div className="flex flex-row justify-between items-center gap-4 p-4">
 
                 <div className="flex flex-row gap-4">
-                    <img
-                        src={item.thumbnail}
-                        alt={item.title}
-                        className="w-24 h-24 object-cover rounded-xl"
-                        style={{
-                            backgroundImage: `url(${getbg})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center"
-                        }}
-                    />
+
+                    <div className="relative min-w-24 justify-center items-center flex overflow-hidden rounded-xl">
+
+                        <div className={`absolute inset-0 h-full`}
+                            style={{
+                                backgroundImage: `url(${getbg})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                opacity: 0.6
+                            }} />
+                        <img
+                            src={item.thumbnail}
+                            alt={item.title}
+                            className="w-24 h-24 object-cover rounded-xl relative z-5"
+                        />
+                    </div>
 
                     <div className="flex flex-col gap-2">
                         <div>
-                            <h2 className="sm:text-[18px] text-[16px]">{item.title}</h2>
+                            <h2 className="sm:text-[18px] text-[16px] line-clamp-1">{item.title}</h2>
 
                             <p className="text-gray-500">
                                 ₹{formatINR(item.price)}
@@ -63,7 +53,7 @@ const CartItem = React.memo(function CartItem({ item }) {
 
                         <div className="relative flex items-center gap-3">
 
-                            <div className={`${isDark ? "border-gray-700" : "border-gray-300"} border rounded-sm flex flex-row`}>
+                            <div className={`${isDark ? "border-gray-700" : "border-gray-300"} overflow-hidden border rounded-sm flex flex-row`}>
 
                                 <button
                                     onClick={() => updateCart(item._id, -1)}
@@ -84,15 +74,6 @@ const CartItem = React.memo(function CartItem({ item }) {
                                 >
                                     <FiPlus className="text-green-600" />
                                 </button>
-
-                                {error &&
-                                    <div className={`absolute bottom-full left-10 bg-red-100 text-red-600 flex justify-between items-center p-1 border-l-3 border-red-400 rounded-md gap-5 px-2 z-99 transition-opacity`}>
-                                        <div className='flex justify-center items-center flex-row gap-2'>
-                                            <GoAlertFill />
-                                            <p className='leading-tight'>{error}</p>
-                                        </div>
-                                    </div>
-                                }
 
                             </div>
 

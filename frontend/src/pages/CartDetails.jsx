@@ -56,19 +56,19 @@ export default function CartDetails() {
     }, [items]);
 
     return (
-        <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] relative`}>
+        <div className={`${isDark ? "bg-gray-900" : "bg-[#FFFFFF]"} lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] relative`}>
             {loading && <Loader />}
-            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 font-bold nunitoFont h-full`}>
+            <div className={`${isDark ? "text-gray-300" : "text-gray-600"} max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-2 sm:p-4 h-full`}>
 
                 {/* Cart Items */}
                 <div className="space-y-1 md:space-y-2 md:w-3/4 rounded-2xl h-full">
-                    <div className="flex w-full flex-row justify-between items-center">
-                        <h1 className="sm:text-3xl text-lg flex flex-row gap-2 items-center">Your Cart <TiShoppingCart className="text-orange-500" /></h1>
+                    <div className="flex w-full flex-row justify-between items-center font-semibold">
+                        <h1 className="sm:text-2xl text-lg flex flex-row gap-2 items-center">Your Cart <TiShoppingCart className="text-orange-500" /></h1>
                         {items.length > 0 && <button className="underline cursor-pointer hover:text-orange-500 active:text-orange-500" onClick={clearCart}>clear all</button>}
                     </div>
 
                     {items.length === 0 ? (
-                        <div className="text-gray-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">
+                        <div className="text-gray-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center font-semibold">
                             <div className="relative">
                                 <Lottie
                                     animationData={emptyCart}
@@ -89,7 +89,7 @@ export default function CartDetails() {
                         </div>
                     ) : (
                         <div className="relative h-full">
-                            <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} lg:max-h-[72dvh] md:max-h-[76dvh] max-h-[78dvh] sm:max-h-[78dvh] overflow-y-auto no-scrollbar scroll-smooth rounded-2xl h-fit`} ref={boxRef}>
+                            <div className={`${isDark ? "bg-[#0F172A80] border-gray-800" : "bg-[#FFFFFF80] border-gray-200"} shadow border lg:max-h-[72dvh] md:max-h-[76dvh] max-h-[78dvh] sm:max-h-[78dvh] overflow-y-auto no-scrollbar scroll-smooth rounded-2xl h-fit`} ref={boxRef}>
                                 {items.map((item, idx) => (
                                     <div key={idx}>
                                         <CartItem
@@ -114,10 +114,10 @@ export default function CartDetails() {
 
                 {/* Order Summary */}
                 {items.length > 0 &&
-                    <div className={`${isDark ? "bg-[#0F172A80] border border-gray-800" : "bg-[#FFFFFF80]"} rounded-2xl shadow-sm h-fit md:w-1/2`}>
+                    <div className={`${isDark ? "bg-[#0F172A80] border-gray-800" : "bg-[#FFFFFF80] border-gray-200"} border rounded-2xl shadow-sm h-fit md:w-1/2`}>
                         <div className="p-6 space-y-4">
 
-                            <h2 className="text-xl ">
+                            <h2 className="text-xl font-semibold">
                                 Order Summary
                             </h2>
 
@@ -140,7 +140,7 @@ export default function CartDetails() {
                                 </span>
                             </div>
 
-                            <div className="border-t pt-3 flex justify-between">
+                            <div className="border-t pt-3 flex justify-between font-semibold text-lg">
                                 <span>Total</span>
                                 <span className="text-green-600">
                                     ₹{formatINR(total)}

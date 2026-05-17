@@ -14,7 +14,7 @@ const addToCart = async (req, res) => {
       if (newQty > 5) {
         return res.status(409).json({
           success: false,
-          error: "Quantity limit exceeded!"
+          message: "Quantity limit exceeded!"
         });
       }
 
@@ -32,7 +32,7 @@ const addToCart = async (req, res) => {
     if (totalCart >= 10) {
       return res.status(409).json({
         success: false,
-        error: "Cart limit exceeded!"
+        message: "Cart limit exceeded!"
       });
     }
 
@@ -51,7 +51,7 @@ const addToCart = async (req, res) => {
     });
   } catch (err) {
     console.error("error :: ", err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ message: "Internal server error! Please try again later." });
   }
 };
 
@@ -64,7 +64,7 @@ const getCart = async (req, res) => {
     res.status(200).json(cartItems);
   } catch (err) {
     console.error("error :: ", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Internal server error! Please try again later." });
   }
 };
 
@@ -78,7 +78,7 @@ const updateQty = async (req, res) => {
     if (!item) {
       return res.status(404).json({
         success: false,
-        error: "Item not found"
+        message: "Item not found"
       });
     }
 
@@ -87,7 +87,7 @@ const updateQty = async (req, res) => {
     if (newQty > 5) {
       return res.status(409).json({
         success: false,
-        error: "limit exceeded!"
+        message: "limit exceeded!"
       });
     }
 
@@ -109,7 +109,7 @@ const updateQty = async (req, res) => {
     });
   } catch (err) {
     console.error("error :: ", err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ message: "Internal server error! Please try again later." });
   }
 };
 
@@ -120,7 +120,7 @@ const clearCart = async (req, res) => {
     return res.status(200).json({ message: "Cart cleared successfully" });
   } catch (err) {
     console.error("error :: ", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Internal server error! Please try again later." });
   }
 }
 

@@ -36,7 +36,7 @@ function AddToCartBtn({ product }) {
             await addToCart({ product_id: product._id });
             setSuccess(product.productId);
         } catch (err) {
-            const error = err?.response?.data?.error || "Failed to add item"
+            const error = err?.response?.data?.message || "Failed to add item!"
             toast.error(error);
         } finally {
             setLoadingId(null);
