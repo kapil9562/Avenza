@@ -6,7 +6,8 @@ import {
   checkoutLimiter,
   orderReadLimiter,
   addressLimiter,
-  speedLimiter
+  speedLimiter,
+  speedLimiter2
 } from "../middleware/rateLimiter.js";
 
 const orderRouter = express.Router()
@@ -15,7 +16,7 @@ const orderRouter = express.Router()
 orderRouter.post(
   "/buy-now",
   verifyJWT,
-  speedLimiter,
+  speedLimiter2,
   checkoutLimiter,
   buyNow
 );
@@ -24,7 +25,7 @@ orderRouter.post(
 orderRouter.post(
   "/checkout/cart",
   verifyJWT,
-  speedLimiter,
+  speedLimiter2,
   checkoutLimiter,
   buyCartItems
 );
@@ -42,7 +43,7 @@ orderRouter.post(
 orderRouter.get(
   "/get-orders",
   verifyJWT,
-  speedLimiter,
+  speedLimiter2,
   orderReadLimiter,
   getOrders
 );
@@ -66,7 +67,7 @@ orderRouter.get(
 orderRouter.get(
   "/get-order-detail",
   verifyJWT,
-  speedLimiter,
+  speedLimiter2,
   orderReadLimiter,
   getOrderDetail
 );

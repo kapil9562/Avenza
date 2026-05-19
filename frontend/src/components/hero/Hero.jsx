@@ -90,7 +90,7 @@ function Hero() {
                     </div>
 
                     <div className='space-x-4 md:flex flex-row hidden'>
-                        <button className='text-gray-800 cursor-pointer font-bold font-[Nunito] hover:text-orange-400 transition-colors duration-200' onClick={handleLogin}>
+                        <button className='text-gray-800 cursor-pointer font-semibold  hover:text-orange-400 transition-colors duration-200' onClick={handleLogin}>
                             Sign in
                         </button>
                         <button
