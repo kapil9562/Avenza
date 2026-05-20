@@ -14,7 +14,7 @@ const Breadcrumb = () => {
     ).join(" ");
 
   return (
-    <div className={`flex text-xs font-normal ${isDark? "text-gray-400" : "text-[#878787]"}`}>
+    <div className={`flex text-sm font-medium ${isDark? "text-gray-400" : "text-[#878787]"}`}>
       <Link
         to='/home'
         onClick={() => {
@@ -31,7 +31,7 @@ const Breadcrumb = () => {
         return (
           <span key={index} className="flex flex-row items-center">
             <MdKeyboardArrowRight size={14} />
-            <Link to={routeTo} className="hover:text-orange-500">{formatName(name)}</Link>
+            <Link to={routeTo} className={`hover:text-orange-500 font-medium ${index == pathnames?.length-1 && "text-rose-400"}`}>{formatName(name)}</Link>
           </span>
         );
       })}

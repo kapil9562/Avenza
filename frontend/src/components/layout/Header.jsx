@@ -174,7 +174,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
   }, [user]);
 
   return (
-    <div className={`w-full sticky top-0 z-50 min-h-20 flex flex-col will-change-transform ${isDark ? "bg-[#0F172A]" : "bg-[#ffffff]"} sm:px-0 px-2`}>
+    <div className={`w-full sticky top-0 z-50 min-h-20 flex flex-col will-change-transform ${isDark ? "bg-[#0F172A] border-b-gray-800" : "bg-[#ffffff] border-b-gray-200"} sm:px-0 px-2 border-b`}>
 
       <div className='flex flex-row justify-between w-full min-h-15 sm:min-h-20 gap-4 sm:px-5 lg:px-10'>
 
