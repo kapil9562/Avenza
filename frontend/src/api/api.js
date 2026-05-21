@@ -156,6 +156,8 @@ api.interceptors.response.use(
       console.log("Switching backend to:", newBase);
 
       originalRequest.baseURL = newBase;
+      
+      api.defaults.baseURL = newBase;
 
       return api(originalRequest);
     }
