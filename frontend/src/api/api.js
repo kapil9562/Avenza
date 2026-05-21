@@ -7,6 +7,7 @@ const SECONDARY_BACKEND = import.meta.env.VITE_BACKEND_BASE_URI2;
 export const api = axios.create({
   baseURL: PRIMARY_BACKEND,
   withCredentials: true,
+  timeout: 10000,
 });
 
 export const googleAuth = (code) => api.get(`auth/google?code=${code}`);
