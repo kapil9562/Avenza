@@ -137,32 +137,48 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // ===== BACKEND FALLBACK =====
-    if (
-      error.response?.status === 503 &&
-      !originalRequest._fallbackTried
-    ) {
+    // =========================
+    // BACKEND FAILOVER
+    // =========================
+    const shouldFallback =
+      !originalRequest._fallbackTried &&
+      (
+        !error.response || // network error
+        error.code === "ECONNABORTED" || // timeout
+        error.response?.status === 502 ||
+        error.response?.status === 503 ||
+        error.response?.status === 504
+      );
+
+    if (shouldFallback) {
       originalRequest._fallbackTried = true;
 
-      // current backend check
-      const currentBase = originalRequest.baseURL || api.defaults.baseURL;
+      const currentBase =
+        originalRequest.baseURL || api.defaults.baseURL;
 
-      // switch backend
       const newBase =
         currentBase === PRIMARY_BACKEND
           ? SECONDARY_BACKEND
           : PRIMARY_BACKEND;
 
-      console.log("Switching backend to:", newBase);
+      console.log("Switching backend:", newBase);
 
+      // switch current request
       originalRequest.baseURL = newBase;
-      
+
+      // switch future requests
       api.defaults.baseURL = newBase;
 
-      return api(originalRequest);
+      try {
+        return await api(originalRequest);
+      } catch (retryError) {
+        return Promise.reject(retryError);
+      }
     }
 
-    // ===== TOKEN REFRESH =====
+    // =========================
+    // TOKEN REFRESH
+    // =========================
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
