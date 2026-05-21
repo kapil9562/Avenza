@@ -39,8 +39,8 @@ createRoot(document.getElementById('root')).render(
             <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
             <Route path="/forgetpassword" element={<PublicRoute><ForgetPass /></PublicRoute>} />
             <Route path="/reset-password/:email" element={<PublicRoute><ResetPass /></PublicRoute>} />
+            <Route path="*" element={<PageNotFound />} />
           </Route>
-          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>
     </AppProviders>
