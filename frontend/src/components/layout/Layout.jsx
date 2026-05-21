@@ -23,6 +23,7 @@ import "swiper/css/effect-fade";
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import { BodyCategorySkeleton } from '../skeletons/CategorySkeletons.jsx';
 import ShowCaseSkeleton from '../skeletons/ShowCaseSkeleton.jsx';
+import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5';
 
 const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -336,18 +337,18 @@ const Layout = React.memo(function Layout({ category, pid }) {
 const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorite, onFavClick, idx, navigate }) {
     return (
         <div
-            className={`will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer shadow-md hover:shadow-xl ${isDark ? "bg-[#0F172A] shadow-[#0F172A] border-gray-700" : "bg-white shadow-gray-300"}`}
+            className={`will-change-transform max-w-sm h-fit rounded-2xl transition-shadow duration-300 pt-2 border border-gray-200 relative group px-2 cursor-pointer shadow-md hover:shadow-xl overflow-hidden ${isDark ? "bg-[#0F172A] shadow-[#0F172A] border-gray-700" : "bg-white shadow-gray-300"}`}
             onClick={() => {
                 navigate(`/${createSlug(product.title)}/p/${product._id}`);
             }}
         >
             <div
-                className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-2xl ${isDark ? "text-gray-500" : "text-gray-400"}`}
+                className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-xl p-1 ${!isFavorite(product?._id) && `lg:border rounded-lg lg:translate-x-10 group-hover:translate-x-0 ${isDark? "lg:bg-[#0F172A] hover:bg-[#ff007b] hover:border-[#F564A9]" : "hover:bg-[#F564A9] hover:border-[#F564A9] lg:bg-white"}`} ${isDark ? "text-gray-500 hover:text-white border-gray-700" : "lg:text-gray-500 text-gray-400 border-gray-200 hover:text-white"}`}
                 onClick={(e) => {
                     e.stopPropagation();
                     onFavClick(product._id);
                 }}>
-                {isFavorite(product._id) ? <FaHeart className='text-red-500' /> : <FaRegHeart />}
+                {isFavorite(product._id) ? <IoHeartSharp className='text-red-500' /> : <IoHeartOutline />}
             </div>
 
             <ProductImage
@@ -457,7 +458,7 @@ const ProductSection = ({ products }) => {
                                 const slides = chunkArray(section.products, 4);
 
                                 return (
-                                    <div key={idx}>
+                                    <div key={idx} className='cursor-pointer'>
 
                                         {/* heading */}
                                         <div className={`border-b pb-4 ${isDark ? "border-gray-700" : "border-gray-200"}`}>
