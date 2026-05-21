@@ -1,8 +1,11 @@
 // api.js
 import axios from "axios";
 
+const PRIMARY_BACKEND = import.meta.env.VITE_BACKEND_BASE_URI;
+const SECONDARY_BACKEND = import.meta.env.VITE_BACKEND_BASE_URI2;
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URI,
+  baseURL: PRIMARY_BACKEND,
   withCredentials: true,
 });
 
@@ -14,18 +17,18 @@ export const signup = ({ email, password, name }) => api.post(`/auth/signup`, {
   name
 });
 
-export const sendOtp = ({email}) => api.post(`/auth/sendotp`, {email});
+export const sendOtp = ({ email }) => api.post(`/auth/sendotp`, { email });
 
-export const verifyOtp = ({name, email, password, otp}) => api.post(`/auth/verifyotp`, {
+export const verifyOtp = ({ name, email, password, otp }) => api.post(`/auth/verifyotp`, {
   name,
   email,
   password,
   otp
 });
 
-export const sendResetOtp = ({email}) => api.post('/auth/forgot-password', {email})
-export const verifyResetOTP = ({email, otp}) => api.post('/auth/verify-reset-otp', {email, otp})
-export const resetPassword = ({email, password}) => api.post('/auth/reset-password', {email, password})
+export const sendResetOtp = ({ email }) => api.post('/auth/forgot-password', { email })
+export const verifyResetOTP = ({ email, otp }) => api.post('/auth/verify-reset-otp', { email, otp })
+export const resetPassword = ({ email, password }) => api.post('/auth/reset-password', { email, password })
 
 
 export const emailLogin = ({ email, password }) => api.post("/auth/emaillogin", {
@@ -53,7 +56,7 @@ export const updateQty = ({ uid, product_id, qtyChange }) => api.post("/cart/upd
   qtyChange
 });
 
-export const clearCart = ({ uid }) => api.post("/cart/clearall", {uid});
+export const clearCart = ({ uid }) => api.post("/cart/clearall", { uid });
 
 export const getProducts = ({ skip = 0, category, limit, title, productId, productIds }) => {
   const params = new URLSearchParams();
@@ -81,7 +84,7 @@ export const clearFav = ({ uid }) => api.post('favorite/clearall', {
 
 export const getFavItems = ({ UserId }) => api.get(`favorite/getitems?UserId=${UserId}`);
 
-export const productReview = ({productId, rating, comment, reviewerName, reviewerEmail}) => api.post("/post-review", {
+export const productReview = ({ productId, rating, comment, reviewerName, reviewerEmail }) => api.post("/post-review", {
   productId,
   rating,
   comment,
@@ -89,27 +92,27 @@ export const productReview = ({productId, rating, comment, reviewerName, reviewe
   reviewerEmail
 });
 
-export const saveAddress = ({userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country}) => api.post("/save-address", {
+export const saveAddress = ({ userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country }) => api.post("/save-address", {
   userId, fullName, phone, addressLine1, addressLine2, city, state, pinCode, country
 });
 
-export const getAddress = ({userId}) => api.get(`/get-address?userId=${userId}`);
+export const getAddress = ({ userId }) => api.get(`/get-address?userId=${userId}`);
 
-export const buyNow = ({productId, quantity, addressId}) => api.post("buy-now", {productId, quantity, addressId});
+export const buyNow = ({ productId, quantity, addressId }) => api.post("buy-now", { productId, quantity, addressId });
 
-export const buyCartItems = ({items, addressId}) => api.post("/checkout/cart", {items, addressId});
+export const buyCartItems = ({ items, addressId }) => api.post("/checkout/cart", { items, addressId });
 
 export const verifyPayment = ({ sessionId, userId }) => api.post("verify-payment", { sessionId, userId });
 
-export const getOrders = ({ userId, time = [], status = [], skip=0 }) => {
-  const statusParam = encodeURIComponent(status.join(",")); 
-  const timeParam = encodeURIComponent(time.join(",")); 
+export const getOrders = ({ userId, time = [], status = [], skip = 0 }) => {
+  const statusParam = encodeURIComponent(status.join(","));
+  const timeParam = encodeURIComponent(time.join(","));
   return api.get(`/get-orders?userId=${userId}&time=${timeParam}&status=${statusParam}&skip=${skip}`);
 };
 
-export const getOrderDetail = ({userId, orderId}) => api.get(`/get-order-detail?userId=${userId}&orderId=${orderId}`);
+export const getOrderDetail = ({ userId, orderId }) => api.get(`/get-order-detail?userId=${userId}&orderId=${orderId}`);
 
-export const deleteReview = ({userId, productId}) => api.post("/delete-otp", userId, productId);
+export const deleteReview = ({ userId, productId }) => api.post("/delete-otp", userId, productId);
 
 
 
@@ -134,6 +137,30 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // ===== BACKEND FALLBACK =====
+    if (
+      error.response?.status === 503 &&
+      !originalRequest._fallbackTried
+    ) {
+      originalRequest._fallbackTried = true;
+
+      // current backend check
+      const currentBase = originalRequest.baseURL || api.defaults.baseURL;
+
+      // switch backend
+      const newBase =
+        currentBase === PRIMARY_BACKEND
+          ? SECONDARY_BACKEND
+          : PRIMARY_BACKEND;
+
+      console.log("Switching backend to:", newBase);
+
+      originalRequest.baseURL = newBase;
+
+      return api(originalRequest);
+    }
+
+    // ===== TOKEN REFRESH =====
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
