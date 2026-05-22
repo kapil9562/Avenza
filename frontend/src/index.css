@@ -7,9 +7,15 @@ body,
   margin: 0;
 }
 
+html,
 body {
-  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
   font-family: Poppins;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 *::-webkit-scrollbar { width: 10px; }
@@ -178,7 +184,6 @@ body {
 .animate-scroll {
   width: max-content;
   animation: scrollRightToLeft 30s linear infinite;
-  will-change: transform;
 }
 
 .animate-scroll:hover {
@@ -323,4 +328,15 @@ input:-webkit-autofill {
 
 button {
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+
+  *::-webkit-scrollbar,
+  .has-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
 }

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
+import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import useScrollReveal from "../hooks/useScrollReveal";
 import { FaChevronRight } from "react-icons/fa6";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { LiaBoxSolid } from "react-icons/lia";
@@ -12,7 +12,19 @@ import { IoPricetagOutline } from "react-icons/io5";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { Breadcrumb } from "../components";
 
-const ease = "ease-[cubic-bezier(0.22,1,0.36,1)]";
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9 } },
+};
+
+const Container = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.5,
+    },
+  },
+};
 
 const brands = [
   "https://www.shutterstock.com/image-vector/galati-romania-april-29-2023-600nw-2295394661.jpg",
@@ -27,266 +39,393 @@ const brands = [
 
 const members = [
   { name: "Kapil Adhikari", role: "Founder & CEO", pfp: "/members/kapil.jpg" },
-  { name: "Ayush Adhikari", role: "Product Manager", pfp: "/members/ayush.png"},
+  { name: "Ayush Adhikari", role: "Product Manager", pfp: "/members/ayush.png" },
   { name: "Amit Adhikari", role: "Head of Operations", pfp: "/members/amit.png" },
   { name: "Sumit Adhikari", role: "Customer Experience Lead", pfp: "/members/sumit.jpg" },
 ];
 
 const About = () => {
   const { isDark } = useTheme();
-  const { scrollRef, setActiveTab } = useOutletContext();
+  const { setActiveTab } = useOutletContext();
   const navigate = useNavigate();
-
-  const hero = useScrollReveal(scrollRef, 0.3);
-  const story = useScrollReveal(scrollRef, 0.3);
-  const team = useScrollReveal(scrollRef, 0.5);
-  const cta = useScrollReveal(scrollRef, 0.3);
 
   useEffect(() => {
     setActiveTab("");
   }, []);
 
   return (
-    <div className={`w-full lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] sm:px-5 lg:px-15 pb-10 pt-5`}>
-      {/* Hero */}
+    <div className="w-full lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] px-2 sm:px-5 lg:px-15 pb-10 pt-5 overflow-hidden">
+
       <Breadcrumb />
-      <section className={`flex gap-10 mt-6`}>
-        <div className={`w-1/2 space-y-2`}>
-          <h3 className={`text-[#ff619e] font-bold`}>ABOUT US</h3>
-          <h1 className={`text-5xl font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>Your Trusted Shopping Partner, <span className={`text-[#ff619e] font-semibold`}>Always</span></h1>
-          <p className={`w-[80%] mt-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+
+      {/* HERO */}
+      <section className="flex lg:flex-row flex-col gap-10 sm:mt-6 mt-4">
+
+        <motion.div
+          initial={{ opacity: 0, x: -60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="lg:w-1/2 sm:space-y-2 space-y-1"
+        >
+          <h3 className="text-[#ff619e] font-bold">ABOUT US</h3>
+
+          <h1 className={`md:text-5xl text-3xl font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+            Your Trusted Shopping Partner,
+            <span className="text-[#ff619e] font-semibold"> Always</span>
+          </h1>
+
+          <p className={`sm:w-[80%] md:text-[16px] text-sm sm:mt-6 mt-2 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
             At Avenza, we believe shopping should be simple, enjoyable, and accessible for everyone. We bring you a wide range of quality products across multiple categories — all at the best prices, delivered to your doorstep.
           </p>
-          <button className="px-4 mt-6 py-3 rounded-lg border-2 border-[#ff498f] bg-[#ff619e] text-[#FFFFFF] font-medium text-sm flex items-center justify-center gap-1 hover:rounded-4xl transition-all durtion-700"
+
+          <button
+            className="px-4 sm:mt-6 mt-2 py-3 rounded-lg border-2 border-[#ff498f] bg-[#ff619e] text-[#FFFFFF] font-medium text-sm flex items-center justify-center gap-1 hover:rounded-4xl transition-all duration-500"
             onClick={() => {
               setActiveTab("HOME");
-              navigate('/home')
+              navigate("/home");
             }}
           >
             <span>Explore Our Products</span>
             <FaChevronRight />
           </button>
-        </div>
-        <div className={`w-1/2`}>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="lg:w-1/2 w-full"
+        >
           <img src="/productsSnap.png" alt="products snapshot" />
-        </div>
+        </motion.div>
+
       </section>
 
-      <div className={`flex justify-between rounded-xl mt-4 py-8 px-15 ${isDark ? "border border-gray-800 shadow-[0_0px_10px_rgba(0,0,0,0.2)]" : "bg-white shadow-[0_0px_10px_rgba(0,0,0,0.1)]"}`}>
-        <div className="flex items-center gap-4 w-fit">
-          <span className={`p-3 rounded-full ${isDark ? "bg-rose-900/40 text-rose-600" : "bg-rose-100 text-rose-400"}`}>
-            <HiOutlineShoppingBag size={38} />
-          </span>
-          <div>
-            <h2 className={`text-3xl font-semibold ${isDark ? "text-gray-200" : "text-gray-800"}`}>10K+</h2>
-            <span className={`font-medium ${isDark ? "text-gray-400" : "text-gray-600"}`}>Happy Customers</span>
-          </div>
-        </div>
-        <div className={`h-14 w-fit border-r-2 ${isDark ? "border-gray-800" : "border-gray-100"}`}></div>
-        <div className="flex items-center gap-4 w-fit">
-          <span className={`p-3 rounded-full ${isDark ? "bg-purple-900/40 text-purple-600" : "bg-purple-100 text-purple-400"}`}>
-            <LiaBoxSolid size={38} />
-          </span>
-          <div>
-            <h2 className={`text-3xl font-semibold ${isDark ? "text-gray-200" : "text-gray-800"}`}>20K+</h2>
-            <span className={`font-medium ${isDark ? "text-gray-400" : "text-gray-600"}`}>Products</span>
-          </div>
-        </div>
-        <div className={`h-14 w-fit border-r-2 ${isDark ? "border-gray-800" : "border-gray-100"}`}></div>
-        <div className="flex items-center gap-4 w-fit">
-          <span className={`p-3 rounded-full ${isDark ? "bg-orange-900/40 text-orange-600" : "bg-orange-100 text-orange-400"}`}>
-            <PiTruck size={38} />
-          </span>
-          <div>
-            <h2 className={`text-3xl font-semibold ${isDark ? "text-gray-200" : "text-gray-800"}`}>500+</h2>
-            <span className={`font-medium ${isDark ? "text-gray-400" : "text-gray-600"}`}>Orders Delivered Daily</span>
-          </div>
-        </div>
-        <div className={`h-14 w-fit border-r-2 ${isDark ? "border-gray-800" : "border-gray-100"}`}></div>
-        <div className="flex items-center gap-4 w-fit">
-          <span className={`p-3 rounded-full ${isDark ? "bg-green-900/40 text-green-600" : "bg-green-100 text-green-400"}`}>
-            <BsEmojiSmile size={38} />
-          </span>
-          <div>
-            <h2 className={`text-3xl font-semibold ${isDark ? "text-gray-200" : "text-gray-800"}`}>4.8/5</h2>
-            <span className={`font-medium ${isDark ? "text-gray-400" : "text-gray-600"}`}>Customer Rating</span>
-          </div>
-        </div>
-      </div>
+      <StatsSection isDark={isDark} />
 
-      {/* Story */}
-      <section
-        ref={story.ref}
+      {/* STORY */}
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
         className="pt-10 grid md:grid-cols-2 gap-10"
       >
-        <img
+
+        <motion.img
           src="/assets/workingPeoples.png"
           alt="story"
-          className={`rounded-2xl shadow-lg w-full object-cover transition-all duration-900 ${ease}
-          ${story.show
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 -translate-x-16"
-            }`}
+          className="rounded-2xl shadow-lg w-full object-cover"
+          initial={{ opacity: 0, x: -60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         />
 
-        <div
-          className={`transition-all duration-900 flex flex-col justify-center ${ease}
-          ${story.show
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 translate-x-16"
-            }`}
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="flex flex-col justify-center"
         >
-          <h3 className={`text-[#ff619e] font-bold`}>OUR STORY</h3>
-          <h1 className={`text-5xl max-w-md mt-2 font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>Built with Passion, Driven by <span className={`text-[#ff619e] font-semibold`}>You</span></h1>
-          <p className={`w-[80%] mt-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+          <h3 className="text-[#ff619e] font-bold">OUR STORY</h3>
+
+          <h1 className={`md:text-5xl text-3xl max-w-md mt-2 font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+            Built with Passion, Driven by
+            <span className="text-[#ff619e] font-semibold"> You</span>
+          </h1>
+
+          <p className={`sm:w-[80%] sm:mt-6 mt-2 md:text-[16px] text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
             Avenza was founded with a simple goal — to create a seamless online shopping experience that combines quality, affordability, and trust.
             <br />
             <br />
             From everyday essentials to special finds, we curate products that add value to your life. Your satisfaction inspires us to keep improving every day.
           </p>
-        </div>
-      </section>
+        </motion.div>
 
+      </motion.section>
+
+      {/* BRANDS */}
       <section
-        className={`py-10 px-6 backdrop-blur-3xl transition-all duration-900 ${ease}
-        ${isDark ? "bg-white/5" : "bg-gray-100"} overflow-hidden mt-10`}
+        className={`md:py-10 py-4 px-6 transition-transform duration-900 overflow-hidden
+        ${isDark ? "bg-white/5" : "bg-gray-100"} mt-10`}
       >
         <div className="animate-scroll flex flex-row gap-6">
           {[...brands, ...brands].map((logo, idx) => (
-            <div className="min-w-50 min-h-25 bg-white text-center gap-8 rounded-xl flex justify-center items-center cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-md hover:shadow-black/6 shadow-black/2" key={idx}>
-              <img src={logo} alt="brand" className=" object-contain bg-contain w-30" />
+            <div className="md:min-w-50 min-w-30 md:min-h-25 min-h-15 bg-white text-center gap-8 rounded-xl flex justify-center items-center cursor-pointer transition-transform duration-300 hover:-translate-y-2 shadow-lg hover:shadow-md hover:shadow-black/6 shadow-black/2" key={idx}>
+              <img src={logo} alt="brand" className=" object-contain bg-contain w-20 lg:w-30" />
             </div>
           ))}
         </div>
       </section>
 
       {/* Cards */}
-
-      <section className={`flex flex-col items-center rounded-xl mt-10 pt-3 pb-8 gap-4 px-8 border-2 ${isDark ? "bg-pink-600/10 border-pink-950" : "bg-rose-200/10 border-rose-100"}`}>
+      <section className={`flex flex-col items-center rounded-xl mt-10 pt-3 pb-8 gap-4 xl:px-8 lg:px-6 px-4 border-2 ${isDark ? "bg-pink-600/10 border-pink-950" : "bg-rose-200/10 border-rose-100"}`}>
         <div>
-          <h1 className="text-[#ff619e] font-semibold">WHAT WE STAND FOR</h1>
+          <h1 className="text-[#ff619e] font-semibold text-center">WHAT WE STAND FOR</h1>
         </div>
-        <div className="flex w-full items-center justify-between">
-          <div className="flex flex-col justify-center  items-center gap-4 w-fit">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 w-full">
+
+          {/* Card 1 */}
+          <div className={`flex flex-col justify-center items-center gap-4 xl:px-6 px-4 py-6 xl:py-1 ${isDark ? "sm:border-r xl:border-r border-b sm:border-b xl:border-b-0 border-pink-950" : "sm:border-r xl:border-r border-b sm:border-b xl:border-b-0 border-rose-100"}`}>
             <span className={`p-4 rounded-full ${isDark ? "bg-rose-900/40 text-rose-600" : "bg-rose-100 text-rose-400"}`}>
               <HiOutlineBadgeCheck size={30} />
             </span>
+
             <div className="flex flex-col justify-center items-center">
-              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>Quality Assured</h2>
-              <span className={`font-medium text-center w-[75%] text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>We handpick quality products you can trust.</span>
+              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+                Quality Assured
+              </h2>
+
+              <span className={`font-medium text-center xl:w-[75%] w-full text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                We handpick quality products you can trust.
+              </span>
             </div>
           </div>
-          <div className={`h-35 w-fit border-r-2 ${isDark ? "border-pink-950" : "border-rose-100"}`} />
-          <div className="flex flex-col justify-center items-center gap-4 w-fit">
+
+          {/* Card 2 */}
+          <div className={`flex flex-col justify-center items-center gap-4 xl:px-6 px-4 py-6 xl:py-1 ${isDark ? "xl:border-r border-b sm:border-b xl:border-b-0 border-pink-950" : "xl:border-r border-b sm:border-b xl:border-b-0 border-rose-100"}`}>
             <span className={`p-4 rounded-full ${isDark ? "bg-purple-900/40 text-purple-600" : "bg-purple-100 text-purple-400"}`}>
               <IoPricetagOutline size={30} />
             </span>
+
             <div className="flex flex-col justify-center items-center">
-              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>Best Prices</h2>
-              <span className={`font-medium text-center w-[75%] text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Competitive prices & exclusive offers, always.</span>
+              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+                Best Prices
+              </h2>
+
+              <span className={`font-medium text-center xl:w-[75%] w-full text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                Competitive prices & exclusive offers, always.
+              </span>
             </div>
           </div>
-          <div className={`h-35 w-fit border-r-2 ${isDark ? "border-pink-950" : "border-rose-100"}`}></div>
-          <div className="flex flex-col justify-center items-center gap-4 w-fit">
+
+          {/* Card 3 */}
+          <div className={`flex flex-col justify-center items-center gap-4 xl:px-6 px-4 py-6 xl:py-1 ${isDark ? "sm:border-r xl:border-r border-pink-950" : "sm:border-r xl:border-r border-b sm:border-b-0 border-rose-100"}`}>
             <span className={`p-4 rounded-full ${isDark ? "bg-orange-900/40 text-orange-600" : "bg-orange-100 text-orange-400"}`}>
               <PiTruck size={30} />
             </span>
+
             <div className="flex flex-col justify-center items-center">
-              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>Fast Delivery</h2>
-              <span className={`font-medium text-center w-[75%] text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Quick and reliable delivery to your doorstep.</span>
+              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+                Fast Delivery
+              </h2>
+
+              <span className={`font-medium text-center xl:w-[75%] w-full text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                Quick and reliable delivery to your doorstep.
+              </span>
             </div>
           </div>
-          <div className={`h-35 w-fit border-r-2 ${isDark ? "border-pink-950" : "border-rose-100"}`}></div>
-          <div className="flex flex-col justify-center items-center gap-4 w-fit">
+
+          {/* Card 4 */}
+          <div className="flex flex-col justify-center items-center gap-4 xl:px-6 px-4 py-6 xl:py-1">
             <span className={`p-4 rounded-full ${isDark ? "bg-green-900/40 text-green-600" : "bg-green-100 text-green-400"}`}>
               <TfiHeadphoneAlt size={30} />
             </span>
+
             <div className="flex flex-col justify-center items-center">
-              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>Customer First</h2>
-              <span className={`font-medium text-center w-[75%] text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Our support team is always here for you.</span>
+              <h2 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+                Customer First
+              </h2>
+
+              <span className={`font-medium text-center xl:w-[75%] w-full text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                Our support team is always here for you.
+              </span>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* Team */}
-      <section
-        ref={team.ref}
-        className={`pt-10 px-6 transition-all duration-900 ${ease}
-        ${team.show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+      {/* TEAM */}
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="pt-10"
       >
+
         <div>
-          <h1 className="text-[#ff619e] font-semibold text-center">MEET OUR TEAM</h1>
-          <h1 className="text-3xl font-semibold text-center mt-2">The People Behind Avenza</h1>
+          <h1 className="text-[#ff619e] font-semibold text-center">
+            MEET OUR TEAM
+          </h1>
+
+          <h1 className={`text-3xl font-semibold text-center mt-2 ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+            The People Behind Avenza
+          </h1>
         </div>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mt-5">
-          {members?.map((member, i) => (
+        <motion.div
+          variants={Container}
+          initial="hidden"
+          animate="show"
+          className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mt-5">
+          {members.map((member, i) => (
             <TeamMember
               key={i}
               {...member}
               index={i}
-              show={team.show}
               isDark={isDark}
             />
           ))}
-        </div>
-      </section>
+        </motion.div>
+
+      </motion.section>
 
       {/* CTA */}
-      <section
-        ref={cta.ref}
-        className={`text-center px-15 pt-2 mt-10 rounded-xl border transition-all duration-900 flex justify-between items-center ${ease}
-        ${cta.show ? "opacity-100 scale-100" : "opacity-0 scale-90"}
-        ${isDark ? "" : "bg-pink-50 border-pink-200"}`}
+      <motion.section
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className={`text-center px-4 sm:px-6 lg:px-12 py-5 sm:pb-0 sm:pt-2 mt-10 rounded-2xl border flex flex-col sm:flex-row gap-5 lg:gap-0 justify-between items-center ${isDark ? "bg-pink-900/40 border-pink-700" : "bg-pink-50 border-pink-200"}`}
       >
-        <div className="flex gap-20 items-center">
-          <img src="/shoppingBag.png" alt="shopping bag" width={80} className="opacity-80" />
-          <div className="flex flex-col gap-1 text-start">
-            <h1 className={`text-xl font-semibold`}>Ready to explore amazing products?</h1>
-            <p className={`font-medium`}>Shop from thousands of products across multiple categories.</p>
+
+        <div className="flex items-start sm:items-center gap-3 sm:gap-5 lg:gap-10 w-full lg:w-auto">
+          <img src="/shoppingBag.png" alt="shopping bag" className="w-10 sm:w-14 lg:w-20 shrink-0" />
+
+          <div className="flex flex-col gap-1 text-left">
+            <h1 className={`text-sm sm:text-lg lg:text-xl font-semibold leading-snug ${isDark ? "text-gray-200" : "text-gray-800"}`}>
+              Ready to explore amazing products?
+            </h1>
+
+            <p className={`text-xs sm:text-sm lg:text-base font-medium leading-relaxed ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+              Shop from thousands of products across multiple categories.
+            </p>
           </div>
         </div>
-        <button className="px-4 py-3 rounded-lg border-2 border-[#ff498f] bg-[#ff619e] text-[#FFFFFF] font-medium text-sm flex items-center justify-center gap-2 hover:rounded-4xl transition-all durtion-800"
+
+        <button
+          className="w-full sm:w-auto px-5 py-3 rounded-xl border-2 border-[#ff498f] bg-[#ff619e] text-white font-medium text-sm flex items-center justify-center gap-2 hover:rounded-4xl transition-[border-radius] duration-500 whitespace-nowrap"
           onClick={() => {
             setActiveTab("HOME");
-            navigate('/home')
-          }}>
+            navigate("/home");
+          }}
+        >
           <span>Start Shopping</span>
           <FaChevronRight />
         </button>
-      </section>
+
+      </motion.section>
+
     </div>
   );
 };
 
 export default About;
 
-/* ---------- Components ---------- */
+const TeamMember = ({ name, role, pfp, isDark, index }) => (
 
-const TeamMember = ({ name, role, pfp, isDark, show, index }) => (
-  <div
-    style={{
-      transitionDelay: show ? `${index * 120}ms` : "0ms",
-    }}
-    onMouseEnter={(e) => (e.currentTarget.style.transitionDelay = "0ms")}
+  <motion.div
+    variants={fadeInUp}
     className={`
-      p-8 rounded-2xl text-center backdrop-blur-md border cursor-pointer
-      transition-all duration-900 ease-[cubic-bezier(0.22,1,0.36,1)]
-      hover:-translate-y-2 hover:scale-[1.03] shadow-[0_0px_8px_rgba(0,0,0,0.1)] will-change-transform
+      p-8 rounded-2xl text-center border cursor-pointer hover:-translate-y-2 transition-all duration-500
       ${isDark
-        ? "bg-white/5 border-white/10 hover:shadow-purple-500/20"
-        : "bg-white/40 border-gray-200 hover:border-[#ff619e] hover:shadow-pink-500/20"
+        ? "bg-[#0F172A] border-gray-800 hover:border-[#b361ff] hover:shadow-purple-500/40 shadow-[0_0px_10px_rgba(0,0,0,0.2)]"
+        : "bg-white/40 border-gray-200 hover:border-[#ff619e] hover:shadow-pink-500/40 shadow-[0_0px_10px_rgba(0,0,0,0.1)]"
       }
-      ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}
     `}
   >
     <img
-      src={pfp || "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg"}
+      src={pfp}
       alt={name}
       className="w-24 h-24 mx-auto rounded-full object-cover mb-4"
     />
-    <h4 className="font-semibold text-lg">{name}</h4>
-    <p className="text-gray-500 text-sm">{role}</p>
-  </div>
+
+    <h4 className={`font-semibold text-lg ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+      {name}
+    </h4>
+
+    <p className={`text-sm font-medium ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+      {role}
+    </p>
+  </motion.div>
 );
+
+const statsData = [
+  {
+    id: 1,
+    title: "10K+",
+    subtitle: "Happy Customers",
+    icon: <HiOutlineShoppingBag />,
+    light: "bg-rose-100 text-rose-400",
+    dark: "bg-rose-900/40 text-rose-600",
+  },
+  {
+    id: 2,
+    title: "20K+",
+    subtitle: "Products",
+    icon: <LiaBoxSolid />,
+    light: "bg-purple-100 text-purple-400",
+    dark: "bg-purple-900/40 text-purple-600"
+  },
+  {
+    id: 3,
+    title: "500+",
+    subtitle: "Orders Delivered Daily",
+    icon: <PiTruck />,
+    light: "bg-orange-100 text-orange-400",
+    dark: "bg-orange-900/40 text-orange-600"
+  },
+  {
+    id: 4,
+    title: "4.8/5",
+    subtitle: "Customer Rating",
+    icon: <BsEmojiSmile />,
+    light: "bg-green-100 text-green-400",
+    dark: "bg-green-900/40 text-green-600"
+  },
+];
+
+const StatsSection = ({ isDark }) => {
+  return (
+    <div
+      className={`mt-4 rounded-2xl overflow-hidden grid grid-cols-2 xl:grid-cols-4 ${isDark
+        ? "border border-gray-800 shadow-[0_0px_10px_rgba(0,0,0,0.2)]"
+        : "bg-white shadow-[0_0px_10px_rgba(0,0,0,0.1)]"
+        }`}
+    >
+      {statsData?.map((stat, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.5,
+            delay: i * 0.1
+          }}
+          key={i}
+          className={`flex xl:justify-center items-center gap-3 xl:gap-4 xl:px-8 lg:px-6 px-4 xl:py-8 lg:py-6 py-5 ${isDark ? "border-r border-gray-800" : "border-r border-gray-100"} ${i < 2 ? isDark ? "border-b border-gray-800 xl:border-b-0" : "border-b border-gray-100 xl:border-b-0" : ""}`}
+        >
+          <div
+            className={`flex items-center justify-center xl:w-16 xl:h-16 lg:w-14 lg:h-14 w-12 h-12 rounded-full shrink-0 ${isDark ? stat?.dark : stat?.light}`}
+          >
+            <div className="xl:text-3xl lg:text-2xl text-xl">
+              {stat.icon}
+            </div>
+          </div>
+
+          <div className="flex flex-col min-w-0">
+            <h2
+              className={`xl:text-3xl lg:text-2xl text-lg font-bold leading-tight ${isDark ? "text-white" : "text-gray-900"}`}
+            >
+              {stat?.title}
+            </h2>
+
+            <span
+              className={`xl:text-[16px] text-xs font-medium mt-1 ${isDark ? "text-gray-400" : "text-gray-500"}`}
+            >
+              {stat?.subtitle}
+            </span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};

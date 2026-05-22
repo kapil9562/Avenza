@@ -34,7 +34,7 @@ function App() {
     <>
       <div
         ref={scrollRef}
-        className={`h-dvh overflow-y-auto overflow-x-hidden overscroll-none transform-gpu`}
+        className={`h-dvh overflow-y-auto overflow-x-hidden transform-gpu`}
       >
         <Header activeTab={activeTab} setShow={setShow} setActiveTab={setActiveTab} />
         <Outlet key={pathname} context={{ activeTab, setActiveTab, scrollRef }} />
