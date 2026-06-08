@@ -12,7 +12,9 @@ import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 import GoogleLoginBtn from "../components/common/GoogleLoginBtn";
 import { toast } from "../context/ToastContext";
-import { IoWarning } from "react-icons/io5";
+import { IoBagHandleOutline, IoWarning } from "react-icons/io5";
+import { BsTags } from "react-icons/bs";
+import { RiSecurePaymentLine } from "react-icons/ri";
 
 const OTP_LENGTH = 6;
 
@@ -283,182 +285,273 @@ export default function Signup() {
   }, [otp]);
 
   return (
-    <div className={`${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"} relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center p-4`}>
-      <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60]"} w-full max-w-xl rounded-4xl shadow-xl p-4 sm:p-8 overflow-hidden`}>
+    <div className={`${isDark ? "bg-gray-900" : "bg-[#FFFFFF]"} relative lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex`}>
+      <div
+        className={`${isDark ? "bg-[#0F172A]" : "bg-[#FEF7FA]"
+          } w-[45%] lg:flex flex-col items-center justify-between p-10 hidden`}
+      >
+        <div className="max-w-xs">
+          {/* Heading */}
+          <div className="text-4xl font-semibold space-x-2">
+            <span className={`${isDark ? "text-gray-100" : "text-gray-700"}`}>Join</span>
+            <span
+              className={`${isDark
+                ? "bg-linear-to-r from-rose-400 via-pink-400 to-purple-400"
+                : "bg-linear-to-r from-rose-400 via-pink-400 to-purple-400"
+                } text-transparent bg-clip-text`}
+            >
+              Avenza
+            </span>
+          </div>
 
-        <div className={`flex flex-col w-full justify-center items-center`}>
-          {/* Header */}
-          <h2 className={`${isDark ? "text-[#F564A9]" : "text-[#6B6F9C]"} text-5xl sm:text-6xl whitespace-nowrap font-semibold font-['Allura']`}>
-            Join Our Shop
-          </h2>
-          <p className={`${isDark ? "text-gray-300" : "text-gray-500"} sm:text-[18px] text-[16px] text-center`}>
-            Get exclusive deals and updates!
+          <h3 className={`${isDark ? "text-gray-200" : "text-gray-700"} font-medium text-2xl mb-2`}>
+            and shop the best!
+          </h3>
+
+          <p
+            className={`${isDark ? "text-gray-400" : "text-[#787878]"
+              } text-sm mb-4`}
+          >
+            Create your account and enjoy a seamless shopping
+            experience with exclusive benefits.
           </p>
 
-          <div className={`${isDark ? "bg-gray-800" : "bg-gray-100"} w-full h-px mt-1`} />
-
-          {/* Email Signup */}
-          <div className="flex flex-col gap-2 sm:gap-4 w-full mt-2">
-            <div className={`${otpSent ? "hidden" : "flex"} transition-all duration-500 w-full flex-col gap-2 sm:gap-4 mt-2`}>
-              <div>
-                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2 w-full ${errors.name && "border border-red-600"}`}>
-                  <FaUser className="text-[#8b90c7] text-xl" />
-                  <input
-                    ref={nameRef}
-                    value={name}
-                    onChange={(e) => { setName(e.target.value) }}
-                    type="text"
-                    placeholder="Full Name"
-                    className={`${isDark ? "text-gray-100" : "text-gray-700"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                  />
-                </div>
-                {errors.name && (
-                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
-                    <IoWarning />
-                    <p>{errors.name}</p>
-                  </div>
-                )}
-              </div>
-              <div>
-                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row  shadow-sm rounded-xl p-3 items-center gap-2  w-full ${errors.email && "border border-red-600"}`}>
-                  <MdEmail className="text-[#8b90c7] text-xl" />
-                  <input
-                    ref={emailRef}
-                    type="email"
-                    value={email}
-                    onChange={(e) => { setEmail(e.target.value.trim().toLowerCase()) }}
-                    placeholder="Email Address"
-                    className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                  />
-                </div>
-                {errors.email && (
-                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
-                    <IoWarning />
-                    <p>{errors.email}</p>
-                  </div>
-                )}
+          {/* Features */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <div className={`${isDark ? "bg-pink-900/40 text-pink-600" : " bg-pink-100 text-pink-500"} p-4 rounded-full flex items-center justify-center`}>
+                <BsTags className="text-xl" />
               </div>
 
               <div>
-                <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2  w-full ${errors.password && "border border-red-600"}`}>
-                  <IoIosLock className="text-[#8b90c7] text-xl" />
-                  <input
-                    ref={passwordRef}
-                    value={password}
-                    maxLength={20}
-                    onChange={(e) => { setPassword(e.target.value) }}
-                    type={showPass ? "text" : "password"}
-                    placeholder="Password"
-                    className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-semibold focus:outline-none placeholder:font-semibold placeholder:text-[#9CA3AF]`}
-                  />
-                  <button
-                    onClick={() => setShowPass(!showPass)}
-                    className="cursor-pointer">
-                    {showPass ? <FaEye className="text-[#8b90c7] text-xl" /> : <FaEyeSlash className="text-[#8b90c7] text-xl" />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
-                    <IoWarning />
-                    <p>{errors.password}</p>
-                  </div>
-                )}
+                <h4 className={`${isDark ? "text-gray-200" : "text-gray-700"} font-semibold`}>
+                  Exclusive Offers
+                </h4>
+                <p className="text-sm text-gray-500">
+                  Get access to members-only deals and discounts.
+                </p>
               </div>
-
-              {errors.other && (
-                <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
-                  <IoWarning />
-                  <p>{errors.other}</p>
-                </div>
-              )}
             </div>
 
-            <div className={`${otpSent ? "flex" : "hidden"} transition-all duration-500 w-full flex-col items-center`}>
+            <div className="flex items-start gap-4">
+              <div className={`${isDark ? "bg-purple-900/40 text-purple-600" : " bg-purple-100 text-purple-500"} p-4 rounded-full flex items-center justify-center`}>
+                <IoBagHandleOutline className="text-xl" />
+              </div>
 
               <div>
-                <div className={`font-semibold mb-1 flex flex-wrap gap-1 ${isDark ? "text-gray-300" : "text-gray-800"}`}>
-                  <p className="whitespace-nowrap">OTP sent to</p>
-                  <div className="text-[#6366F1] underline flex flex-row gap-2 underline-offset-2 cursor-pointer">{email}
+                <h4 className={`${isDark ? "text-gray-200" : "text-gray-700"} font-semibold`}>
+                  Faster Checkout
+                </h4>
+                <p className="text-sm text-gray-500">
+                  Save your details and enjoy a quicker checkout.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className={`${isDark ? "bg-green-900/40 text-green-600" : " bg-green-100 text-green-500"} p-4 rounded-full flex items-center justify-center`}>
+                <RiSecurePaymentLine className="text-xl" />
+              </div>
+
+              <div>
+                <h4 className={`${isDark ? "text-gray-200" : "text-gray-700"} font-semibold`}>
+                  Secure & Safe
+                </h4>
+                <p className="text-sm text-gray-500">
+                  Your data is always protected with top-notch
+                  security.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Illustration */}
+        <div className="mt-8">
+          <img
+            src="/login-illustration.png"
+            alt="Signup Illustration"
+            className="object-contain h-40 w-full"
+          />
+        </div>
+      </div>
+      <div className="flex items-center p-6 lg:w-2/3 w-full justify-center lg:justify-start">
+        <div className={`${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF] shadow-[0px_0px_10px_rgba(0,0,0,0.1)]"} w-full max-w-xl rounded-2xl p-4 sm:p-8 overflow-hidden`}>
+
+          <div className={`flex flex-col w-full justify-center items-center`}>
+            {/* Header */}
+            <h2 className={`${isDark ? "text-[#F564A9]" : "text-[#6B6F9C]"} text-5xl sm:text-6xl whitespace-nowrap font-semibold font-['Allura']`}>
+              Join Our Shop
+            </h2>
+            <p className={`${isDark ? "text-gray-300" : "text-gray-500"} sm:text-[18px] text-[16px] text-center`}>
+              Get exclusive deals and updates!
+            </p>
+
+            <div className={`${isDark ? "bg-gray-800" : "bg-gray-100"} w-full h-px mt-1`} />
+
+            {/* Email Signup */}
+            <div className="flex flex-col gap-2 sm:gap-4 w-full mt-2">
+              <div className={`${otpSent ? "hidden" : "flex"} transition-all duration-500 w-full flex-col gap-2 sm:gap-4 mt-2`}>
+                <div>
+                  <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2 w-full ${errors.name && "border border-red-600"}`}>
+                    <FaUser className="text-[#8b90c7] text-xl" />
+                    <input
+                      ref={nameRef}
+                      value={name}
+                      onChange={(e) => { setName(e.target.value) }}
+                      type="text"
+                      placeholder="Full Name"
+                      className={`${isDark ? "text-gray-100" : "text-gray-700"} w-full font-medium focus:outline-none placeholder:font-medium placeholder:text-[#9CA3AF]`}
+                    />
+                  </div>
+                  {errors.name && (
+                    <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                      <IoWarning />
+                      <p>{errors.name}</p>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row  shadow-sm rounded-xl p-3 items-center gap-2  w-full ${errors.email && "border border-red-600"}`}>
+                    <MdEmail className="text-[#8b90c7] text-xl" />
+                    <input
+                      ref={emailRef}
+                      type="email"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value.trim().toLowerCase()) }}
+                      placeholder="Email Address"
+                      className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-medium focus:outline-none placeholder:font-medium placeholder:text-[#9CA3AF]`}
+                    />
+                  </div>
+                  {errors.email && (
+                    <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                      <IoWarning />
+                      <p>{errors.email}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <div className={`${isDark ? "bg-[#0F172A] border-gray-800 shadow-[#0F172A] border-2" : "bg-[#F9FAFB] border border-[#E5E7EB] shadow-gray-200"} flex flex-row shadow-sm rounded-xl p-3 items-center gap-2  w-full ${errors.password && "border border-red-600"}`}>
+                    <IoIosLock className="text-[#8b90c7] text-xl" />
+                    <input
+                      ref={passwordRef}
+                      value={password}
+                      maxLength={20}
+                      onChange={(e) => { setPassword(e.target.value) }}
+                      type={showPass ? "text" : "password"}
+                      placeholder="Password"
+                      className={`${isDark ? "text-gray-100" : "text-[#374151]"} w-full font-medium focus:outline-none placeholder:font-medium placeholder:text-[#9CA3AF]`}
+                    />
                     <button
-                      className="flex justify-center items-center text-[#6B6F9C] text-sm cursor-pointer"
-                      onClick={() => {
-                        handleChangeEmail();
-                      }}><FaPencil />
+                      onClick={() => setShowPass(!showPass)}
+                      className="cursor-pointer">
+                      {showPass ? <FaEye className="text-[#8b90c7] text-xl" /> : <FaEyeSlash className="text-[#8b90c7] text-xl" />}
                     </button>
                   </div>
+                  {errors.password && (
+                    <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
+                      <IoWarning />
+                      <p>{errors.password}</p>
+                    </div>
+                  )}
+                </div>
 
-                </div>
-                <div className="flex gap-2 w-full justify-center items-center">
-                  {otp.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      ref={(el) => (inputsRef.current[idx] = el)}
-                      value={digit}
-                      maxLength={1}
-                      onChange={(e) => handleOtpChange(e.target.value, idx)}
-                      onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                      onPaste={(e) => handlePaste(e)}
-                      className={`w-[66%] h-15 min-h-10 m-w-10 text-center text-xl border-2 focus:border-[#f5719d] outline-none font-semibold mt-2 rounded-2xl  ${isDark ? "bg-[#0F172A] border-gray-700 shadow-lg shadow-[#0F172A] text-gray-200" : "bg-[#F9FAFB] shadow-lg shadow-gray-200 border-[#f8d4e0] text-black"}`}
-                    />
-                  ))}
-                </div>
                 {errors.other && (
-                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm mt-1">
+                  <div className="flex flex-row gap-1 items-center text-red-600 text-sm">
                     <IoWarning />
                     <p>{errors.other}</p>
                   </div>
                 )}
-                <button
-                  onClick={handleSendOTP}
-                  disabled={timer > 0}
-                  className={`text-sm font-semibold mt-2 ${timer > 0
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-[#6366F1] cursor-pointer"
-                    }`}
-                >
-                  {timer > 0
-                    ? `Resend OTP in ${formatTime(timer)}`
-                    : "Resend OTP"}
-                </button>
               </div>
+
+              <div className={`${otpSent ? "flex" : "hidden"} transition-all duration-500 w-full flex-col items-center`}>
+
+                <div>
+                  <div className={`font-semibold mb-1 flex flex-wrap gap-1 ${isDark ? "text-gray-300" : "text-gray-800"}`}>
+                    <p className="whitespace-nowrap">OTP sent to</p>
+                    <div className="text-[#6366F1] underline flex flex-row gap-2 underline-offset-2 cursor-pointer">{email}
+                      <button
+                        className="flex justify-center items-center text-[#6B6F9C] text-sm cursor-pointer"
+                        onClick={() => {
+                          handleChangeEmail();
+                        }}><FaPencil />
+                      </button>
+                    </div>
+
+                  </div>
+                  <div className="flex gap-2 w-full justify-center items-center">
+                    {otp.map((digit, idx) => (
+                      <input
+                        key={idx}
+                        ref={(el) => (inputsRef.current[idx] = el)}
+                        value={digit}
+                        maxLength={1}
+                        onChange={(e) => handleOtpChange(e.target.value, idx)}
+                        onKeyDown={(e) => handleOtpKeyDown(e, idx)}
+                        onPaste={(e) => handlePaste(e)}
+                        className={`w-[66%] h-15 min-h-10 m-w-10 text-center text-xl border-2 focus:border-[#f5719d] outline-none font-semibold mt-2 rounded-2xl  ${isDark ? "bg-[#0F172A] border-gray-700 shadow-lg shadow-[#0F172A] text-gray-200" : "bg-[#F9FAFB] shadow-lg shadow-gray-200 border-[#f8d4e0] text-black"}`}
+                      />
+                    ))}
+                  </div>
+                  {errors.other && (
+                    <div className="flex flex-row gap-1 items-center text-red-600 text-sm mt-1">
+                      <IoWarning />
+                      <p>{errors.other}</p>
+                    </div>
+                  )}
+                  <button
+                    onClick={handleSendOTP}
+                    disabled={timer > 0}
+                    className={`text-sm font-semibold mt-2 ${timer > 0
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-[#6366F1] cursor-pointer"
+                      }`}
+                  >
+                    {timer > 0
+                      ? `Resend OTP in ${formatTime(timer)}`
+                      : "Resend OTP"}
+                  </button>
+                </div>
+              </div>
+
+              <button className={`w-full h-12 py-3 rounded-xl transition border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d]  font-semibold text-white cursor-pointer relative flex justify-center items-center ${(timer > 0) && !otpSent && "opacity-50"}`}
+                onClick={() => {
+                  otpSent ? handleVerifyOTP() : handleSendOTP();
+                }} disabled={(loading || (timer != 0)) && !otpSent}>
+                {loading ? <Lottie
+                  animationData={loader}
+                  loop={true}
+                  className="w-50 h-50 absolute"
+                /> : otpSent ? "Verify OTP" : timer > 0
+                  ? `${formatTime(timer)}`
+                  : "Get OTP"}
+              </button>
             </div>
 
-            <button className={`w-full h-12 py-3 rounded-xl transition border-2 hover:bg-[#fc8479] bg-[#FF6F61] border-[#ff3e2d]  font-semibold text-white cursor-pointer relative flex justify-center items-center ${(timer > 0) && !otpSent && "opacity-50"}`}
-              onClick={() => {
-                otpSent ? handleVerifyOTP() : handleSendOTP();
-              }} disabled={(loading || (timer != 0)) && !otpSent}>
-              {loading ? <Lottie
-                animationData={loader}
-                loop={true}
-                className="w-50 h-50 absolute"
-              /> : otpSent ? "Verify OTP" : timer > 0
-                ? `${formatTime(timer)}`
-                : "Get OTP"}
-            </button>
+            {/* Divider */}
+            <div className="w-full flex flex-row items-center justify-center my-2">
+              <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
+              <span className="px-2 text text-gray-400 font-semibold">or</span>
+              <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
+            </div>
+
+            {/* Google Button */}
+            <GoogleLoginBtn loading={loading} setLoading={setLoading} />
+
+            <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-4 sm:mt-6`}>
+              By signing up, you agree to our{" "}
+              <span className="text-pink-500 font-medium cursor-pointer">
+                Terms & Privacy Policy
+              </span>
+            </p>
+            <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-2`}>
+              Already have an account?{" "}
+              <NavLink className="text-pink-500 font-medium cursor-pointer" to={'/login'} replace state={{ from: from }}>
+                Login
+              </NavLink>
+            </p>
           </div>
-
-          {/* Divider */}
-          <div className="w-full flex flex-row items-center justify-center my-2">
-            <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
-            <span className="px-2 text text-gray-400 font-semibold">or</span>
-            <div className={`${isDark ? "bg-gray-800" : "bg-gray-200"} w-full h-px`}></div>
-          </div>
-
-          {/* Google Button */}
-          <GoogleLoginBtn loading={loading} setLoading={setLoading} />
-
-          <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-4 sm:mt-6`}>
-            By signing up, you agree to our{" "}
-            <span className="text-[#6366F1] font-medium cursor-pointer">
-              Terms & Privacy Policy
-            </span>
-          </p>
-          <p className={`${isDark ? "text-gray-200" : "text-[#6B6F9C]"} text-sm text-center tracking-tight mt-2`}>
-            Already have an account?{" "}
-            <NavLink className="text-[#6366F1] font-medium cursor-pointer" to={'/login'} replace state={{ from: from }}>
-              Login
-            </NavLink>
-          </p>
         </div>
       </div>
     </div>

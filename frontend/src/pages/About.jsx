@@ -400,7 +400,6 @@ const StatsSection = ({ isDark }) => {
             duration: 0.5,
             delay: i * 0.1
           }}
-          key={i}
           className={`flex xl:justify-center items-center gap-3 xl:gap-4 xl:px-8 lg:px-6 px-4 xl:py-8 lg:py-6 py-5 ${isDark ? "border-r border-gray-800" : "border-r border-gray-100"} ${i < 2 ? isDark ? "border-b border-gray-800 xl:border-b-0" : "border-b border-gray-100 xl:border-b-0" : ""}`}
         >
           <div

@@ -419,7 +419,7 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
         {categories?.length <= 0 ? (
           Array(5).fill(0).map((_, idx) => (
-            <HeaderCategorySkeleton />
+            <HeaderCategorySkeleton key={idx} />
           ))
         ) : (
           <div className='flex'>
