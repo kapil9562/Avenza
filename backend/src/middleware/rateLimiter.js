@@ -32,7 +32,7 @@ export const cartLimiter = rateLimit({
 
 export const speedLimiter2 =  slowDown({
     windowMs: 15 * 60 * 1000,
-    delayAfter: 20,
+    delayAfter: 50,
     delayMs: (hits) => (hits - 20) * 100,
 });
 

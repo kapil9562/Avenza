@@ -1,15 +1,17 @@
 import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import {ProductDetailsSkeleton, Layout, AddToCartBtn} from "../components";
+import { ProductDetailsSkeleton, Layout, AddToCartBtn } from "../components";
 import { formatINR } from "../utils/price.js";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { getProducts, productReview } from "../api/api.js";
-import { IoStar } from "react-icons/io5";
+import { IoGiftOutline, IoShieldCheckmarkOutline, IoStar } from "react-icons/io5";
 import { useAuth } from "../context/AuthContext.jsx";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { PiPencilLineFill } from "react-icons/pi";
+import { BsBoxSeam, BsThreeDotsVertical } from "react-icons/bs";
+import { PiPencilLineFill, PiTruck } from "react-icons/pi";
 import { ImBin } from "react-icons/im";
-
+import { TfiHeadphoneAlt } from "react-icons/tfi";
+import { LuRefreshCw, LuWeight } from "react-icons/lu";
+import { SlTag } from "react-icons/sl";
 
 function ProductDetails() {
     const { productId } = useParams();
@@ -41,7 +43,7 @@ function ProductDetails() {
 
     const submitReview = async () => {
         if (!user) {
-            navigate('/login', {replace: true, state: {from: location}});
+            navigate('/login', { replace: true, state: { from: location } });
             return;
         }
         try {
@@ -128,7 +130,7 @@ function ProductDetails() {
 
     const handleBuyNow = () => {
         if (!user) {
-            navigate('/login', {replace: true, state: {from: location}});
+            navigate('/login', { replace: true, state: { from: location } });
             return;
         }
 
@@ -139,8 +141,36 @@ function ProductDetails() {
         (review) => review.reviewerEmail === user?.email
     );
 
+
+    const highlights = [
+        {
+            id: 1,
+            title: "Stock",
+            value: product?.stock,
+            icon: <BsBoxSeam />
+        },
+        {
+            id: 2,
+            title: "Brand",
+            value: product?.brand || "-",
+            icon: <SlTag />
+        },
+        {
+            id: 3,
+            title: "Weight",
+            value: product?.weight,
+            icon: <LuWeight />
+        },
+        {
+            id: 4,
+            title: "Warranty",
+            value: product?.warrantyInformation,
+            icon: <IoShieldCheckmarkOutline />
+        },
+    ]
+
     return (
-        <div className={`flex flex-col gap-2 md:p-5 lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] w-full ${isDark ? "bg-linear-to-br from-[#020617] via-[#0F172A] to-slate-800" : "bg-linear-to-br from-[#CAD0FD] to-[#F9E1FE]"}`}>
+        <div className={`flex flex-col gap-2 md:p-5 lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] w-full ${isDark ? "bg-gray-900" : "bg-[#FFFFFF]"}`}>
 
             {loading ?
                 (
@@ -162,7 +192,7 @@ function ProductDetails() {
                         ) : (
                             <>
 
-                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 p-2 w-full  pb-20">
+                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 p-2 w-full">
                                     {/* IMAGE SECTION */}
                                     <div className="flex gap-3 justify-start items-start flex-col">
 
@@ -218,8 +248,8 @@ function ProductDetails() {
                                     </div>
 
                                     {/* DETAILS */}
-                                    <div className="flex flex-col">
-                                        <div className="p-2">
+                                    <div className="flex flex-col gap-4">
+                                        <div className="px-2">
                                             <h1 className={`${!isDark ? "text-gray-800" : "text-[#F564A9]"} font-medium text-3xl`}>
                                                 {product.title}
                                             </h1>
@@ -265,55 +295,50 @@ function ProductDetails() {
                                             </div>
                                         </div>
 
-                                        <div className="w-full h-1 p-4">
-                                            <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
+                                        <div className="px-2 mt-2">
+                                            <StatsSection isDark={isDark} />
                                         </div>
 
-                                        <div className="flex flex-col rounded-lg px-4 gap-1">
-                                            <h1 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
-                                                Return Policy
-                                            </h1>
-                                            <p className="bg-[#FF6F6120] w-fit p-2 rounded-4xl border-2 border-[#FF6F61] text-[#FF6F61] font-semibold">
-                                                {product.returnPolicy}
-                                            </p>
+                                        <div className="px-2">
+                                            <div className={`flex flex-row items-center gap-2 rounded-xl px-4 border py-3 ${isDark ? "border-gray-700" : "border-gray-200"}`}>
+                                                <div className="p-2 rounded-lg bg-pink-600/10 text-pink-500 h-fit w-fit text-lg">
+                                                    <LuRefreshCw />
+                                                </div>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex flex-row gap-8 items-center">
+                                                        <h3 className={`font-semibold ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
+                                                            Return Policy
+                                                        </h3>
+                                                        <p className={`bg-pink-600/10 w-fit h-fit py-1 px-4 rounded-4xl text-pink-600 font-medium flex items-center justify-center text-xs ${isDark ? "border border-pink-700" : ""}`}>
+                                                            {product.returnPolicy}
+                                                        </p>
+                                                    </div>
+
+                                                    <p className={`${isDark ? "text-gray-400" : "text-[#787878]"} text-sm font-medium`}>Easy returns & refunds on eligible items.</p>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div className="w-full p-4 h-1">
-                                            <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
-                                        </div>
+                                        <div className="px-2">
+                                            <div className={`${isDark ? "border-gray-700" : "border-gray-200"} border rounded-xl px-4 py-3`}>
+                                                <h1 className={`text-lg mb-2 font-semibold ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
+                                                    Product Highlights
+                                                </h1>
 
-                                        <div className="rounded-lg px-4">
-                                            <h1 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
-                                                Product Highlights
-                                            </h1>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div>
-                                                    <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
-                                                        stock
-                                                    </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.stock}</span>
-                                                </div>
-
-                                                <div>
-                                                    <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
-                                                        brand
-                                                    </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.brand}</span>
-                                                </div>
-
-                                                <div>
-                                                    <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
-                                                        weight
-                                                    </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.weight} gm</span>
-                                                </div>
-
-                                                <div>
-                                                    <h1 className={`${isDark ? "text-gray-200" : "text-gray-600"}  text-sm font-semibold`}>
-                                                        warranty
-                                                    </h1>
-                                                    <span className={`${isDark ? "text-gray-300" : "text-gray-800"}`}>{product.warrantyInformation}</span>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    {highlights?.map((item, i) => (
+                                                        <div key={i} className="flex flex-row items-center gap-2">
+                                                            <div className="bg-pink-600/10 text-pink-500 p-2 rounded-md h-fit w-fit text-lg">
+                                                                {item?.icon}
+                                                            </div>
+                                                            <div>
+                                                                <h1 className={`${isDark ? "text-gray-200" : "text-gray-800"}  text-sm font-semibold`}>
+                                                                    {item?.title}
+                                                                </h1>
+                                                                <span className={`${isDark ? "text-gray-400" : "text-[#787878]"} text-sm font-medium`}>{item?.value}</span>
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
                                         </div>
@@ -452,5 +477,72 @@ function ProductDetails() {
         </div>
     );
 }
+
+const statsData = [
+    {
+        id: 1,
+        title: "Free Delivery",
+        subtitle: "On orders ₹499+",
+        icon: <PiTruck />
+    },
+    {
+        id: 2,
+        title: "100% Authentic",
+        subtitle: "Original products",
+        icon: <IoShieldCheckmarkOutline />
+    },
+    {
+        id: 3,
+        title: "24/7 Support",
+        subtitle: "We're here to help",
+        icon: <TfiHeadphoneAlt />
+    },
+    {
+        id: 4,
+        title: "Secure Payment",
+        subtitle: "Safe & encrypted",
+        icon: <IoGiftOutline />
+    },
+];
+
+const StatsSection = ({ isDark }) => {
+    return (
+        <div
+            className={`rounded-xl overflow-hidden grid grid-cols-2 xl:grid-cols-4 ${isDark
+                ? "border border-pink-700 bg-pink-600/10"
+                : "bg-pink-50 border border-pink-200"
+                }`}
+        >
+            {statsData?.map((stat, i) => (
+                <div
+                    key={i}
+                    className={`flex xl:justify-center items-center gap-3 py-3 px-2 ${isDark ? "border-r border-pink-800" : "border-r border-pink-100"} ${i < 2 ? isDark ? "border-b border-pink-800 xl:border-b-0" : "border-b border-pink-100 xl:border-b-0" : ""}`}
+                >
+                    <div
+                        className={`flex items-center justify-center p-2 rounded-full shrink-0 bg-rose-600/10 text-rose-500`}
+                    >
+                        <div className="xl:text-xl lg:text-2xl text-xl">
+                            {stat.icon}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col min-w-0">
+                        <h2
+                            className={`text-sm font-semibold leading-tight ${isDark ? "text-white" : "text-gray-900"}`}
+                        >
+                            {stat?.title}
+                        </h2>
+
+                        <span
+                            className={`xl:text-sm text-xs font-medium mt-1 ${isDark ? "text-gray-400" : "text-gray-500"}`}
+                        >
+                            {stat?.subtitle}
+                        </span>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
 
 export default ProductDetails;

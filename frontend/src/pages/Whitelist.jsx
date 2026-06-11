@@ -38,7 +38,7 @@ export default function Whitelist() {
             </div>
 
             {items.length === 0 ? (
-                <div className="text-gray-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center text-center font-semibold">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center text-center font-semibold">
                     <div className="relative flex flex-col justify-center items-center gap-4">
                         <Lottie
                             animationData={emptyFav}
@@ -46,8 +46,8 @@ export default function Whitelist() {
                             className="h-30 w-fit"
                         />
                         <div className="flex flex-col justify-center items-center">
-                            <span>No favorites yet. Start exploring and add what you love ❤️</span>
-                            <button className="text-[#6366F1] underline cursor-pointer"
+                            <span className={`${isDark? "text-gray-400" : "text-gray-500"}`}>No favorites yet. Start exploring and add what you love ❤️</span>
+                            <button className="text-rose-400 underline cursor-pointer"
                                 onClick={() => {
                                     navigate('/home');
                                     setActiveTab("HOME");

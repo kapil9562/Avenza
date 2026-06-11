@@ -76,8 +76,8 @@ export default function CartDetails() {
                                     className="h-60 w-fit"
                                 />
                                 <div className="flex flex-col justify-center items-center">
-                                    <span>Your cart is empty</span>
-                                    <a className="text-[#6366F1] underline cursor-pointer"
+                                    <span className={`${isDark? "text-gray-400" : "text-gray-500"}`}>Your cart is empty</span>
+                                    <a className="text-rose-400 underline cursor-pointer"
                                         onClick={() => {
                                             navigate('/home');
                                             setActiveTab("HOME");
