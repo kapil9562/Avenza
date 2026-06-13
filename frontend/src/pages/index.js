@@ -14,7 +14,7 @@ import ResetPass from './ResetPass';
 import PageNotFound from './PageNotFound';
 import FavItems from './FavItems';
 import AddressPage from './AddressPage';
-import CheckOut from './CheckOut';
+import Checkout from './Checkout';
 
 export {
   Login,
@@ -33,5 +33,5 @@ export {
   PageNotFound,
   FavItems,
   AddressPage,
-  CheckOut
+  Checkout
 };

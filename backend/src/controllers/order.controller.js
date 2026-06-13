@@ -60,6 +60,10 @@ export const buyNow = async (req, res) => {
                     p => p._id.toString() === item.productId
                 );
 
+                if (!product) {
+                    throw new Error("Product not found");
+                }
+
                 if (product.stock < item.quantity) {
                     return res.status(400).json({
                         success: false,
@@ -235,8 +239,6 @@ export const verifyPayment = async (req, res) => {
         const items = JSON.parse(session.metadata.items);
 
         const paymentMethod = session.payment_method_types[0];
-
-        console.log(paymentMethod)
 
         let orderItems = [];
         let subtotal = 0;

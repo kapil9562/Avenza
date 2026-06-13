@@ -10,7 +10,8 @@ import AccountDetail from './pages/AccountDetail.jsx';
 import {
   Login, Signup, ProductDetails, CartDetails, SearchResults,
   About, Whitelist, Orders, OrderSuccess,
-  PaymentFailed, OrderDetail, ForgetPass, ResetPass, PageNotFound, AddressPage, CheckOut
+  PaymentFailed, OrderDetail, ForgetPass, ResetPass, PageNotFound, AddressPage,
+  Checkout
 } from './pages';
 
 createRoot(document.getElementById('root')).render(
@@ -25,7 +26,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/:slug/p/:productId" element={<ProductDetails />} />
             <Route path="/checkout" element={<ProtectedRoute><AddressPage /></ProtectedRoute>} />
             <Route path="/carts/checkout" element={<ProtectedRoute><AddressPage /></ProtectedRoute>} />
-            <Route path="/checkout/payment-method" element={<ProtectedRoute><CheckOut /></ProtectedRoute>} />
+            <Route path="/checkout/payment-method" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="/success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
             <Route path="/cancel" element={<ProtectedRoute><PaymentFailed /></ProtectedRoute>} />
             <Route path="/my-account/my-orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />

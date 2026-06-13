@@ -15,7 +15,7 @@ import { useAuth } from '../context/AuthContext'
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 
-function CheckOut() {
+function Checkout() {
 
   const { isDark } = useTheme();
   const location = useLocation();
@@ -264,4 +264,4 @@ function CheckOut() {
   )
 }
 
-export default CheckOut
+export default Checkout
