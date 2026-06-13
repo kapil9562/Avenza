@@ -129,8 +129,8 @@ function Checkout() {
   }
 
   return (
-    <div className={`w-full sm:px-5 lg:px-10 lg:py-4 px-2 lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex flex-row gap-10 ${isDark ? "bg-gray-900" : "bg-[#FFFFFF]"} `}>
-      <div className='space-y-4 w-[60%]'>
+    <div className={`w-full sm:px-5 lg:px-10 py-2 lg:py-4 px-2 lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex lg:flex-row flex-col gap-10 ${isDark ? "bg-gray-900" : "bg-[#FFFFFF]"} `}>
+      <div className='space-y-4 lg:w-[60%] w-full'>
         <Breadcrumb />
         <div>
           <h2 className={`${isDark ? "text-gray-100" : "text-gray-800"} text-2xl font-semibold`}>Choose Payment Method</h2>
@@ -141,7 +141,7 @@ function Checkout() {
           {paymentOptions.map((option, i) => (
             <label
               key={option.value}
-              className={`flex items-center gap-4 p-4 cursor-pointer transition-[border-color,background-color] duration-200 ${!option.status && "brightness-50 pointer-events-none"} ${paymentMethod === option.value
+              className={`flex items-center gap-4 p-4 cursor-pointer transition-[border-color,background-color] duration-200 ${!option.status && `${isDark? "brightness-50": "opacity-50"} pointer-events-none`} ${paymentMethod === option.value
                 ? isDark
                   ? "bg-rose-600/10 ring-1 ring-inset ring-rose-400 rounded-lg"
                   : "bg-rose-50 ring-1 ring-inset ring-rose-400 rounded-lg"
@@ -189,7 +189,7 @@ function Checkout() {
         </div>
       </div>
 
-      <div className='w-[40%] p-4'>
+      <div className='lg:w-[40%] lg:p-4 w-full'>
         <div className={`${isDark ? "border-gray-800 shadow-[0px_1px_8px_rgba(0,0,0,0.1)]" : "bg-[#FFFFFF] shadow-[0px_1px_8px_rgba(0,0,0,0.1)] border-transparent"} border rounded-lg p-4`}>
           <div className='flex flex-row w-full justify-between'>
             <h2 className={`${isDark ? "text-gray-100" : "text-gray-800"} font-semibold text-lg`}>Order Summary</h2>
