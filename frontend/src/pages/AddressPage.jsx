@@ -1,18 +1,26 @@
 import React, { useState } from "react";
-import { buyCartItems, buyNow, getAddress, saveAddress } from "../api/api";
+import { buyNow, getAddress, saveAddress } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import loader from "../assets/loader2.json";
 import { useTheme } from "../context/ThemeContext";
 import { toast } from "../context/ToastContext";
 import { useCart } from "../context/CartContext";
 
-const CheckoutPage = () => {
-
-    const { productId } = useParams();
-    const { items:cartItems } = useCart();
+const AddressPage = () => {
+    
+    const location = useLocation();
+    const product = location?.state;
+    
+    const { items: cartItems } = useCart();
+    const [loading, setLoading] = useState(false);
+    const { isDark } = useTheme();
+    const { user } = useAuth();
+    const [originalAddress, setOriginalAddress] = useState(null);
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         addressId: "",
@@ -26,14 +34,6 @@ const CheckoutPage = () => {
         country: "India"
     });
 
-    const [loading, setLoading] = useState(false);
-    const { isDark } = useTheme();
-
-    const [originalAddress, setOriginalAddress] = useState(null);
-
-    const [errors, setErrors] = useState({});
-
-    const { user } = useAuth();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,25 +96,7 @@ const CheckoutPage = () => {
                 }));
             }
 
-            let res;
-
-            if (productId) {
-                res = await buyNow({
-                    productId,
-                    quantity: 1,
-                    addressId
-                });
-            } else {
-                res = await buyCartItems({
-                    items: cartItems,
-                    addressId
-                });
-            }
-
-            if (res?.data?.url) {
-                window.location.href = res.data.url;
-            }
-
+            navigate('/checkout/payment-method', {state: {product:product, addressId:addressId}});
 
         } catch (error) {
             const msg = error?.response?.data?.message || error?.message || "Something went wrong !"
@@ -293,4 +275,4 @@ const CheckoutPage = () => {
     );
 };
 
-export default CheckoutPage;
+export default AddressPage;

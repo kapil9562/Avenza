@@ -1,4 +1,4 @@
-import { useSearchParams, Link, useOutletContext } from "react-router-dom";
+import { useSearchParams, Link, useOutletContext, useLocation } from "react-router-dom";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { verifyPayment } from '../api/api.js'
 import { useEffect, useState } from "react";
@@ -10,19 +10,27 @@ import { useCart } from "../context/CartContext.jsx";
 
 const OrderSuccess = () => {
     const [searchParams] = useSearchParams();
-
     const sessionId = searchParams.get("session_id");
+
+    const location = useLocation();
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
-    const [orderId, setOrderId] = useState("");
+    const [orderId, setOrderId] = useState(location?.state || "");
     const { setActiveTab } = useOutletContext();
-    const {fetchCart} = useCart();
+    const { fetchCart } = useCart();
 
     const { user, isAuthenticated } = useAuth();
-    const {isDark} = useTheme();
+    const { isDark } = useTheme();
 
     useEffect(() => {
+
+        if (orderId) {
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
+            return;
+        }
 
         const verify = async () => {
 
@@ -31,10 +39,10 @@ const OrderSuccess = () => {
             setLoading(true);
 
             try {
-                const res = await verifyPayment({ sessionId, userId: user._id });
+                const res = await verifyPayment({ sessionId, userId: user?._id });
 
                 if (res?.data?.success) {
-                    setOrderId(res?.data?.order?._id);
+                    setOrderId(res?.data?.orderId);
                     fetchCart();
                 }
             } catch (error) {
@@ -52,14 +60,14 @@ const OrderSuccess = () => {
             verify();
         }
 
-    }, [sessionId, isAuthenticated, user]);
+    }, [sessionId, isAuthenticated, user, fetchCart]);
 
     useEffect(() => {
         setActiveTab("");
     }, [])
 
     return (
-        <div className={`lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center px-4 ${isDark? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
+        <div className={`lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] flex items-center justify-center px-4 ${isDark ? "bg-[#0F172A]" : "bg-[#F1F3F6]"}`}>
             {loading ?
                 <div className="flex flex-col items-center justify-center relative">
                     <Lottie
@@ -73,23 +81,23 @@ const OrderSuccess = () => {
                 </div>
                 :
                 !error ?
-                    <div className={`shadow-xl rounded-2xl p-8 max-w-md w-full text-center border-2 ${isDark? "bg-gray-900 border-gray-800" : "bg-white border-transparent"}`}>
+                    <div className={`shadow-xl rounded-2xl p-8 max-w-md w-full text-center border-2 ${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-transparent"}`}>
 
                         <div className="flex justify-center mb-4">
                             <FaRegCheckCircle size={70} className="text-green-500" />
                         </div>
 
-                        <h1 className={`text-2xl font-bold mb-2 ${isDark? "text-gray-200" : "text-gray-800"}`}>
+                        <h1 className={`text-2xl font-bold mb-2 ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                             Order Placed Successfully 🎉
                         </h1>
 
-                        <p className={`mb-4 ${isDark? "text-gray-400" : "text-gray-600"}`}>
+                        <p className={`mb-4 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
                             Thank you for your purchase. Your order has been placed successfully.
                         </p>
 
-                        <div className={`p-3 rounded-lg mb-6 ${isDark? "bg-gray-800" : "bg-gray-100"}`}>
-                            <p className={`text-sm ${isDark? "text-gray-300" : "text-gray-500"}`}>Order ID</p>
-                            <p className={`font-semibold ${isDark? "text-white" : "text-gray-800"}`}>{orderId}</p>
+                        <div className={`p-3 rounded-lg mb-6 ${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
+                            <p className={`text-sm ${isDark ? "text-gray-300" : "text-gray-500"}`}>Order ID</p>
+                            <p className={`font-semibold ${isDark ? "text-white" : "text-gray-800"}`}>{orderId}</p>
                         </div>
 
                         <div className="flex flex-col gap-3">
@@ -103,7 +111,7 @@ const OrderSuccess = () => {
 
                             <Link
                                 to="/home"
-                                className={`border-2 py-2 rounded-lg transform-gpu ${isDark? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"} font-semibold`}
+                                className={`border-2 py-2 rounded-lg transform-gpu ${isDark ? "hover:bg-gray-800 text-white border-gray-700" : "hover:bg-gray-100 border-gray-300"} font-semibold`}
                             >
                                 Continue Shopping
                             </Link>

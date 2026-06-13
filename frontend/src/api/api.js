@@ -99,11 +99,9 @@ export const saveAddress = ({ userId, fullName, phone, addressLine1, addressLine
 
 export const getAddress = ({ userId }) => api.get(`/get-address?userId=${userId}`);
 
-export const buyNow = ({ productId, quantity, addressId }) => api.post("buy-now", { productId, quantity, addressId });
+export const buyNow = ({ order, addressId, paymentMethod, userId }) => api.post("/buy-now", { order, addressId, paymentMethod, userId });
 
-export const buyCartItems = ({ items, addressId }) => api.post("/checkout/cart", { items, addressId });
-
-export const verifyPayment = ({ sessionId, userId }) => api.post("verify-payment", { sessionId, userId });
+export const verifyPayment = ({ sessionId, userId }) => api.post("/verify-payment", { sessionId, userId });
 
 export const getOrders = ({ userId, time = [], status = [], skip = 0 }) => {
   const statusParam = encodeURIComponent(status.join(","));
@@ -161,8 +159,6 @@ api.interceptors.response.use(
         currentBase === PRIMARY_BACKEND
           ? SECONDARY_BACKEND
           : PRIMARY_BACKEND;
-
-      console.log("Switching backend:", newBase);
 
       // switch current request
       originalRequest.baseURL = newBase;

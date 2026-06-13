@@ -6,55 +6,203 @@ import Cart from "../models/cart.model.js";
 import User from "../models/user.model.js"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const VALID_METHODS = ["cod", "upi", "card"];
 
 export const buyNow = async (req, res) => {
+    const { order, addressId, paymentMethod, userId } = req.body;
+
+    if (!paymentMethod) {
+        return res.status(400).json({
+            success: false,
+            message: "Payment method is required!"
+        });
+    }
+
+    if (!VALID_METHODS.includes(paymentMethod)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid payment method!"
+        });
+    }
+
+    if (!order || !Array.isArray(order) || order.length === 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Order items are required!"
+        });
+    }
+
     try {
 
-        const { productId, quantity, addressId } = req.body;
+        if (paymentMethod === "cod") {
 
-        const product = await Product.findOne({ _id: productId });
+            if (!userId) {
+                return res.status(400).json({
+                    success: false,
+                    message: "userId is required!"
+                });
+            }
 
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
+            const now = new Date();
+            const orderId = `OD${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}${Math.floor(100000 + Math.random() * 900000)}`;
+
+            const productIds = order.map(item => item.productId);
+
+            const products = await Product.find({
+                _id: { $in: productIds }
+            });
+
+            let subtotal = 0;
+
+            const orderItems = order.map((item) => {
+
+                const product = products.find(
+                    p => p._id.toString() === item.productId
+                );
+
+                if (product.stock < item.quantity) {
+                    return res.status(400).json({
+                        success: false,
+                        message: `${product.title} has insufficient stock`
+                    });
+                }
+
+                subtotal += product.price * item.quantity;
+
+                return {
+                    product: product._id,
+                    name: product.title,
+                    image: product.thumbnail,
+                    price: product.price,
+                    quantity: item.quantity
+                }
+            });
+
+            const deliveryCharge = subtotal < 500 ? 100 : 0;
+            const totalAmount = subtotal + deliveryCharge;
+
+            const createdOrder = await Order.create({
+                user: userId,
+                orderId,
+                orderItems,
+                paymentMethod: "COD",
+                paymentStatus: "pending",
+                isPaid: false,
+                deliveryCharge,
+                totalAmount
+            });
+
+            return res.json({
+                success: true,
+                message: "Order created successfully",
+                orderId: createdOrder?._id
+            });
+
+        }
+
+        const productIds = order.map(item => item.productId);
+
+        const products = await Product.find({
+            _id: { $in: productIds }
+        });
+
+        if (products.length !== productIds.length) {
+            return res.status(404).json({
+                success: false,
+                message: "Some products not found"
+            });
+        }
+
+        let subtotal = 0;
+
+        for (const item of order) {
+            const product = products.find(
+                p => p._id.toString() === item.productId
+            );
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found"
+                });
+            }
+
+            if (product.stock < item.quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message: `${product.title} has insufficient stock`
+                });
+            }
+
+            subtotal += product.price * item.quantity;
+        }
+
+        const line_items = order.map(item => {
+            const product = products.find(
+                p => p._id.toString() === item.productId
+            );
+
+            return {
+                price_data: {
+                    currency: "inr",
+                    product_data: {
+                        name: product.title,
+                        images: product.thumbnail
+                            ? [product.thumbnail]
+                            : []
+                    },
+                    unit_amount: product.price * 100
+                },
+                quantity: item.quantity
+            };
+        });
+
+        const deliveryCharge = subtotal < 100 ? 100 : 0;
+
+        if (deliveryCharge > 0) {
+            line_items.push({
+                price_data: {
+                    currency: "inr",
+                    product_data: {
+                        name: "Delivery Charge"
+                    },
+                    unit_amount: deliveryCharge * 100
+                },
+                quantity: 1
+            });
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-
-            line_items: [
-                {
-                    price_data: {
-                        currency: "inr",
-                        product_data: {
-                            name: product.title,
-                            images: [product.thumbnail]
-                        },
-                        unit_amount: product.price < 100 ? (product.price + 100) * 100 : product.price * 100
-                    },
-                    quantity
-                }
-            ],
-
+            payment_method_types: [paymentMethod],
+            line_items,
             mode: "payment",
-
             metadata: {
-                checkoutType: "buy_now",
-                productId,
-                quantity,
-                addressId
+                addressId,
+                productIds: JSON.stringify(productIds),
+                items: JSON.stringify(
+                    order.map(item => ({
+                        productId: item.productId,
+                        quantity: item.quantity
+                    }))
+                )
             },
-
             success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.CLIENT_URL}/cancel`
         });
 
-        res.json({
+        return res.status(200).json({
+            success: true,
             url: session.url
         });
 
     } catch (error) {
+
         console.log(error);
-        res.status(500).json({ message: "Server error" });
+
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
     }
 };
 
@@ -76,19 +224,25 @@ export const verifyPayment = async (req, res) => {
         if (existingOrder) {
             return res.json({
                 success: true,
-                order: existingOrder
+                orderId: existingOrder._id
             });
         }
-
-        const { checkoutType } = session.metadata;
 
         const now = new Date();
         const orderId = `OD${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}${Math.floor(100000 + Math.random() * 900000)}`;
 
-        if (checkoutType === "buy_now") {
-            const { productId, quantity } = session.metadata;
 
-            const product = await Product.findById(productId);
+        const items = JSON.parse(session.metadata.items);
+
+        const paymentMethod = session.payment_method_types[0];
+
+        console.log(paymentMethod)
+
+        let orderItems = [];
+        let subtotal = 0;
+
+        for (const item of items) {
+            const product = await Product.findById(item.productId);
 
             if (!product) {
                 return res.status(404).json({
@@ -97,107 +251,53 @@ export const verifyPayment = async (req, res) => {
                 });
             }
 
-            const deliveryCharge = (product.price * Number(quantity)) < 100 ? 100 : 0;
-            const totalAmount = (product.price * Number(quantity)) + deliveryCharge;
 
-            const order = await Order.create({
-                user: userId,
-                orderId,
-                orderItems: [{
-                    product: product._id,
-                    name: product.title,
-                    image: product.thumbnail,
-                    price: product.price,
-                    quantity: Number(quantity),
-                    deliveryCharge
-                }],
-                paymentMethod: "Stripe",
-                paymentStatus: "paid",
-                isPaid: true,
-                totalAmount,
-                stripeSessionId: sessionId
-            });
 
-            product.stock -= Number(quantity);
-            await product.save();
-
-            return res.json({
-                success: true,
-                message: "Order created successfully",
-                order
-            });
-        }
-
-        if (checkoutType === "cart") {
-            const items = JSON.parse(session.metadata.items);
-
-            let orderItems = [];
-            let subtotal = 0;
-
-            for (const item of items) {
-                const product = await Product.findById(item._id);
-
-                if (!product) {
-                    return res.status(404).json({
-                        success: false,
-                        message: "Product not found"
-                    });
-                }
-
-                if (product.stock < item.quantity) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `${product.title} stock is insufficient`
-                    });
-                }
-
-                subtotal += product.price * item.quantity;
-
-                orderItems.push({
-                    product: product._id,
-                    name: product.title,
-                    image: product.thumbnail,
-                    price: product.price,
-                    quantity: item.quantity,
-                    deliveryCharge: 0
+            if (product.stock < item.quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message: `${product.title} stock is insufficient`
                 });
-
-                product.stock -= item.quantity;
-                await product.save();
             }
 
-            const deliveryCharge = subtotal < 100 ? 100 : 0;
-            const totalAmount = subtotal + deliveryCharge;
+            subtotal += product.price * item.quantity;
 
-            if (orderItems.length > 0) {
-                orderItems[0].deliveryCharge = deliveryCharge;
-            }
-
-            const order = await Order.create({
-                user: userId,
-                orderId,
-                orderItems,
-                paymentMethod: "Stripe",
-                paymentStatus: "paid",
-                isPaid: true,
-                totalAmount,
-                stripeSessionId: sessionId
+            orderItems.push({
+                product: product._id,
+                name: product.title,
+                image: product.thumbnail,
+                price: product.price,
+                quantity: item.quantity
             });
 
-            const user = await User.findById({ _id: userId })
+            product.stock -= Number(item.quantity);
 
-            await Cart.deleteMany({ uid: user.uid });
-
-            return res.json({
-                success: true,
-                message: "Cart order created successfully",
-                order
-            });
+            await product.save();
         }
 
-        return res.status(400).json({
-            success: false,
-            message: "Invalid checkout type"
+        const deliveryCharge = subtotal < 500 ? 100 : 0;
+        const totalAmount = subtotal + deliveryCharge;
+
+        const order = await Order.create({
+            user: userId,
+            orderId,
+            orderItems,
+            paymentMethod: paymentMethod,
+            paymentStatus: "paid",
+            isPaid: true,
+            totalAmount,
+            deliveryCharge,
+            stripeSessionId: sessionId
+        });
+
+        const user = await User.findById({ _id: userId })
+
+        await Cart.deleteMany({ uid: user.uid });
+
+        return res.json({
+            success: true,
+            message: "Order created successfully",
+            orderId: order?._id
         });
 
     } catch (error) {
@@ -437,109 +537,4 @@ export const getOrderDetail = async (req, res) => {
         })
     }
 
-};
-
-
-export const buyCartItems = async (req, res) => {
-    try {
-        const { items, addressId } = req.body;
-
-        if (!items || !Array.isArray(items) || items.length === 0 || !addressId) {
-            return res.status(400).json({
-                success: false,
-                message: "Items and addressId are required"
-            });
-        }
-
-        const productIds = items.map(item => item._id);
-        const products = await Product.find({ _id: { $in: productIds } });
-
-        if (products.length !== productIds.length) {
-            return res.status(404).json({
-                success: false,
-                message: "Some products not found"
-            });
-        }
-
-        const line_items = [];
-        let subtotal = 0;
-
-        for (const item of items) {
-            const product = products.find(p => p._id.toString() === item._id);
-
-            if (!product) {
-                return res.status(404).json({
-                    success: false,
-                    message: `Product not found: ${item._id}`
-                });
-            }
-
-            if (product.stock < item.qty) {
-                return res.status(400).json({
-                    success: false,
-                    message: `${product.title} is out of stock or insufficient stock`
-                });
-            }
-
-            subtotal += product.price * item.qty;
-
-            line_items.push({
-                price_data: {
-                    currency: "inr",
-                    product_data: {
-                        name: product.title,
-                        images: [product.thumbnail]
-                    },
-                    unit_amount: product.price * 100
-                },
-                quantity: item.qty
-            });
-        }
-
-        const deliveryCharge = subtotal < 100 ? 100 : 0;
-
-        if (deliveryCharge > 0) {
-            line_items.push({
-                price_data: {
-                    currency: "inr",
-                    product_data: {
-                        name: "Delivery Charge"
-                    },
-                    unit_amount: deliveryCharge * 100
-                },
-                quantity: 1
-            });
-        }
-
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-            line_items,
-            mode: "payment",
-            metadata: {
-                checkoutType: "cart",
-                addressId,
-                productIds: JSON.stringify(productIds),
-                items: JSON.stringify(items.map((item) => {
-                    return {
-                        _id: item._id,
-                        quantity: item.qty
-                    };
-                })),
-            },
-            success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.CLIENT_URL}/cancel`
-        });
-
-        return res.status(200).json({
-            success: true,
-            url: session.url
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: "Server error"
-        });
-    }
 };

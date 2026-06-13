@@ -99,8 +99,8 @@ function OrderDetail() {
             <div className='flex flex-col gap-2'>
               <div className={`flex flex-col w-full border-2 rounded-lg px-4 ${isDark ? "border-gray-800" : "border-gray-100"}`}>
                 {order?.orderItems?.slice(0, visible).map((item, i) => (
-                  <div>
-                    <div key={i} className='flex items-center w-full gap-4'>
+                  <div key={i}>
+                    <div className='flex items-center w-full gap-4'>
                       <div className='h-full flex items-center'>
                         <img src={item?.image} alt="Thumbnail" className='h-20 w-20 object-contain' loading='lazy' />
                       </div>

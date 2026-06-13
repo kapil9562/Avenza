@@ -8,7 +8,7 @@ const cartRouter = express.Router()
 
 cartRouter.post('/cart/add', verifyJWT, speedLimiter2, cartLimiter, addToCart);
 
-cartRouter.get('/cart/get', verifyJWT, speedLimiter2, cartLimiter, getCart);
+cartRouter.get('/cart/get', verifyJWT, cartLimiter, getCart);
 
 cartRouter.post('/cart/updateqty', verifyJWT, speedLimiter2, cartLimiter, updateQty);
 

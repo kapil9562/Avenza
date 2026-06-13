@@ -1,5 +1,5 @@
 import express from "express";
-import { buyCartItems, buyNow, getAddress, getOrderDetail, getOrders, saveAddress, verifyPayment } from "../controllers/order.controller.js";
+import { buyNow, getAddress, getOrderDetail, getOrders, saveAddress, verifyPayment } from "../controllers/order.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import {
   paymentLimiter,
@@ -19,15 +19,6 @@ orderRouter.post(
   speedLimiter2,
   checkoutLimiter,
   buyNow
-);
-
-// Cart Checkout
-orderRouter.post(
-  "/checkout/cart",
-  verifyJWT,
-  speedLimiter2,
-  checkoutLimiter,
-  buyCartItems
 );
 
 // Verify Payment

@@ -9,8 +9,8 @@ import PublicRoute from './components/common/PublicRoute.jsx';
 import AccountDetail from './pages/AccountDetail.jsx';
 import {
   Login, Signup, ProductDetails, CartDetails, SearchResults,
-  About, Whitelist, Orders, CheckoutPage, OrderSuccess,
-  PaymentFailed, OrderDetail, ForgetPass, ResetPass, PageNotFound
+  About, Whitelist, Orders, OrderSuccess,
+  PaymentFailed, OrderDetail, ForgetPass, ResetPass, PageNotFound, AddressPage, CheckOut
 } from './pages';
 
 createRoot(document.getElementById('root')).render(
@@ -23,8 +23,9 @@ createRoot(document.getElementById('root')).render(
             <Route path='/home' element={<Container />} />
             <Route path="/:pCategory/:category" element={<Container />} />
             <Route path="/:slug/p/:productId" element={<ProductDetails />} />
-            <Route path="/checkout/:productId" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
-            <Route path="/checkout/cart" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+            <Route path="/checkout" element={<ProtectedRoute><AddressPage /></ProtectedRoute>} />
+            <Route path="/carts/checkout" element={<ProtectedRoute><AddressPage /></ProtectedRoute>} />
+            <Route path="/checkout/payment-method" element={<ProtectedRoute><CheckOut /></ProtectedRoute>} />
             <Route path="/success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
             <Route path="/cancel" element={<ProtectedRoute><PaymentFailed /></ProtectedRoute>} />
             <Route path="/my-account/my-orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
