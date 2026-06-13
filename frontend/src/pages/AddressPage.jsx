@@ -149,7 +149,7 @@ const AddressPage = () => {
             <div className={`max-w-2xl mx-auto p-6 rounded-xl ${isDark ? "bg-gray-900 shadow-[0px_0px_20px_rgba(0,0,0,0.4)]" : "bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.2)]"}`}>
                 <h2 className={`text-2xl font-semibold mb-6 ${isDark ? "text-white" : "text-gray-800"}`}>Shipping Address</h2>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={(e) => handleSubmit(e)} className="space-y-4">
 
                     {/* Full Name */}
                     <div>

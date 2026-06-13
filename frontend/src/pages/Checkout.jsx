@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Breadcrumb } from '../components'
 import { IoCardOutline, IoWalletOutline } from 'react-icons/io5'
 import { RiBankLine } from 'react-icons/ri'
@@ -20,9 +20,15 @@ function CheckOut() {
   const { isDark } = useTheme();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const { product: productData, addressId } = location?.state;
+  const { product: productData, addressId } = location?.state || {};
   const { items: cartItems, subtotal: cartTotal } = useCart();
   const products = productData ? [productData] : cartItems;
+
+  useEffect(() => {
+    if (!productData || !addressId) {
+      navigate("/", { replace: true })
+    }
+  }, [productData, addressId]);
 
   const subtotal = productData
     ? productData.price * productData.qty
@@ -48,7 +54,7 @@ function CheckOut() {
           className="h-5 w-5 object-contain"
         />
       ),
-      status: total<100000? true : false
+      status: total < 100000 ? true : false
     },
     {
       value: "card",
@@ -100,7 +106,7 @@ function CheckOut() {
 
       const url = res?.data?.url;
       const orderId = res?.data?.orderId;
-      
+
       if (url) {
         window.location.href = url;
       } else if (orderId) {
