@@ -180,8 +180,8 @@ export default function Login() {
                     />
                 </div>
             </div>
-            <div className="flex items-center p-6 lg:w-2/3 w-full justify-center lg:justify-start">
-                <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60] shadow-[0px_0px_10px_rgba(0,0,0,0.1)]"} w-full max-w-xl rounded-4xl p-4 sm:p-8 flex flex-col items-center`}>
+            <div className="flex items-center md:p-6 px-2 lg:w-2/3 w-full justify-center lg:justify-start">
+                <div className={`${isDark ? "bg-[#0F172A90] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF60] shadow-[0px_0px_10px_rgba(0,0,0,0.1)]"} w-full max-w-xl rounded-2xl p-4 sm:p-8 flex flex-col items-center`}>
 
                     {/* Header */}
                     <h2 className={`${isDark ? "text-[#F564A9]" : "text-[#6B6F9C]"} text-5xl whitespace-nowrap sm:text-6xl font-semibold font-['Allura']`}>

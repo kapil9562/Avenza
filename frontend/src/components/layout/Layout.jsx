@@ -208,7 +208,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
     return (
         <>
             <div className='flex lg:min-h-[calc(100dvh-112px)] md:min-h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] sm:px-5 px-1 lg:px-10 sm:py-2 gap-6 relative mb-6'>
-                <aside className={`sticky top-32 p-4 lg:block hidden min-w-1/4 max-w-1/4 border h-fit ${isDark ? "bg-[#0F172A] border-gray-700" : "border-gray-200"} rounded-xl`}>
+                <aside className={`sticky ${activeTab === "HOME" && "mt-6"} top-32 p-4 lg:block hidden min-w-1/4 max-w-1/4 border h-fit ${isDark ? "bg-[#0F172A] border-gray-700" : "border-gray-200"} rounded-xl`}>
                     <div className='relative'>
                         <h1 className={`uppercase font-semibold text-lg tracking-wide mb-3 ${isDark ? "text-gray-100" : "text-[#454545]"}`}>Category</h1>
                         <div className='space-y-2'>
@@ -280,7 +280,7 @@ const Layout = React.memo(function Layout({ category, pid }) {
                     </div>
                     {showPagination && (
 
-                        <div className="w-full flex justify-center items-center pb-20 mt-5">
+                        <div className="w-full flex justify-center items-center mt-5">
                             <div className={`${isDark ? "bg-[#0F172A] shadow-xl shadow-[#0F172A] border-gray-700" : "bg-[#FFFFFF] shadow-md shadow-gray-300"} flex justify-center items-center p-1 sm:p-2 gap-1 sm:gap-2 rounded-4xl border border-gray-200`}>
                                 {/* Prev */}
                                 <button
@@ -343,7 +343,7 @@ const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorit
             }}
         >
             <div
-                className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-xl p-1 ${!isFavorite(product?._id) && `lg:border rounded-lg lg:translate-x-10 group-hover:translate-x-0 ${isDark? "lg:bg-[#0F172A] hover:bg-[#ff007b] hover:border-[#F564A9]" : "hover:bg-[#F564A9] hover:border-[#F564A9] lg:bg-white"}`} ${isDark ? "text-gray-500 hover:text-white border-gray-700" : "lg:text-gray-500 text-gray-400 border-gray-200 hover:text-white"}`}
+                className={`absolute right-2 top-2 z-100 hover:text-red-500 active:scale-90 transition-transform duration-300 will-change-transform text-xl p-1 ${!isFavorite(product?._id) && `lg:border rounded-lg lg:translate-x-10 group-hover:translate-x-0 ${isDark ? "lg:bg-[#0F172A] hover:bg-[#ff007b] hover:border-[#F564A9]" : "hover:bg-[#F564A9] hover:border-[#F564A9] lg:bg-white"}`} ${isDark ? "text-gray-500 hover:text-white border-gray-700" : "lg:text-gray-500 text-gray-400 border-gray-200 hover:text-white"}`}
                 onClick={(e) => {
                     e.stopPropagation();
                     onFavClick(product._id);
@@ -368,7 +368,7 @@ const ProductCard = React.memo(function ProductCard({ product, isDark, isFavorit
                         {product.description}
                     </p>
                     <div className=" text-sm flex flex-row text-amber-400 items-center gap-2">
-                        {renderStars(product?.rating)} ({(product?.rating)? product?.rating?.toFixed(1) : 0})
+                        {renderStars(product?.rating)} ({(product?.rating) ? product?.rating?.toFixed(1) : 0})
                     </div>
 
                     <div className="flex flex-col justify-between">
@@ -449,9 +449,9 @@ const ProductSection = ({ products }) => {
                 !products ? (
                     <ShowCaseSkeleton />
                 ) : (
-                    <div className="py-10 font-[Poppins]">
+                    <div className="py-2 sm:p-0 font-[Poppins] md:mt-6">
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
 
                             {sections.map((section, idx) => {
 

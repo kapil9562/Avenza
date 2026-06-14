@@ -136,7 +136,7 @@ function HomeBanner() {
                             <div className={`border  rounded-md items-center flex min-h-13 min-w-13 justify-center ${isDark? "bg-gray-800/20 border-gray-700" : "bg-[#EDEDED] border-gray-300"}`}>
                                 <img
                                     src={card?.image}
-                                    alt="dress"
+                                    alt={card?.title || "dress"}
                                     height={30}
                                     width={30}
                                 />
@@ -144,7 +144,7 @@ function HomeBanner() {
 
                             <div className='flex flex-col justify-between w-full'>
                                 <div className='flex justify-between gap-2'>
-                                    <span className={`font-semibold whitespace-nowrap ${isDark? "text-gray-200" : "text-[#212121]"}`}>
+                                    <span className={`font-semibold whitespace-nowrap text-sm sm:text-[16px] ${isDark? "text-gray-200" : "text-[#212121]"}`}>
                                         {card?.title}
                                     </span>
 

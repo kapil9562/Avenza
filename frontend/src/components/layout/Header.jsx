@@ -16,7 +16,7 @@ import { BsMoonStarsFill } from "react-icons/bs";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { useProducts } from '../../context/ProductsContext';
 import { useModal } from '../../context/ModalContext';
-import {HeaderCategorySkeleton} from '../skeletons/CategorySkeletons';
+import { HeaderCategorySkeleton } from '../skeletons/CategorySkeletons';
 
 function Header({ activeTab, setActiveTab, setShow }) {
 
@@ -204,8 +204,8 @@ function Header({ activeTab, setActiveTab, setShow }) {
             onKeyDown={handleEnter}
             type="text"
             placeholder='Search products, brands, categories…'
-            className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-semibold text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
-          <IoIosSearch className='absolute left-3 text-2xl font-semibold text-[#8b90c7] z-20' />
+            className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-medium text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
+          <IoIosSearch className='absolute left-3 text-2xl text-[#8b90c7] z-20' />
           {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-300" : "bg-[#FFEDF3]"} absolute top-10 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 overflow-hidden z-5`} >
             <div className={`${showDropdown ? "block" : "hidden"} w-full overflow-auto pt-1`}>
               {suggestions?.length > 0 ? (
@@ -361,18 +361,19 @@ function Header({ activeTab, setActiveTab, setShow }) {
 
       </div>
 
+      {/* Search box for mobile */}
       <div className='relative w-full flex flex-row justify-center items-center sm:hidden mb-2' ref={mobileSearchRef}>
         <input
+          type="text"
           value={input}
           onChange={(e) => {
             setInput(e.target.value);
             setSearchType(null);
           }}
           onKeyDown={handleEnter}
-          type="text"
           placeholder='Enter your product name...'
-          className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-semibold text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
-        <IoIosSearch className='absolute left-3 text-2xl font-semibold text-gray-500 z-20' />
+          className={`z-10 w-full p-2 pl-10 rounded-4xl border-2 border-gray-300 font-medium text-gray-700 ${isDark ? "focus:border-white focus:outline-none bg-[#0F172A] placeholder:text-gray-500 text-white" : "focus:border-[#6B6F9C] focus:outline-none bg-white placeholder:text-gray-500"}`} />
+        <IoIosSearch className='absolute left-3 text-2xl text-gray-500 z-20' />
         {showDropdown && <div className={`${isDark ? "bg-[#0F172A] text-gray-300" : "bg-[#FFEDF3]"} absolute top-5 left-0 w-full rounded-xl border-2 border-gray-300 pt-4 overflow-hidden z-5`}>
           <div className={`${showDropdown ? "block" : "hidden"} w-full overflow-auto pt-1`}>
             {suggestions.length > 0 ? (

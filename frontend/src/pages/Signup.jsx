@@ -375,7 +375,7 @@ export default function Signup() {
           />
         </div>
       </div>
-      <div className="flex items-center p-6 lg:w-2/3 w-full justify-center lg:justify-start">
+      <div className="flex items-center md:p-6 px-2 lg:w-2/3 w-full justify-center lg:justify-start">
         <div className={`${isDark ? "bg-[#0F172A] shadow-lg shadow-[#0F172A] border-gray-800 border" : "bg-[#FFFFFF] shadow-[0px_0px_10px_rgba(0,0,0,0.1)]"} w-full max-w-xl rounded-2xl p-4 sm:p-8 overflow-hidden`}>
 
           <div className={`flex flex-col w-full justify-center items-center`}>
