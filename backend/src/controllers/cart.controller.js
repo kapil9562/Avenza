@@ -38,6 +38,13 @@ const addToCart = async (req, res) => {
 
     const product = await Product.findById(product_id).select("price");
 
+    if (product?.stock <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Currently Unavailable!"
+      });
+    }
+
     await Cart.create({
       uid,
       productId: product_id,
@@ -61,10 +68,32 @@ const getCart = async (req, res) => {
 
   try {
     const cartItems = await Cart.find({ uid });
-    res.status(200).json(cartItems);
+
+    const productIds = cartItems.map(item => item.productId);
+
+    const products = await Product.find({
+      _id: { $in: productIds },
+    });
+
+    const availableProductIds = new Set(
+      products
+        .filter(product => product.stock > 0)
+        .map(product => product._id.toString())
+    );
+
+    await Cart.deleteMany({
+      uid,
+      productId: { $nin: [...availableProductIds] },
+    });
+
+    const updatedCart = await Cart.find({ uid });
+
+    res.status(200).json(updatedCart);
   } catch (err) {
     console.error("error :: ", err);
-    res.status(500).json({ message: "Internal server error! Please try again later." });
+    res.status(500).json({
+      message: "Internal server error! Please try again later.",
+    });
   }
 };
 

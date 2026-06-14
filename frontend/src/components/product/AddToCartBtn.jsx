@@ -24,10 +24,15 @@ function AddToCartBtn({ product }) {
 
     const handleAddToCart = async () => {
 
+        if (product?.stock <= 0) {
+            toast.info("Currently Unavailable!");
+            return;
+        }
+
         if (loadingId === product.productId) return;
 
         if (!user) {
-            navigate('/signup', {replace: true, state: {from: location}});
+            navigate('/signup', { replace: true, state: { from: location } });
             return
         }
 

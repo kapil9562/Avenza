@@ -12,6 +12,7 @@ import { ImBin } from "react-icons/im";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { LuRefreshCw, LuWeight } from "react-icons/lu";
 import { SlTag } from "react-icons/sl";
+import { toast } from "../context/ToastContext.jsx";
 
 function ProductDetails() {
     const { productId } = useParams();
@@ -129,12 +130,17 @@ function ProductDetails() {
     };
 
     const handleBuyNow = () => {
+
+        if (product?.stock <= 0) {
+            toast.info("Currently Unavailable");
+        }
+
         if (!user) {
             navigate('/login', { replace: true, state: { from: location } });
             return;
         }
 
-        navigate(`/checkout`, {state: {qty:1,...product}});
+        navigate(`/checkout`, { state: { qty: 1, ...product } });
     }
 
     const hasUserReviewed = product?.reviews?.some(
@@ -280,19 +286,25 @@ function ProductDetails() {
                                                 {(product.rating) ? product?.rating?.toFixed(1) : 0} ★
                                             </div>
 
-                                            <div className="flex flex-col md:flex-row gap-4 mt-6">
+                                            {product?.stock > 0 ? (
+                                                <div className="flex flex-col md:flex-row gap-4 mt-6">
 
-                                                <div className="min-w-35">
-                                                    <AddToCartBtn product={product} />
+                                                    <div className="min-w-35">
+                                                        <AddToCartBtn product={product} />
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => { handleBuyNow() }}
+                                                        className="min-w-35 px-6 py-2 bg-[#FF6F61] text-[#FFFFFF] rounded-xl cursor-pointer active:scale-95 transition-transform duration-300"
+                                                    >
+                                                        Buy Now
+                                                    </button>
                                                 </div>
-
-                                                <button
-                                                    onClick={() => { handleBuyNow() }}
-                                                    className="min-w-35 px-6 py-2 bg-[#FF6F61] text-[#FFFFFF] rounded-xl cursor-pointer active:scale-95 transition-transform duration-300"
-                                                >
-                                                    Buy Now
-                                                </button>
-                                            </div>
+                                            ) : (
+                                                <div className={`w-fit mt-6 px-3 py-2 rounded-4xl border text-rose-600 font-semibold ${isDark ? "border-rose-600 bg-rose-600/10" : "border-rose-600 bg-rose-50"}`}>
+                                                    <span>Currently Unavailable</span>
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="px-2 mt-2">
@@ -411,8 +423,8 @@ function ProductDetails() {
                                     </div>)
                                 }
 
-                                {/* Give Review */}
-                                {user && !hasUserReviewed &&
+                                {/* Give Review  Disabled*/}
+                                {false && user && !hasUserReviewed &&
                                     (<div className={`w-full pb-4 flex flex-col gap-2 px-6`}>
                                         <h2 className={`text-2xl mb-2 font-medium ${!isDark ? "text-gray-800" : "text-gray-200"}`}>
                                             Give a Review
@@ -460,9 +472,10 @@ function ProductDetails() {
                                     </div>)
                                 }
 
-                                <div className="w-full p-4 h-1">
+                                {/* <div className="w-full p-4 h-1">
                                     <div className={`w-full h-px ${!isDark ? "bg-gray-200" : "bg-gray-700"}`}></div>
-                                </div>
+                                </div> */}
+
                                 {/* Related Products */}
                                 <div className="pb-4 flex flex-col w-full">
                                     <h1 className={`text-2xl mb-2 font-medium sm:pl-6 pl-4 ${!isDark ? "text-gray-800" : "text-gray-200"}`}>

@@ -26,7 +26,7 @@ function Checkout() {
 
   useEffect(() => {
     if (!productData || !addressId) {
-      navigate("/", { replace: true })
+      console.log(productData)
     }
   }, [productData, addressId]);
 
