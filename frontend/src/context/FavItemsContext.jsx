@@ -31,7 +31,7 @@ export const FavItemsProvider = ({ children }) => {
 
     const [items, setItems] = useState([]);
     const [favorites, setFavorites] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // ================= FETCH FAVORITES =================
     const fetchFavorites = useCallback(async () => {

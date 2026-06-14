@@ -4,7 +4,7 @@ import { verifyPayment } from '../api/api.js'
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import Lottie from 'lottie-react';
-import Loader from '../assets/paymentLoader.json'
+import Loader from '../assets/loader.json'
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 

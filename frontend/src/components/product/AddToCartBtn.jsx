@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GoAlertFill } from "react-icons/go";
 import Lottie from "lottie-react";
+import loader from "../../assets/circularLoader.json"
 import { BsCheckCircleFill } from "react-icons/bs";
 import { useTheme } from '../../context/ThemeContext';
 import successCheck from "../../assets/successCheck.json"
@@ -48,14 +49,6 @@ function AddToCartBtn({ product }) {
         }
     };
 
-    const [animationData, setAnimationData] = useState(null);
-
-    useEffect(() => {
-        fetch("/assets/loader.json")
-            .then(res => res.json())
-            .then(data => setAnimationData(data));
-    }, []);
-
     useEffect(() => {
         const timer = setTimeout(() => {
             setSuccess(null);
@@ -76,7 +69,7 @@ function AddToCartBtn({ product }) {
             >
                 {loadingId === product.productId ? (
                     <Lottie
-                        animationData={animationData}
+                        animationData={loader}
                         loop
                         className="w-12 h-12 hue-rotate-180"
                     />

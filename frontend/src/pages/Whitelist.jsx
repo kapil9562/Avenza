@@ -37,7 +37,7 @@ export default function Whitelist() {
                 {items.length > 0 && <button className="underline cursor-pointer hover:text-orange-500 active:text-orange-500" onClick={clearFav}>clear all</button>}
             </div>
 
-            {items.length === 0 ? (
+            {items.length === 0 && !loading ? (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center text-center font-semibold">
                     <div className="relative flex flex-col justify-center items-center gap-4">
                         <Lottie
