@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Product from "../models/products.model.js";
 
 const getProducts = async (req, res) => {
-    let { skip = 0, limit = 20, category, search, productId, productIds, inStock } = req.query;
+    let { skip = 0, limit = 20, category, search, productId, productIds, inStock, deletedItems = "false" } = req.query;
 
     skip = parseInt(skip);
     limit = parseInt(limit);
@@ -10,6 +10,12 @@ const getProducts = async (req, res) => {
     try {
         // Build filter
         const filter = {};
+
+        if (deletedItems === "true") {
+            filter.isDeleted = true;
+        } else {
+            filter.isDeleted = { $ne: true };
+        }
 
         if (category) {
             filter.category = category;
