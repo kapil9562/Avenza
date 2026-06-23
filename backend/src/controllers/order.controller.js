@@ -318,7 +318,7 @@ export const saveAddress = async (req, res) => {
     if (!userId || !fullName || !phone || !addressLine1 || !city || !state || !pinCode || !country) {
         return res.status(400).json({
             success: false,
-            error: "Please provide required fields !"
+            message: "Please provide required fields !"
         })
     }
 
@@ -353,7 +353,7 @@ export const saveAddress = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            error: "Internal server error",
+            message: "Internal server error",
         });
     }
 }
@@ -363,15 +363,15 @@ export const getAddress = async (req, res) => {
 
     if (!userId) {
         return res.status(400).json({
-            error: "invalid credentials!",
+            message: "invalid credentials!",
         })
     }
 
     try {
         const address = await Address.findOne({ userId });
         if (!address) {
-            return res.status(402).json({
-                error: "address not found !",
+            return res.status(404).json({
+                message: "address not found !",
             })
         }
 
@@ -382,7 +382,7 @@ export const getAddress = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({
-            error: "Internal server error",
+            message: "Internal server error",
         })
     }
 }
@@ -397,7 +397,7 @@ export const getOrders = async (req, res) => {
     const skip = parseInt(req.query.skip) || 0;
 
     if (!userId) {
-        return res.status(400).json({ error: "userId required!" });
+        return res.status(400).json({ message: "userId required!" });
     }
 
     try {
@@ -534,7 +534,7 @@ export const getOrders = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            error: "Internal server error",
+            message: "Internal server error",
         });
     }
 };
@@ -544,7 +544,7 @@ export const getOrderDetail = async (req, res) => {
 
     if (!userId || !orderId) {
         return res.status(400).json({
-            error: "userId and orderId are required!"
+            message: "userId and orderId are required!"
         })
     }
 
@@ -556,7 +556,7 @@ export const getOrderDetail = async (req, res) => {
 
         if (!order) {
             return res.status(404).json({
-                error: "order not found!"
+                message: "order not found!"
             });
         }
 
@@ -566,7 +566,7 @@ export const getOrderDetail = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({
-            error: "Internal server error",
+            message: "Internal server error",
         })
     }
 
