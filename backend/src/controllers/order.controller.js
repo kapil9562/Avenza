@@ -4,6 +4,7 @@ import Order from "../models/order.model.js";
 import Address from "../models/address.model.js";
 import Cart from "../models/cart.model.js";
 import User from "../models/user.model.js"
+import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const VALID_METHODS = ["cod", "upi", "card"];
@@ -486,7 +487,35 @@ export const getOrders = async (req, res) => {
 
         }
 
-        const total = await Order.countDocuments(filter);
+        const [stats] = await Order.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: 1 },
+
+                    completed: {
+                        $sum: {
+                            $cond: [{ $eq: ["$orderStatus", "delivered"] }, 1, 0]
+                        }
+                    },
+
+                    pending: {
+                        $sum: {
+                            $cond: [{ $ne: ["$orderStatus", "delivered"] }, 1, 0]
+                        }
+                    }
+                }
+            }
+        ]);
+
+        const total = stats?.total || 0;
+        const completed = stats?.completed || 0;
+        const pending = stats?.pending || 0;
 
         const orders = await Order.find(filter).select("-stripeSessionId")
             .sort({ createdAt: -1 })
@@ -497,6 +526,8 @@ export const getOrders = async (req, res) => {
             success: true,
             orders,
             total,
+            completed,
+            pending,
             count: orders.length,
         });
 
