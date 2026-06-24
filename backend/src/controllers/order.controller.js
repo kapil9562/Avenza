@@ -5,6 +5,7 @@ import Address from "../models/address.model.js";
 import Cart from "../models/cart.model.js";
 import User from "../models/user.model.js"
 import mongoose from "mongoose";
+import { response } from "express";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const VALID_METHODS = ["cod", "upi", "card"];
@@ -400,8 +401,16 @@ export const getOrders = async (req, res) => {
         return res.status(400).json({ message: "userId required!" });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid userId"
+        });
+    }
+
     try {
-        const filter = { user: userId };
+        const objectId = new mongoose.Types.ObjectId(userId);
+        const filter = { user: objectId };
 
         // STATUS FILTER
         if (status.length) {
@@ -522,6 +531,13 @@ export const getOrders = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
+        if (orders?.length <= 0 || !orders) {
+            return res.status(404).json({
+                success: false,
+                message: "No orders found!"
+            })
+        }
+
         res.status(200).json({
             success: true,
             orders,
@@ -532,6 +548,7 @@ export const getOrders = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Internal server error",
