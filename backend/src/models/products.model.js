@@ -15,8 +15,6 @@ const dimensionsSchema = new mongoose.Schema({
 }, { _id: false });
 
 const metaSchema = new mongoose.Schema({
-    createdAt: Date,
-    updatedAt: Date,
     barcode: String,
     qrCode: String
 }, { _id: false });
@@ -24,7 +22,8 @@ const metaSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema({
     productId: {
         type: Number,
-        unique: true
+        unique: true,
+        index: true
     },
     title: String,
     description: String,
