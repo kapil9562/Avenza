@@ -54,7 +54,11 @@ const getProducts = async (req, res) => {
         // Get products
         const products = await Product.find(filter).sort({ productId: 1 })
             .skip(skip)
-            .limit(limit)
+            .limit(limit);
+
+        if (products.length === 0) {
+            return res.status(404).json({ message: "No products found!" });
+        }
 
         return res.status(200).json({
             total,
